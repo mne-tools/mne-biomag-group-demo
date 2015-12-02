@@ -1,0 +1,24 @@
+import os.path as op
+import glob
+import shutil
+
+from sklearn.externals.joblib import Parallel, delayed
+
+from mne.bem import make_flash_bem, convert_flash_mris
+
+from config import study_path, subjects_dir
+
+N_JOBS = 8
+
+
+def make_report(subject_id):
+    subject = "sub%03d" % subject_id
+    print("processing %s" % subject)
+
+    meg_path = op.join(study_path, 'MEG', subject)
+    ave_fname = op.join(meg_path, "%s-ave.fif" % subject)
+
+    !mne report -p $meg_path -i $ave_fname -d $subjects_dir -s $subject --no-browser --overwrite
+
+
+Parallel(n_jobs=N_JOBS)(delayed(make_report)(subject_id) for subject_id in range(1, 20))

@@ -1,0 +1,32 @@
+import os
+from config import study_path
+
+pwd = os.getcwd()
+
+os.chdir(os.path.join(study_path, 'ds117'))
+
+archive_dir = os.path.join(os.getcwd(), 'archive')
+
+if not os.path.isdir(archive_dir):
+    os.mkdir(archive_dir)
+
+!wget http://openfmri.s3.amazonaws.com/tarballs/ds117_metadata.tgz
+!tar xvzf ds117_metadata.tgz
+!mkdir metadata
+!mv stimuli study_key.txt models README release_history.txt scan_key.txt model_key.txt listing.txt license.txt emptyroom metadata/
+!mv ds117_metadata.tgz archive/
+
+for i in range(11, 20):
+    subject = "sub%03d" % i
+    print("processing %s" % subject)
+    fname = "ds117_%s_raw.tgz" % subject
+    url = "http://openfmri.s3.amazonaws.com/tarballs/" + fname
+    if os.path.isdir(subject):
+        continue
+    !wget $url
+    !tar xvzf $fname
+    !mv ds117/$subject .
+    !mv $fname archive/
+    !rmdir ds117
+
+os.chdir(pwd)

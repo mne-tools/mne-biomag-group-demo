@@ -1,0 +1,49 @@
+import os
+import glob
+import shutil
+
+from sklearn.externals.joblib import Parallel, delayed
+
+from mne.bem import make_flash_bem, convert_flash_mris
+
+from config import study_path, subjects_dir
+
+N_JOBS = 1
+
+
+def process_subject_anat(subject_id):
+    subject = "sub%03d" % subject_id
+    print("processing %s" % subject)
+
+    # error_log = "%s/%s/scripts/IsRunning.lh+rh" % (subjects_dir, subject)
+    # if os.path.exists(error_log):
+    #     print("removing %s" % error_log)
+    #     os.remove(error_log)
+
+    # t1_fname = "%s/ds117/%s/anatomy/highres001.nii.gz" % (study_path, subject)
+    # log_fname = "%s/ds117/%s/my-recon-all.txt" % (study_path, subject)
+    # !recon-all -all -s $subject -i $t1_fname > $log_fname
+
+    # Move flash data
+    fnames = glob.glob("%s/ds117/%s/anatomy/FLASH/meflash*" % (study_path, subject))
+    dst_flash = "%s/%s/mri/flash" % (subjects_dir, subject)
+    if not os.path.isdir(dst_flash):
+        os.mkdir(dst_flash)
+
+    for f_src in fnames:
+        f_dst = os.path.basename(f_src).replace("meflash_", "mef")
+        f_dst = os.path.join(dst_flash, f_dst)
+	shutil.copy(f_src, f_dst)
+
+    # Make flash BEM
+    convert_flash_mris(subject, flash30=True, convert=False, unwarp=False,
+                       subjects_dir=subjects_dir)
+    make_flash_bem(subject=subject, subjects_dir=subjects_dir,
+                   overwrite=True, show=False)
+
+
+# 19 excluded due to pb with flash images
+Parallel(n_jobs=N_JOBS)(delayed(process_subject_anat)(subject_id) for subject_id in range(1, 19))
+
+# run this for subject 19
+# for i in *nii.gz; do mri_convert $i ${i/nii.gz/mgz}; done

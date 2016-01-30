@@ -4,8 +4,6 @@ import shutil
 
 from sklearn.externals.joblib import Parallel, delayed
 
-from mne.bem import make_flash_bem, convert_flash_mris
-
 from config import study_path, subjects_dir
 
 N_JOBS = 8

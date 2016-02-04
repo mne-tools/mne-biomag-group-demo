@@ -1,13 +1,11 @@
 import os.path as op
-from sklearn.externals.joblib import Parallel, delayed
 
 import mne
+from mne.parallel import parallel_func
 from mne.minimum_norm import (make_inverse_operator, apply_inverse,
                               write_inverse_operator)
 
-from config import meg_dir, spacing
-
-N_JOBS = 8
+from config import meg_dir, spacing, N_JOBS
 
 
 def run_inverse(subject_id):
@@ -46,4 +44,5 @@ def run_inverse(subject_id):
         stc.save(op.join(data_path, 'mne_dSPM_inverse-%s' % evoked.comment))
 
 
-Parallel(n_jobs=N_JOBS)(delayed(run_inverse)(subject_id) for subject_id in range(1, 20))
+parallel, run_func, _ = parallel_func(run_inverse, n_jobs=N_JOBS)
+parallel(run_func(subject_id) for subject_id in range(1, 20))

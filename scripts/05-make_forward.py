@@ -1,13 +1,9 @@
 import os.path as op
 import mne
 
-from sklearn.externals.joblib import Parallel, delayed
+from mne.parallel import parallel_func
 
-from config import study_path, meg_dir, subjects_dir, spacing
-
-mindist = 5
-
-N_JOBS = 8
+from config import study_path, meg_dir, subjects_dir, spacing, N_JOBS, mindist
 
 
 def run_forward(subject_id):
@@ -36,22 +32,6 @@ def run_forward(subject_id):
     fwd = mne.convert_forward_solution(fwd, surf_ori=True)
     mne.write_forward_solution(fname_fwd, fwd, overwrite=True)
 
-    # mag_map = mne.sensitivity_map(fwd, ch_type=fwd_ch_type, mode=fwd_ori)
-    # brain = mag_map.plot(subject=subject, time_label='Magnetometer sensitivity',
-    #                      hemi='rh', subjects_dir=subjects_dir, **fwd_plot_args)
-    # brain.save_image('sensitivity_mag.png')
-    # report.add_images_to_section('sensitivity_mag.png', 'sensitivity map',
-    #                              'forward')
-    # os.remove('sensitivity_mag.png')
 
-    # fig = plt.figure()
-    # plt.hist(mag_map.data.ravel(),
-    #          bins=20, label=['Magnetometers'],
-    #          color=['b'])
-    # plt.title('Normal orientation sensitivity')
-    # plt.xlabel('sensitivity')
-    # plt.ylabel('count')
-    # plt.legend()
-
-
-Parallel(n_jobs=N_JOBS)(delayed(run_forward)(subject_id) for subject_id in range(1, 20))
+parallel, run_func, _ = parallel_func(run_forward, n_jobs=N_JOBS)
+parallel(run_func(subject_id) for subject_id in range(1, 20))

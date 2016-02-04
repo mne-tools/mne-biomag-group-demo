@@ -2,11 +2,9 @@ import os.path as op
 import glob
 import shutil
 
-from sklearn.externals.joblib import Parallel, delayed
+from mne.parallel import parallel_func
 
-from config import study_path, subjects_dir
-
-N_JOBS = 8
+from config import study_path, subjects_dir, N_JOBS
 
 
 def make_report(subject_id):
@@ -19,4 +17,5 @@ def make_report(subject_id):
     !mne report -p $meg_path -i $ave_fname -d $subjects_dir -s $subject --no-browser --overwrite
 
 
-Parallel(n_jobs=N_JOBS)(delayed(make_report)(subject_id) for subject_id in range(1, 20))
+parallel, run_func, _ = parallel_func(make_report, n_jobs=N_JOBS)
+parallel(run_func(subject_id) for subject_id in range(1, 20))

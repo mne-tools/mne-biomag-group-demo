@@ -33,12 +33,18 @@ def run_epochs(subject_id):
     all_epochs = []
 
     # # Get all bad channels
-    # all_bads = []
-    # for run in runs:
-    #     bads = np.loadtxt(data_path + '/MaxFilterOutput/run_%02d_bad.txt' % run)
-    #     bads = np.unique(bads.ravel())
-    #     bads = ['MEG%d' % b for b in bads]
-    #     all_bads += [bad for bad in bads if bad not in all_bads]
+    all_bads = []
+    for run in range(1, 7):
+        bads = list()
+        bad_name = op.join(data_path, 'bads', 'run_%02d_raw_tr.fif_bad' % run)
+        if os.path.exists(bad_name):
+            with open(bad_name) as f:
+                for line in f:
+                    bads.append(line.strip())
+        #     bads = np.loadtxt(data_path + '/MaxFilterOutput/run_%02d_bad.txt' % run)
+        #     bads = np.unique(bads.ravel())
+        #     bads = ['MEG%d' % b for b in bads]
+        all_bads += [bad for bad in bads if bad not in all_bads]
 
     for run in range(1, 7):
         print " - Run %s" % run
@@ -48,7 +54,8 @@ def run_epochs(subject_id):
 
         raw = mne.io.Raw(run_fname)
         raw.del_proj(0)  # remove EEG average ref
-        events = mne.read_events(op.join(data_path, 'run_%02d_filt_sss-eve.fif' % run))
+        events = mne.read_events(op.join(data_path,
+                                         'run_%02d_filt_sss-eve.fif' % run))
 
         raw.set_channel_types({'EEG061': 'eog',
                                'EEG062': 'eog',
@@ -59,15 +66,17 @@ def run_epochs(subject_id):
 
         raw.add_eeg_average_proj()
 
-        # # Add bad channels (only needed for non SSS data)
-        # exclude = raw.info['bads']
+        # Add bad channels (only needed for non SSS data)
+        exclude = raw.info['bads']
         # if not ("sss" in raw.info['filename']):
-        #     raw.info['bads'] = bads
-        #     exclude = bads
-        exclude = []  # XXX
+        #     raw.info['bads'] = all_bads
+        #     exclude = all_bads
+        # exclude = []  # XXX
+        raw.info['bads'] = all_bads
+        exclude = all_bads
 
-        picks = mne.pick_types(raw.info, meg=True, eeg=True, stim=True, eog=True,
-                               exclude=exclude)
+        picks = mne.pick_types(raw.info, meg=True, eeg=True, stim=True,
+                               eog=True, exclude=exclude)
 
         # Read epochs
         epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
@@ -88,7 +97,8 @@ def run_epochs(subject_id):
     evoked_unfamiliar.comment = 'unfamiliar'
 
     mne.evoked.write_evokeds(op.join(data_path, '%s-ave.fif' % subject),
-                             [evoked_famous, evoked_scrambled, evoked_unfamiliar,
+                             [evoked_famous, evoked_scrambled,
+                              evoked_unfamiliar,
                               evoked_famous - evoked_scrambled,
                               evoked_unfamiliar - evoked_scrambled,
                               evoked_famous - evoked_unfamiliar])

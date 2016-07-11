@@ -64,8 +64,6 @@ def run_epochs(subject_id):
                              'EEG062': 'EOG062',
                              'EEG063': 'ECG063'})
 
-        raw.add_eeg_average_proj()
-
         # Add bad channels (only needed for non SSS data)
         exclude = raw.info['bads']
         # if not ("sss" in raw.info['filename']):
@@ -73,6 +71,7 @@ def run_epochs(subject_id):
         #     exclude = all_bads
         # exclude = []  # XXX
         raw.info['bads'] = all_bads
+        raw.add_eeg_average_proj()
         exclude = all_bads
 
         picks = mne.pick_types(raw.info, meg=True, eeg=True, stim=True,

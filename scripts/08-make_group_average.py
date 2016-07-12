@@ -11,7 +11,10 @@ contrasts = list()
 fams = list()
 unfams = list()
 scrambs = list()
-for run in range(1, 19):  # run 19 left out
+exclude = [1, 5, 16]  # Excluded subjects
+for run in range(1, 20):
+    if run in exclude:
+        continue
     subject = "sub%03d" % run
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)

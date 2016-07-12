@@ -1,5 +1,6 @@
 import os
 import os.path as op
+import numpy as np
 
 import mne
 from mne.parallel import parallel_func
@@ -20,8 +21,8 @@ events_id = {
 
 tmin, tmax = -0.2, 0.8
 reject = dict(grad=4000e-13, mag=4e-12, eog=180e-6)
-# baseline = (-0.3, 00.)
-baseline = None
+baseline = (-0.2, 00.)
+# baseline = None
 
 
 def run_epochs(subject_id):
@@ -37,6 +38,7 @@ def run_epochs(subject_id):
     for run in range(1, 7):
         bads = list()
         bad_name = op.join(data_path, 'bads', 'run_%02d_raw_tr.fif_bad' % run)
+
         if os.path.exists(bad_name):
             with open(bad_name) as f:
                 for line in f:
@@ -53,10 +55,20 @@ def run_epochs(subject_id):
             continue
 
         raw = mne.io.Raw(run_fname)
+
+        eog_events = mne.preprocessing.find_eog_events(raw, ch_name='EEG002')
+        eog_events[:, 0] -= int(0.25 * raw.info['sfreq'])
+        annotations = mne.Annotations(eog_events[:, 0] / raw.info['sfreq'],
+                                      np.repeat(0.5, len(eog_events)),
+                                      'BAD_blink')
+        raw.annotations = annotations  # Remove epochs with blinks
+
+        delay = int(0.0345 * raw.info['sfreq'])
         raw.del_proj(0)  # remove EEG average ref
         events = mne.read_events(op.join(data_path,
                                          'run_%02d_filt_sss-eve.fif' % run))
 
+        events[:, 0] = events[:, 0] + delay
         raw.set_channel_types({'EEG061': 'eog',
                                'EEG062': 'eog',
                                'EEG063': 'ecg'})
@@ -65,7 +77,6 @@ def run_epochs(subject_id):
                              'EEG063': 'ECG063'})
 
         # Add bad channels (only needed for non SSS data)
-        exclude = raw.info['bads']
         # if not ("sss" in raw.info['filename']):
         #     raw.info['bads'] = all_bads
         #     exclude = all_bads
@@ -95,12 +106,12 @@ def run_epochs(subject_id):
     evoked_scrambled.comment = 'scrambled'
     evoked_unfamiliar.comment = 'unfamiliar'
 
+    contrast = mne.combine_evoked([evoked_famous, evoked_unfamiliar,
+                                   evoked_scrambled], weights=[0.5, 0.5, -1.])
+    contrast.comment = 'contrast'
     mne.evoked.write_evokeds(op.join(data_path, '%s-ave.fif' % subject),
                              [evoked_famous, evoked_scrambled,
-                              evoked_unfamiliar,
-                              evoked_famous - evoked_scrambled,
-                              evoked_unfamiliar - evoked_scrambled,
-                              evoked_famous - evoked_unfamiliar])
+                              evoked_unfamiliar, contrast])
 
     # take care of noise cov
     cov = mne.compute_covariance(epochs, tmin=tmin, tmax=0)

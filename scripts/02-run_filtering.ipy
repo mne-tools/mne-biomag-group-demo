@@ -21,7 +21,7 @@ def run_filter(subject_id):
         if not op.exists(op.join(meg_dir, subject)):
             os.mkdir(op.join(meg_dir, subject))
 
-        !mne_process_raw --raw $raw_in --highpass 1 --lowpass 40 --save $raw_out --projoff --decim 3 --filtersize 16384
+        !mne_process_raw --raw $raw_in --lowpass 40 --lowpassw 10 --save $raw_out --projoff --decim 3 --filtersize 16384
 
 parallel, run_func, _ = parallel_func(run_filter, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))

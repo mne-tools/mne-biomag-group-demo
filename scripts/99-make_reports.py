@@ -29,15 +29,15 @@ def make_report(subject_id):
     figs = list()
     captions = list()
 
-    fig = fam.plot(spatial_colors=True, show=False)
+    fig = fam.plot(spatial_colors=True, show=False, gfp=True)
     figs.append(fig)
     captions.append('Famous faces')
 
-    fig = unfam.plot(spatial_colors=True, show=False)
+    fig = unfam.plot(spatial_colors=True, show=False, gfp=True)
     figs.append(fig)
     captions.append('Unfamiliar faces')
 
-    fig = scramb.plot(spatial_colors=True, show=False)
+    fig = scramb.plot(spatial_colors=True, show=False, gfp=True)
     figs.append(fig)
     captions.append('Scrambled faces')
 
@@ -51,9 +51,6 @@ def make_report(subject_id):
         plt.plot(scramb.data[idx], label='scrambled')
         plt.legend()
         captions.append('Famous, unfamliliar and scrambled faces on EEG070')
-
-    figs.append(mne.viz.plot_evoked_topo(evokeds, show=False))
-    captions.append('Evoked responses')
 
     fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
                           '%s-trans.fif' % subject)
@@ -82,4 +79,4 @@ def make_report(subject_id):
 
 
 parallel, run_func, _ = parallel_func(make_report, n_jobs=N_JOBS)
-parallel(run_func(subject_id) for subject_id in range(17, 20))
+parallel(run_func(subject_id) for subject_id in range(1, 17))

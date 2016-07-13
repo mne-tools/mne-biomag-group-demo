@@ -67,7 +67,7 @@ def make_report(subject_id):
         stc = mne.read_source_estimate(fname, subject)
         brain = stc.plot(views=['ven'], hemi='both')
 
-        brain.set_data_time_index(135)
+        brain.set_data_time_index(112)
 
         fig = mlab.gcf()
         rep._add_figs_to_section(fig, cond)
@@ -77,6 +77,31 @@ def make_report(subject_id):
 
     # !mne report -p $meg_path -i $ave_fname -d $subjects_dir -s $subject --no-browser --overwrite
 
+
+# Group report
+faces_fname = op.join(study_path, 'MEG', 'eeg_faces-ave.fif')
+rep = Report(info_fname=faces_fname, subject='fsaverage',
+             subjects_dir=subjects_dir)
+faces = mne.read_evokeds(faces_fname)[0]
+rep.add_figs_to_section(faces.plot(spatial_colors=True, gfp=True, show=False),
+                        'Average faces')
+
+scrambled = mne.read_evokeds(op.join(study_path, 'MEG',
+                                     'eeg_scrambled-ave.fif'))[0]
+rep.add_figs_to_section(scrambled.plot(spatial_colors=True, gfp=True,
+                                       show=False), 'Average scrambled')
+
+fname = op.join(study_path, 'MEG', 'contrast-average')
+stc = mne.read_source_estimate(fname, subject='fsaverage')
+brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
+                 subjects_dir=subjects_dir)
+brain.set_data_time_index(165)
+
+fig = mlab.gcf()
+rep._add_figs_to_section(fig, 'Avergae faces - scrambled')
+
+rep.save(fname=op.join(study_path, 'MEG', 'report_average.html'),
+         open_browser=False, overwrite=True)
 
 parallel, run_func, _ = parallel_func(make_report, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))

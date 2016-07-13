@@ -16,7 +16,7 @@ subjects_dir = op.join(study_path, 'subjects')
 meg_dir = op.join(study_path, 'MEG')
 
 # Configuration
-subject = 'sub015'
+subject = 'sub002'
 # Raw data
 fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
 raw = mne.io.Raw(fname)
@@ -27,10 +27,9 @@ raw_filt = mne.io.Raw(fname)
 def plot_stc(cond):
     fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
     stc = mne.read_source_estimate(fname, subject)
-    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
-                     hemi='both')
-    brain.set_data_time_index(135)
-
+    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['fro'],
+                     hemi='both', time_viewer=True)
+    brain.set_data_time_index(165)
 ###############################################################################
 # Filtering
 raw.plot_psd()
@@ -43,12 +42,13 @@ evoked = mne.read_evokeds(evo_fname)
 
 ###############################################################################
 # Faces
-faces = mne.combine_evoked([evoked[0], evoked[2]])
-faces.plot(spatial_colors=True, gfp=True, window_title='Faces %s' % subject)
+famous_evo, scrambled_evo, unfamiliar_evo, contrast_evo, faces_evo = evoked
+faces_evo.plot(spatial_colors=True, gfp=True, ylim={'eeg': (-10, 10)},
+               window_title='Faces %s' % subject)
 
 ###############################################################################
 # Famous
-famous_evo, scrambled_evo, unfamiliar_evo, contrast_evo = evoked
+
 famous_evo.plot(spatial_colors=True, gfp=True,
                 window_title='Famous %s' % subject)
 
@@ -84,6 +84,10 @@ mne.viz.plot_trans(raw.info, fname_trans, subject=subject,
                    eeg_sensors=True)
 
 ###############################################################################
+# Faces
+plot_stc('faces')
+
+###############################################################################
 # Famous
 plot_stc('famous')
 
@@ -96,13 +100,5 @@ plot_stc('unfamiliar')
 plot_stc('scrambled')
 
 ###############################################################################
-# Famous - scrambled
-plot_stc('famous - scrambled')
-
-###############################################################################
-# Unfamiliar - scrambled
-plot_stc('unfamiliar - scrambled')
-
-###############################################################################
-# Famous - unfamiliar
-plot_stc('famous - unfamiliar')
+# Faces - scrambled
+plot_stc('contrast')

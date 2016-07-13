@@ -18,7 +18,7 @@ def run_inverse(subject_id):
     fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
     fname_inv = op.join(data_path, '%s-meg-%s-inv.fif' % (subject, spacing))
 
-    evokeds = mne.read_evokeds(fname_ave, condition=[0, 1, 2, 3])
+    evokeds = mne.read_evokeds(fname_ave, condition=[0, 1, 2, 3, 4])
     cov = mne.read_cov(fname_cov)
     # cov = mne.cov.regularize(cov, evokeds[0].info,
     #                                mag=0.05, grad=0.05, eeg=0.1, proj=True)

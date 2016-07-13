@@ -62,8 +62,7 @@ def make_report(subject_id):
     captions.append('Coregistration')
 
     rep.add_figs_to_section(figs, captions)
-    for cond in ['famous', 'unfamiliar', 'scrambled', 'famous - scrambled',
-                 'unfamiliar - scrambled', 'famous - unfamiliar']:
+    for cond in ['faces', 'famous', 'unfamiliar', 'scrambled', 'contrast']:
         fname = op.join(meg_path, 'mne_dSPM_inverse-%s' % cond)
         stc = mne.read_source_estimate(fname, subject)
         brain = stc.plot(views=['ven'], hemi='both')
@@ -73,10 +72,11 @@ def make_report(subject_id):
         fig = mlab.gcf()
         rep._add_figs_to_section(fig, cond)
 
-    rep.save(open_browser=False, overwrite=True)
+    rep.save(fname=op.join(study_path, 'MEG', 'report%s.html' % subject),
+                           open_browser=False, overwrite=True)
 
     # !mne report -p $meg_path -i $ave_fname -d $subjects_dir -s $subject --no-browser --overwrite
 
 
 parallel, run_func, _ = parallel_func(make_report, n_jobs=N_JOBS)
-parallel(run_func(subject_id) for subject_id in range(1, 17))
+parallel(run_func(subject_id) for subject_id in range(1, 20))

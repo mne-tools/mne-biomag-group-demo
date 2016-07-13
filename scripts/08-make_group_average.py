@@ -12,6 +12,9 @@ fams = list()
 unfams = list()
 scrambs = list()
 exclude = [1, 5, 16]  # Excluded subjects
+faces = list()
+scrambled = list()
+ch_names = list()
 for run in range(1, 20):
     if run in exclude:
         continue
@@ -36,7 +39,28 @@ for run in range(1, 20):
                           subjects_dir=subjects_dir))
     contrasts.append(contrast)
 
+    eeg_fams = evokeds[0]
+    eeg_unfams = evokeds[2]
+    eeg_fams.pick_types(meg=False, eeg=True)
+    eeg_unfams.pick_types(meg=False, eeg=True)
+
+    scrambled.append(evokeds[1])
+    faces.append(mne.combine_evoked([eeg_fams, eeg_unfams]))
+    if len(ch_names) == 0:
+        ch_names = faces[-1].ch_names
+    else:
+        ch_names = np.intersect1d(ch_names, faces[-1].ch_names)
+
+
 data = np.average([s.data for s in stcs], axis=0)
 
 stc = mne.SourceEstimate(data, stcs[0].vertices, stcs[0].tmin, stcs[0].tstep)
 stc.save(op.join(meg_dir, 'contrast-average'))
+
+for i in range(len(faces)):
+    faces[i] = faces[i].pick_channels(ch_names)
+    scrambled[i] = scrambled[i].pick_channels(ch_names)
+faces = mne.combine_evoked(faces)
+faces.save(op.join(meg_dir, 'eeg_faces-ave.fif'))
+scrambled = mne.combine_evoked(scrambled)
+scrambled.save(op.join(meg_dir, 'eeg_scrambled-ave.fif'))

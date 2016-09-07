@@ -7,7 +7,7 @@ from mne.io.constants import FIFF
 from mne.parallel import parallel_func
 from mne.preprocessing import ICA, create_ecg_epochs
 
-from autoreject import LocalAutoRejectCV,  GlobalAutoReject, validation_curve
+from autoreject import GlobalAutoReject, validation_curve
 
 from config import study_path, meg_dir, N_JOBS
 autoreject = True
@@ -39,7 +39,7 @@ def run_process(subject_id):
     # # Get all bad channels
     all_bads = []
     all_epochs = []
-    for run in range(1, 3):
+    for run in range(1, 7):
         bads = list()
         bad_name = op.join(data_path, 'bads', 'run_%02d_raw_tr.fif_bad' % run)
 
@@ -52,7 +52,7 @@ def run_process(subject_id):
         #     bads = ['MEG%d' % b for b in bads]
         all_bads += [bad for bad in bads if bad not in all_bads]
 
-    for run in range(1, 3):
+    for run in range(1, 7):
         raw_fname_in = op.join(study_path, 'MEG', subject,
                                'run_%02d_cropped_sss.fif')
         if not os.path.exists(raw_fname_in % run):
@@ -180,8 +180,6 @@ def run_process(subject_id):
         ica.apply(epochs)
         all_epochs.append(epochs)
 
-    return all_epochs
-    """
     epochs = mne.epochs.concatenate_epochs(all_epochs)
     epochs.save(op.join(data_path, '%s-epo.fif' % subject))
 
@@ -207,7 +205,7 @@ def run_process(subject_id):
     # take care of noise cov
     cov = mne.compute_covariance(epochs, tmin=tmin, tmax=0)
     cov.save(op.join(data_path, '%s-cov.fif' % subject))
-    """
 
-#parallel, run_func, _ = parallel_func(run_process, n_jobs=N_JOBS)
-#parallel(run_func(subject_id) for subject_id in range(1, 2))
+
+parallel, run_func, _ = parallel_func(run_process, n_jobs=N_JOBS)
+parallel(run_func(subject_id) for subject_id in range(1, 20))

@@ -16,7 +16,7 @@ subjects_dir = op.join(study_path, 'subjects')
 meg_dir = op.join(study_path, 'MEG')
 
 # Configuration
-subject = 'sub002'
+subject = 'sub001'
 # Raw data
 fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
 raw = mne.io.Raw(fname)

@@ -21,8 +21,8 @@ events_id = {
 
 tmin, tmax = -0.2, 0.8
 reject = dict(grad=4000e-13, mag=4e-12, eog=180e-6)
-baseline = (-0.2, 00.)
-# baseline = None
+#baseline = (-0.2, 00.)
+baseline = None
 
 
 def run_epochs(subject_id):

@@ -93,7 +93,7 @@ def run_process(subject_id):
                              'EEG062': 'EOG062',
                              'EEG063': 'ECG063'})
 
-        ica_name = op.join(study_path, 'MEG', subject, 'run_%02d-ica.fif')
+        ica_name = op.join(study_path, 'MEG', subject, 'run_%02d-ica.fif' % run)
         if os.path.exists(ica_name):
             ica = mne.preprocessing.read_ica(ica_name)
         else:

@@ -44,12 +44,14 @@ def make_report(subject_id):
     if 'EEG070' in fam.ch_names:
         idx = fam.ch_names.index('EEG070')
 
-        figs.append(plt.figure())
+        fig = mne.viz.plot_compare_evokeds({'Famous':fam, 'Unfamiliar':unfam,
+                                            'Scrambled':scramb}, idx, show=False)
+        figs.append(fig)
 
-        plt.plot(fam.data[idx], label='famous')
-        plt.plot(unfam.data[idx], label='unfamiliar')
-        plt.plot(scramb.data[idx], label='scrambled')
-        plt.legend()
+        #plt.plot(fam.data[idx], label='famous')
+        #plt.plot(unfam.data[idx], label='unfamiliar')
+        #plt.plot(scramb.data[idx], label='scrambled')
+        #plt.legend()
         captions.append('Famous, unfamliliar and scrambled faces on EEG070')
 
     fname_trans = op.join(study_path, 'ds117', subject, 'MEG',

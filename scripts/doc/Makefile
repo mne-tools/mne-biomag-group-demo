@@ -190,3 +190,7 @@ pseudoxml:
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 
+html_dev-pattern:
+	BUILD_DEV_HTML=1 $(SPHINXBUILD) -D plot_gallery=1 -D raise_gallery=1 -D abort_on_example_error=1 -D sphinx_gallery_conf.filename_pattern=$(PATTERN) -b html $(ALLSPHINXOPTS) _build/html
+	@echo
+	@echo "Build finished. The HTML pages are in _build/html"

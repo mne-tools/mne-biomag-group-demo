@@ -5,8 +5,8 @@ from mne.parallel import parallel_func
 from mne.minimum_norm import (make_inverse_operator, apply_inverse,
                               write_inverse_operator)
 
-from config import meg_dir, spacing, N_JOBS
-
+from config import meg_dir, spacing
+N_JOBS = 2
 
 def run_inverse(subject_id):
     subject = "sub%03d" % subject_id

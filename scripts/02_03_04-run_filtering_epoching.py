@@ -88,7 +88,8 @@ def run_process(subject_id):
 
         raw.set_channel_types({'EEG061': 'eog',
                                'EEG062': 'eog',
-                               'EEG063': 'ecg'})
+                               'EEG063': 'ecg',
+                               'EEG064': 'misc'})  # EEG064 free floating el.
         raw.rename_channels({'EEG061': 'EOG061',
                              'EEG062': 'EOG062',
                              'EEG063': 'ECG063'})

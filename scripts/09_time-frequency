@@ -6,7 +6,7 @@ from mne.parallel import parallel_func
 
 from config import study_path, meg_dir, N_JOBS
 
-freqs = np.arange(7, 30, 0.5)
+freqs = np.arange(6, 40)
 n_cycles = freqs / 2.
 
 def run_time_frequency(subject_id):
@@ -18,7 +18,7 @@ def run_time_frequency(subject_id):
     faces = evokeds[-1]
     power = mne.time_frequency.tfr_morlet(faces, freqs=freqs, return_itc=False,
                                           n_cycles=n_cycles)
-    power.save(op.join(data_path, '%s-tfr.h5' % subject))
+    power.save(op.join(data_path, '%s-tfr.h5' % subject), overwrite=True)
     #power, itc = mne.time_frequency.tfr_morlet(epochs['famous'], freqs=freqs,
     #                                           return_itc=True,
     #                                           n_cycles=n_cycles)

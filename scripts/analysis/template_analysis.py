@@ -91,7 +91,8 @@ power = mne.time_frequency.read_tfrs(op.join(meg_dir, subject,
                                              '%s-tfr.h5' % subject))[0]
 channel = 'EEG070'
 idx = [power.ch_names.index(channel)]
-power.plot(idx, title='Faces %s' % channel)
+power.plot(idx, title='Faces %s' % channel, baseline=(-0.1, 0.0),
+           mode='logratio')
 
 ###############################################################################
 # Trans

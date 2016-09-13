@@ -134,7 +134,8 @@ def run_process(subject_id):
         raw.info['bads'] = all_bads
         raw.interpolate_bads()
         raw.add_eeg_average_proj()
-        exclude = all_bads
+        exclude = []
+        # exclude = all_bads
 
         picks = mne.pick_types(raw.info, meg=True, eeg=True, stim=True,
                                eog=True, exclude=exclude)

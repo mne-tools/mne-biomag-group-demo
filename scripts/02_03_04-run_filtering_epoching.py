@@ -132,6 +132,7 @@ def run_process(subject_id):
         #     exclude = all_bads
         # exclude = []  # XXX
         raw.info['bads'] = all_bads
+        raw.interpolate_bads()
         raw.add_eeg_average_proj()
         exclude = all_bads
 

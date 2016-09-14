@@ -86,12 +86,32 @@ unfamiliar_evo.plot_topomap(times=times, title='Unfamiliar %s' % subject)
 contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject)
 
 ###############################################################################
-# TFR faces
-power = mne.time_frequency.read_tfrs(op.join(meg_dir, subject,
-                                             '%s-tfr.h5' % subject))[0]
+# TFR
+fpower = mne.time_frequency.read_tfrs(
+    op.join(meg_dir, subject, '%s-faces-tfr.h5' % subject))[0]
+fitc = mne.time_frequency.read_tfrs(
+    op.join(meg_dir, subject, '%s-itc_faces-tfr.h5' % subject))[0]
+spower = mne.time_frequency.read_tfrs(
+    op.join(meg_dir, subject, '%s-scrambled-tfr.h5' % subject))[0]
+sitc = mne.time_frequency.read_tfrs(
+    op.join(meg_dir, subject, '%s-itc_scrambled-tfr.h5' % subject))[0]
 channel = 'EEG070'
-idx = [power.ch_names.index(channel)]
-power.plot(idx, title='Faces %s' % channel)
+idx = [fpower.ch_names.index(channel)]
+fpower.plot(idx, title='Faces power %s' % channel, baseline=(-0.1, 0.0),
+            mode='logratio')
+spower.plot(idx, title='Scrambled power %s' % channel, baseline=(-0.1, 0.0),
+            mode='logratio')
+fitc.plot(idx, title='Faces ITC %s' % channel, baseline=(-0.1, 0.0),
+          mode='logratio')
+sitc.plot(idx, title='Scrambled ITC %s' % channel, baseline=(-0.1, 0.0),
+          mode='logratio')
+
+
+###############################################################################
+# Covariance
+cov = mne.read_cov(op.join(meg_dir, subject, '%s-cov.fif' % subject))
+mne.viz.plot_cov(cov, faces_evo.info)
+faces_evo.plot_white(cov)
 
 ###############################################################################
 # Trans

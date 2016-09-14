@@ -23,6 +23,11 @@ scrambled = mne.read_evokeds(op.join(study_path, 'MEG',
                                      'eeg_scrambled-ave.fif'))[0]
 scrambled.plot_joint()
 
+faces.comment = 'Faces'
+scrambled.comment = 'Scrambled'
+idx = faces.ch_names.index('EEG070')
+mne.viz.plot_compare_evokeds({'Faces': faces, 'Scrambled': scrambled}, [idx])
+
 fname = op.join(study_path, 'MEG', 'contrast-average')
 stc = mne.read_source_estimate(fname, subject='fsaverage')
 brain = stc.plot(views=['cau'], hemi='both', subject='fsaverage',

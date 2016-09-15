@@ -1,9 +1,10 @@
 import os
 
-if os.environ['USER'] == 'gramfort':
+user = os.environ['USER']
+if user == 'gramfort':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
     N_JOBS = 8
-elif os.environ['USER'] == 'jleppakangas':
+elif user == 'jleppakangas' or user == 'mjas':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
     N_JOBS = 4
 else:

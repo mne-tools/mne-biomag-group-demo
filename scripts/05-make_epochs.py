@@ -23,7 +23,6 @@ events_id = {
 
 tmin, tmax = -0.2, 0.8
 reject = dict(grad=4000e-13, mag=4e-12, eog=180e-6)
-#baseline = (-0.2, 00.)
 baseline = None
 
 
@@ -46,9 +45,6 @@ def run_epochs(subject_id):
             with open(bad_name) as f:
                 for line in f:
                     bads.append(line.strip())
-        #     bads = np.loadtxt(data_path + '/MaxFilterOutput/run_%02d_bad.txt' % run)
-        #     bads = np.unique(bads.ravel())
-        #     bads = ['MEG%d' % b for b in bads]
         all_bads += [bad for bad in bads if bad not in all_bads]
 
     for run in range(1, 7):
@@ -104,7 +100,7 @@ def run_epochs(subject_id):
         n_max_ecg = 3  # use max 3 components
         ecg_epochs = create_ecg_epochs(raw, tmin=-.5, tmax=.5)
         ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
-                                                     threshold=0.8)
+                                                 threshold=0.8)
         ica.exclude += ecg_inds[:n_max_ecg]
 
         ica.apply(epochs)

@@ -11,7 +11,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-from datetime import date
 import sphinx_gallery
 import sphinx_bootstrap_theme
 
@@ -56,10 +55,6 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'MNE Group Demo'
-
-td = date.today()
-copyright = u'2016, MNE Developers. Last updated on %s' % (td.year,
-                                                              td.isoformat())
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

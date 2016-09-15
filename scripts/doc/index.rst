@@ -1,5 +1,11 @@
 .. title:: MNE
 
+.. toctree::
+   :hidden:
+
+   /auto_examples/index
+
+
 .. raw:: html
 
     <div class="container"><div class="row">
@@ -26,7 +32,7 @@ The aim of this web site is to demo the use of MNE to process the data from SPM 
 
 We provide the full scripts to analyse the data, going from the files on openfmri, to processed data ready to make publication quality figures at the single subject and at the group level.
 
-The scripts are provided at `https://github.com/mne-tools/mne-biomag-group-demo/`_
+The scripts are provided on `mne-biomag-group-demo github repository <https://github.com/mne-tools/mne-biomag-group-demo/>`_
 
 See now the general_analysis_.
 

@@ -91,7 +91,7 @@ def run_epochs(subject_id):
         # Read epochs
         epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
                             picks=picks, baseline=baseline, preload=True,
-                            reject=reject)
+                            decim=2, reject=reject)
 
         # ICA
         ica_name = op.join(study_path, 'MEG', subject,

@@ -55,5 +55,3 @@
 :ref:`Subject 18 <sphx_glr_auto_examples_plot_analysis_18.py>`
 
 :ref:`Subject 19 <sphx_glr_auto_examples_plot_analysis_19.py>`
-
-:ref:`Group <sphx_glr_auto_examples_plot_group.py>`

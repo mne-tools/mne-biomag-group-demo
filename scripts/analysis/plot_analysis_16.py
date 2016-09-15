@@ -9,11 +9,10 @@ Run the analysis.
 import os.path as op
 import numpy as np
 
-from mayavi import mlab
 import mne
 
-mlab.close(all=True)
-
+###############################################################################
+# Configuration
 def plot_stc(cond):
     fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
     stc = mne.read_source_estimate(fname, subject)
@@ -26,24 +25,18 @@ study_path = op.join(op.dirname("__file__"), '..', '..')
 subjects_dir = op.join(study_path, 'subjects')
 meg_dir = op.join(study_path, 'MEG')
 
-
-#subject_id = os.getenv("SUBJECT_ID")
-#print(subject_id)
-#subject_id = 1
-# Configuration
-
-# Raw data
-#fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
-#raw = mne.io.Raw(fname)
-
-#fname = op.join(meg_dir, subject, 'run_01_filt_sss_raw.fif')
-#raw_filt = mne.io.Raw(fname)
 subject = "sub%03d" % int(16)
+
+fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
+raw = mne.io.Raw(fname)
+
+fname = op.join(meg_dir, subject, 'run_01_filt_sss_raw.fif')
+raw_filt = mne.io.Raw(fname)
 
 ###############################################################################
 # Filtering
-#raw.plot_psd()
-#raw_filt.plot_psd()
+raw.plot_psd()
+raw_filt.plot_psd()
 
 ###############################################################################
 # Evoked responses
@@ -79,7 +72,7 @@ contrast_evo.plot(spatial_colors=True, gfp=True,
 
 ###############################################################################
 # Topomaps
-times = np.arange(0.05, 0.3, 0.05)
+times = np.arange(0.05, 0.3, 0.025)
 famous_evo.plot_topomap(times=times, title='Famous %s' % subject)
 scrambled_evo.plot_topomap(times=times, title='Scrambled %s' % subject)
 unfamiliar_evo.plot_topomap(times=times, title='Unfamiliar %s' % subject)

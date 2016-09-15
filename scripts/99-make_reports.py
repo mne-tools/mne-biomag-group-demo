@@ -1,3 +1,10 @@
+"""
+Blabla
+======================
+
+blabla
+"""
+
 from mayavi import mlab
 import os.path as op
 

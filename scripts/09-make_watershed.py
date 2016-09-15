@@ -1,3 +1,10 @@
+"""
+Blabla
+======================
+
+blabla
+"""
+
 import mne
 
 from config import subjects_dir

@@ -11,6 +11,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import os
 from datetime import date
 import sphinx_gallery  # noqa
 import sphinx_bootstrap_theme
@@ -128,6 +129,7 @@ html_theme_options = {
         ("Subjects", "auto_examples/index"),
         ("Group", "auto_examples/plot_group"),
         ("Comparison", "auto_examples/plot_compare"),
+        ("Processing Scripts", "auto_scripts/index"),
     ],
 }
 
@@ -280,7 +282,7 @@ intersphinx_mapping = {
     'scipy': ('http://scipy.github.io/devdocs/', None),
 }
 
-examples_dirs = ['../analysis']
+examples_dirs = ['analysis', '../']
 
 try:
     # Run the mayavi examples and find the mayavi figures if mayavi is
@@ -303,5 +305,7 @@ sphinx_gallery_conf = {
         'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
         'mayavi': 'http://docs.enthought.com/mayavi/mayavi'},
     'examples_dirs': examples_dirs,
+    'gallery_dirs': ['auto_examples', 'auto_scripts'],
     'find_mayavi_figures': find_mayavi_figures,
+    'default_thumb_file': os.path.join('_static', 'mne_helmet.png'),
 }

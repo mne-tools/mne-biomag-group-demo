@@ -110,10 +110,6 @@ blockquote {
 
 /* OVERRIDES */
 .sphx-glr-download {
-    background-color: rgb(204, 230, 255);
-    border-radius: 10px;
-    border-style: solid;
-    border-color: rgb(143, 173, 204);
     max-width: 55ex;
 }
 .highlight pre {

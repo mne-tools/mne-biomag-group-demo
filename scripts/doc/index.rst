@@ -18,44 +18,42 @@
    <div class="col-md-8">
    <br>
 
+:ref:`Subject 1 <sphx_glr_auto_examples_plot_analysis_1.py>`
 
+:ref:`Subject 2 <sphx_glr_auto_examples_plot_analysis_2.py>`
 
-Subject 1 :ref:`sphx_glr_auto_examples_plot_analysis_1.py`
+:ref:`Subject 3 <sphx_glr_auto_examples_plot_analysis_3.py>`
 
-Subject 2 :ref:`sphx_glr_auto_examples_plot_analysis_2.py`
+:ref:`Subject 4 <sphx_glr_auto_examples_plot_analysis_4.py>`
 
-Subject 3 :ref:`sphx_glr_auto_examples_plot_analysis_3.py`
+:ref:`Subject 5 <sphx_glr_auto_examples_plot_analysis_5.py>`
 
-Subject 4 :ref:`sphx_glr_auto_examples_plot_analysis_4.py`
+:ref:`Subject 6 <sphx_glr_auto_examples_plot_analysis_6.py>`
 
-Subject 5 :ref:`sphx_glr_auto_examples_plot_analysis_5.py`
+:ref:`Subject 7 <sphx_glr_auto_examples_plot_analysis_7.py>`
 
-Subject 6 :ref:`sphx_glr_auto_examples_plot_analysis_6.py`
+:ref:`Subject 8 <sphx_glr_auto_examples_plot_analysis_8.py>`
 
-Subject 7 :ref:`sphx_glr_auto_examples_plot_analysis_7.py`
+:ref:`Subject 9 <sphx_glr_auto_examples_plot_analysis_9.py>`
 
-Subject 8 :ref:`sphx_glr_auto_examples_plot_analysis_8.py`
+:ref:`Subject 10 <sphx_glr_auto_examples_plot_analysis_10.py>`
 
-Subject 9 :ref:`sphx_glr_auto_examples_plot_analysis_9.py`
+:ref:`Subject 11 <sphx_glr_auto_examples_plot_analysis_11.py>`
 
-Subject 10 :ref:`sphx_glr_auto_examples_plot_analysis_10.py`
+:ref:`Subject 12 <sphx_glr_auto_examples_plot_analysis_12.py>`
 
-Subject 11 :ref:`sphx_glr_auto_examples_plot_analysis_11.py`
+:ref:`Subject 13 <sphx_glr_auto_examples_plot_analysis_13.py>`
 
-Subject 12 :ref:`sphx_glr_auto_examples_plot_analysis_12.py`
+:ref:`Subject 14 <sphx_glr_auto_examples_plot_analysis_14.py>`
 
-Subject 13 :ref:`sphx_glr_auto_examples_plot_analysis_13.py`
+:ref:`Subject 15 <sphx_glr_auto_examples_plot_analysis_15.py>`
 
-Subject 14 :ref:`sphx_glr_auto_examples_plot_analysis_14.py`
+:ref:`Subject 16 <sphx_glr_auto_examples_plot_analysis_16.py>`
 
-Subject 15 :ref:`sphx_glr_auto_examples_plot_analysis_15.py`
+:ref:`Subject 17 <sphx_glr_auto_examples_plot_analysis_17.py>`
 
-Subject 16 :ref:`sphx_glr_auto_examples_plot_analysis_16.py`
+:ref:`Subject 18 <sphx_glr_auto_examples_plot_analysis_18.py>`
 
-Subject 17 :ref:`sphx_glr_auto_examples_plot_analysis_17.py`
+:ref:`Subject 19 <sphx_glr_auto_examples_plot_analysis_19.py>`
 
-Subject 18 :ref:`sphx_glr_auto_examples_plot_analysis_18.py`
-
-Subject 19 :ref:`sphx_glr_auto_examples_plot_analysis_19.py`
-
-Group :ref:`sphx_glr_auto_examples_plot_group.py`
+:ref:`Group <sphx_glr_auto_examples_plot_group.py>`

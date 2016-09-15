@@ -13,8 +13,7 @@ if not op.exists(meg_dir):
 def run_filter(subject_id):
     subject = "sub%03d" % subject_id
     data_path = op.join(meg_dir, subject)
-    raw_fname_out = op.join(data_path,
-                            'run_%02d_filt_sss_raw.fif' % subject_id)
+    raw_fname_out = op.join(meg_dir, subject, 'run_%02d_filt_sss_raw.fif')
 
     for run in range(1, 7):
         raw_fname_in = op.join(study_path, 'MEG', subject,

@@ -3,6 +3,9 @@ import os
 if os.environ['USER'] == 'gramfort':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
     N_JOBS = 8
+elif os.environ['USER'] == 'jleppakangas':
+    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
+    N_JOBS = 4
 else:
     study_path = os.path.join(os.path.dirname(__file__), '..')
     N_JOBS = 1

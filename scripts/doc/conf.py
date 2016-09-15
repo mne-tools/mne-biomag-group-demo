@@ -114,14 +114,6 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-# html_theme = 'default'
-
-# def setup(app):
-#     app.add_stylesheet('theme_override.css')
-
-
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
 html_theme = 'bootstrap'
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -133,8 +125,11 @@ html_theme_options = {
     'navbar_sidebarrel': False,
     'bootstrap_version': "3",
     'navbar_links': [
-        ("Gallery", "auto_examples/index"),
-    ]}
+        ("Subjects", "auto_examples/index"),
+        ("Group", "auto_examples/plot_group"),
+        ("Comparison", "auto_examples/plot_compare"),
+    ],
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()

@@ -7,7 +7,7 @@ from mne.parallel import parallel_func
 from mne.io.constants import FIFF
 from mne.preprocessing import create_ecg_epochs, read_ica
 
-from config import study_path, meg_dir, N_JOBS
+from config import study_path, meg_dir, N_JOBS, map_subjects
 
 events_id = {
     'famous/first': 5,
@@ -39,7 +39,8 @@ def run_epochs(subject_id):
     all_bads = []
     for run in range(1, 7):
         bads = list()
-        bad_name = op.join(data_path, 'bads', 'run_%02d_raw_tr.fif_bad' % run)
+        mapping = map_subjects[subject_id]
+        bad_name = op.join('bads', mapping, 'run_%02d_raw_tr.fif_bad' % run)
 
         if os.path.exists(bad_name):
             with open(bad_name) as f:

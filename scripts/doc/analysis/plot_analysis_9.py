@@ -21,7 +21,7 @@ def plot_stc(cond):
     del stc
     return brain
 
-study_path = op.join(op.dirname("__file__"), '..', '..')
+study_path = op.join(op.dirname("__file__"), '..', '..', '..')
 subjects_dir = op.join(study_path, 'subjects')
 meg_dir = op.join(study_path, 'MEG')
 

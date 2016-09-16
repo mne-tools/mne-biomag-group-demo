@@ -60,7 +60,7 @@ def run_epochs(subject_id):
         if not os.path.exists(run_fname):
             continue
 
-        raw = mne.io.Raw(run_fname)
+        raw = mne.io.Raw(run_fname, preload=True)
         for idx, proj in enumerate(raw.info['projs']):  # find idx for EEG-ref
             if proj['kind'] == FIFF.FIFFV_MNE_PROJ_ITEM_EEG_AVREF:
                 proj_idx = idx

@@ -17,12 +17,12 @@ from mne.preprocessing import create_ecg_epochs, read_ica
 from config import study_path, meg_dir, N_JOBS, map_subjects
 
 events_id = {
-    'famous/first': 5,
-    'famous/immediate': 6,
-    'famous/long': 7,
-    'unfamiliar/first': 13,
-    'unfamiliar/immediate': 14,
-    'unfamiliar/long': 15,
+    'face/famous/first': 5,
+    'face/famous/immediate': 6,
+    'face/famous/long': 7,
+    'face/unfamiliar/first': 13,
+    'face/unfamiliar/immediate': 14,
+    'face/unfamiliar/long': 15,
     'scrambled/first': 17,
     'scrambled/immediate': 18,
     'scrambled/long': 19,
@@ -118,4 +118,4 @@ def run_epochs(subject_id):
 
 
 parallel, run_func, _ = parallel_func(run_epochs, n_jobs=N_JOBS)
-parallel(run_func(subject_id) for subject_id in range(1, 20))
+parallel(run_func(subject_id) for subject_id in range(1, 2))

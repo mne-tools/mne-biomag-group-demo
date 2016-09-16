@@ -2,6 +2,7 @@
 #
 
 # You can set these variables from the command line.
+PYTHON        = python
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
@@ -64,10 +65,13 @@ html_abort_on_example_error:
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
-html:
+html: generate_examples
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+generate_examples:
+	$(PYTHON) analysis/subject_template.py
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml

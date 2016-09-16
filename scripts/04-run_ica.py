@@ -33,7 +33,7 @@ def run_ica(subject_id):
         picks = mne.pick_types(raw.info, meg=True, eeg=False, eog=False,
                                stim=False, exclude='bads')
         ica.fit(raw, picks=picks, reject=dict(grad=4000e-13, mag=4e-12),
-                decim=2)
+                decim=8)
         ica.save(ica_name)
 
 

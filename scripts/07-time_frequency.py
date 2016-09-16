@@ -23,7 +23,7 @@ def run_time_frequency(subject_id):
     epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject))
     #evokeds = mne.read_evokeds(op.join(data_path, '%s-ave.fif' % subject))
     #faces = evokeds[-1]
-    faces = mne.concatenate_epochs([epochs['famous'], epochs['unfamiliar']])
+    faces = epochs['face']
     idx = [faces.ch_names.index('EEG070')]
     power_faces, itc_faces = mne.time_frequency.tfr_morlet(
         faces, freqs=freqs, return_itc=True, n_cycles=n_cycles, picks=idx)

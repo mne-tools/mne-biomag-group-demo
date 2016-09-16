@@ -20,7 +20,7 @@ elif user == 'jleppakangas' or user == 'mjas':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
     N_JOBS = 4
 else:
-    study_path = op.join(op.dirname("__file__"), '..', '..', '..')
+    study_path = op.join(op.dirname(__file__), '..', '..', '..')
 subjects_dir = os.path.join(study_path, 'subjects')
 meg_dir = os.path.join(study_path, 'MEG')
 
@@ -37,15 +37,19 @@ def plot_stc(cond):
 subject = "sub%03d" % int({{subject_id}})
 
 fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
-raw = mne.io.Raw(fname)
+raw = mne.io.read_raw_fif(fname)
 
 fname = op.join(meg_dir, subject, 'run_01_filt_sss_raw.fif')
-raw_filt = mne.io.Raw(fname)
+raw_filt = mne.io.read_raw_fif(fname)
 
 ###############################################################################
 # Filtering
 raw.plot_psd()
 raw_filt.plot_psd()
+
+###############################################################################
+# events
+
 
 ###############################################################################
 # Evoked responses

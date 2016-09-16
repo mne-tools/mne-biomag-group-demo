@@ -19,9 +19,9 @@ def run_evoked(subject_id):
 
     data_path = op.join(meg_dir, subject)
     epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject))
-    evoked_famous = epochs['famous'].average()
+    evoked_famous = epochs['face/famous'].average()
     evoked_scrambled = epochs['scrambled'].average()
-    evoked_unfamiliar = epochs['unfamiliar'].average()
+    evoked_unfamiliar = epochs['face/unfamiliar'].average()
 
     # Simplify comment
     evoked_famous.comment = 'famous'

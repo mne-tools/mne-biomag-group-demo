@@ -11,6 +11,8 @@ import numpy as np
 
 import mne
 
+from config import study_path, meg_dir, subjects_dir
+
 ###############################################################################
 # Configuration
 def plot_stc(cond):
@@ -20,10 +22,6 @@ def plot_stc(cond):
                      hemi='both', time_viewer=False)
     del stc
     return brain
-
-study_path = op.join(op.dirname("__file__"), '..', '..', '..')
-subjects_dir = op.join(study_path, 'subjects')
-meg_dir = op.join(study_path, 'MEG')
 
 subject = "sub%03d" % int(8)
 

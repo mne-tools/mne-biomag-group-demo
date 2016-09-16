@@ -1,8 +1,8 @@
 """
-Blabla
-======================
+Run ICA
+=======
 
-blabla
+
 """
 
 import os

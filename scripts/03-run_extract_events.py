@@ -1,8 +1,9 @@
 """
-Blabla
-======================
+Extract events from the stimulus channel
+========================================
 
-blabla
+The events are extracted from stimulus channel 'STI101'. The events are saved
+to the subject's MEG directory.
 """
 
 import os

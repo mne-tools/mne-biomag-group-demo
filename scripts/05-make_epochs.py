@@ -90,7 +90,7 @@ def run_epochs(subject_id):
 
         raw.info['bads'] = all_bads
         raw.interpolate_bads()
-        raw.add_eeg_average_proj()
+        raw.set_eeg_reference()
 
         picks = mne.pick_types(raw.info, meg=True, eeg=True, stim=True,
                                eog=True)

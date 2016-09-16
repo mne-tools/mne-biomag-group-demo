@@ -39,7 +39,7 @@ def run_evoked(subject_id):
                               evoked_unfamiliar, contrast, faces])
 
     # take care of noise cov
-    cov = mne.compute_covariance(epochs, tmin=tmin, tmax=0)
+    cov = mne.compute_covariance(epochs, tmax=0)
     cov.save(op.join(data_path, '%s-cov.fif' % subject))
 
 

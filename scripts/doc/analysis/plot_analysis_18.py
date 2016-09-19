@@ -12,6 +12,8 @@ import numpy as np
 
 import mne
 
+###############################################################################
+# Configuration
 user = os.environ['USER']
 if user == 'gramfort':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
@@ -24,28 +26,27 @@ else:
 subjects_dir = os.path.join(study_path, 'subjects')
 meg_dir = os.path.join(study_path, 'MEG')
 
-###############################################################################
-# Configuration
-def plot_stc(cond):
-    fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
-    stc = mne.read_source_estimate(fname, subject)
-    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['cau'],
-                     hemi='both', time_viewer=False)
-    del stc
-    return brain
-
 subject = "sub%03d" % int(18)
 
 fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
-raw = mne.io.Raw(fname)
+raw = mne.io.read_raw_fif(fname)
 
 fname = op.join(meg_dir, subject, 'run_01_filt_sss_raw.fif')
-raw_filt = mne.io.Raw(fname)
+raw_filt = mne.io.read_raw_fif(fname)
 
 ###############################################################################
 # Filtering
 raw.plot_psd()
 raw_filt.plot_psd()
+
+###############################################################################
+# Events
+events = mne.read_events(op.join(meg_dir, subject, 'run_01_filt_sss-eve.fif'))
+fig = mne.viz.plot_events(events, show=False)
+fig.suptitle('Events from run 01')
+
+epochs = mne.read_epochs(op.join(meg_dir, subject, subject + '-epo.fif'))
+epochs.plot_drop_log()
 
 ###############################################################################
 # Evoked responses
@@ -122,6 +123,15 @@ fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
 mne.viz.plot_trans(famous_evo.info, fname_trans, subject=subject,
                    subjects_dir=subjects_dir, meg_sensors=True,
                    eeg_sensors=True)
+
+
+def plot_stc(cond):
+    fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
+    stc = mne.read_source_estimate(fname, subject)
+    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['cau'],
+                     hemi='both', time_viewer=False)
+    del stc
+    return brain
 
 ###############################################################################
 # Faces

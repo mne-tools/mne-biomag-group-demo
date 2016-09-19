@@ -5,9 +5,11 @@ Plotting the analysis chain
 
 Run the analysis.
 """
+import os.path as op
+
 from mne.externals.tempita import Template
 
-with open('template_analysis.py') as f:
+with open(op.join(op.dirname(__file__), 'template_analysis.py')) as f:
     lines = f.readlines()
 template = Template(''.join(lines))
 for subject in range(1, 20):

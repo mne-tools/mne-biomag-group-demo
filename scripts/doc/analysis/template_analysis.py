@@ -12,6 +12,8 @@ import numpy as np
 
 import mne
 
+###############################################################################
+# Configuration
 user = os.environ['USER']
 if user == 'gramfort':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
@@ -23,16 +25,6 @@ else:
     study_path = op.join(op.dirname(__file__), '..', '..', '..')
 subjects_dir = os.path.join(study_path, 'subjects')
 meg_dir = os.path.join(study_path, 'MEG')
-
-###############################################################################
-# Configuration
-def plot_stc(cond):
-    fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
-    stc = mne.read_source_estimate(fname, subject)
-    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['cau'],
-                     hemi='both', time_viewer=False)
-    del stc
-    return brain
 
 subject = "sub%03d" % int({{subject_id}})
 
@@ -48,8 +40,13 @@ raw.plot_psd()
 raw_filt.plot_psd()
 
 ###############################################################################
-# events
+# Events
+events = mne.read_events(op.join(meg_dir, subject, 'run_01_filt_sss-eve.fif'))
+fig = mne.viz.plot_events(events, show=False)
+fig.suptitle('Events from run 01')
 
+epochs = mne.read_epochs(op.join(meg_dir, subject, subject + '-epo.fif'))
+epochs.plot_drop_log()
 
 ###############################################################################
 # Evoked responses
@@ -119,6 +116,7 @@ cov = mne.read_cov(op.join(meg_dir, subject, '%s-cov.fif' % subject))
 mne.viz.plot_cov(cov, faces_evo.info)
 faces_evo.plot_white(cov)
 
+"""
 ###############################################################################
 # Trans
 fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
@@ -126,6 +124,15 @@ fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
 mne.viz.plot_trans(famous_evo.info, fname_trans, subject=subject,
                    subjects_dir=subjects_dir, meg_sensors=True,
                    eeg_sensors=True)
+
+
+def plot_stc(cond):
+    fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
+    stc = mne.read_source_estimate(fname, subject)
+    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['cau'],
+                     hemi='both', time_viewer=False)
+    del stc
+    return brain
 
 ###############################################################################
 # Faces
@@ -151,3 +158,4 @@ brain.set_data_time_index(407)
 # Faces - scrambled
 brain = plot_stc('contrast')
 brain.set_data_time_index(407)
+"""

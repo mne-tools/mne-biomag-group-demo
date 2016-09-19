@@ -25,11 +25,12 @@ def run_ica(subject_id):
         if not os.path.exists(run_fname):
             warn('Could not find file %s. '
                  'Skipping run %s for subject %s.' % (run_fname, run, subject))
+            continue
         raw = mne.io.read_raw_fif(run_fname)
         ica_name = op.join(study_path, 'MEG', subject,
                            'run_%02d-ica.fif' % run)
 
-        ica = ICA(method='fastica', random_state=42, n_components=0.95)
+        ica = ICA(method='fastica', random_state=42, n_components=0.98)
         picks = mne.pick_types(raw.info, meg=True, eeg=False, eog=False,
                                stim=False, exclude='bads')
         ica.fit(raw, picks=picks, reject=dict(grad=4000e-13, mag=4e-12),

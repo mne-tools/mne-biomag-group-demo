@@ -61,7 +61,6 @@ faces_evo.plot(spatial_colors=True, gfp=True, ylim={'eeg': (-10, 10)},
 
 ###############################################################################
 # Famous
-
 famous_evo.plot(spatial_colors=True, gfp=True,
                 window_title='Famous %s' % subject)
 

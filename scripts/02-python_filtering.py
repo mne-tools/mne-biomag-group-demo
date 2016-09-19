@@ -38,7 +38,7 @@ def run_filter(subject_id):
         if not op.exists(op.join(meg_dir, subject)):
             os.mkdir(op.join(meg_dir, subject))
 
-        raw.filter(1, 40, l_trans_bandwidth='auto', h_trans_bandwidth='auto',
+        raw.filter(1, 40, l_trans_bandwidth=0.5, h_trans_bandwidth='auto',
                    phase='zero', fir_window='hamming', filter_length='auto',
                    n_jobs=N_JOBS)
         raw.save(raw_out, overwrite=True)

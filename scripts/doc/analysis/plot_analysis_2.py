@@ -116,6 +116,7 @@ cov = mne.read_cov(op.join(meg_dir, subject, '%s-cov.fif' % subject))
 mne.viz.plot_cov(cov, faces_evo.info)
 faces_evo.plot_white(cov)
 
+"""
 ###############################################################################
 # Trans
 fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
@@ -157,3 +158,4 @@ brain.set_data_time_index(407)
 # Faces - scrambled
 brain = plot_stc('contrast')
 brain.set_data_time_index(407)
+"""

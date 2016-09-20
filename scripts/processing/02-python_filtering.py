@@ -14,7 +14,7 @@ from warnings import warn
 import mne
 from mne.parallel import parallel_func
 
-from config import study_path, meg_dir, N_JOBS
+from library.config import study_path, meg_dir, N_JOBS
 
 if not op.exists(meg_dir):
     os.mkdir(meg_dir)

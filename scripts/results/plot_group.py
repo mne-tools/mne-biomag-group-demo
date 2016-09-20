@@ -6,12 +6,21 @@ Group analysis
 Run the group analysis.
 """
 
-from pyface.qt import QtCore, QtGui
+import os
 import os.path as op
 
 import mne
 
-study_path = op.join(op.dirname("__file__"), '..', '..')
+user = os.environ['USER']
+if user == 'gramfort':
+    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
+    N_JOBS = 8
+elif user == 'jleppakangas' or user == 'mjas':
+    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
+    N_JOBS = 4
+else:
+    study_path = op.join(op.dirname(__file__), '..', '..', '..')
+
 subjects_dir = op.join(study_path, 'subjects')
 meg_dir = op.join(study_path, 'MEG')
 

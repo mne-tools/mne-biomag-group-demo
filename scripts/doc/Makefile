@@ -71,7 +71,7 @@ html: generate_examples
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 generate_examples:
-	$(PYTHON) analysis/generate_scripts.py
+	$(PYTHON) ../results/library/generate_scripts.py
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml

@@ -10,7 +10,7 @@ import os.path as op
 import mne
 from mne.parallel import parallel_func
 
-from config import meg_dir, N_JOBS
+from library.config import meg_dir, N_JOBS
 
 
 def run_evoked(subject_id):

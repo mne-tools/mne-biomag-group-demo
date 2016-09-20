@@ -11,7 +11,7 @@ import numpy as np
 import mne
 from mne.parallel import parallel_func
 
-from config import study_path, meg_dir, N_JOBS
+from library.config import study_path, meg_dir, N_JOBS
 
 freqs = np.arange(6, 40)
 n_cycles = freqs / 2.

@@ -14,7 +14,7 @@ from mne.parallel import parallel_func
 from mne import Report
 import mne
 
-from config import study_path, subjects_dir, N_JOBS
+from library.config import study_path, subjects_dir, N_JOBS
 
 
 def make_report(subject_id):

@@ -14,7 +14,7 @@ from mne.parallel import parallel_func
 from mne.io.constants import FIFF
 from mne.preprocessing import create_ecg_epochs, read_ica
 
-from config import study_path, meg_dir, N_JOBS, map_subjects
+from library.config import study_path, meg_dir, N_JOBS, map_subjects
 
 events_id = {
     'face/famous/first': 5,

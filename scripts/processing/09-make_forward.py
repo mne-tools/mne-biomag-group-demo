@@ -10,7 +10,7 @@ import mne
 
 from mne.parallel import parallel_func
 
-from config import study_path, meg_dir, subjects_dir, spacing, N_JOBS, mindist
+from library.config import study_path, meg_dir, subjects_dir, spacing, N_JOBS, mindist
 
 
 def run_forward(subject_id):

@@ -7,7 +7,7 @@ blabla
 
 import mne
 
-from config import subjects_dir
+from library.config import subjects_dir
 
 for subject_id in range(1, 2):
     subject = "sub%03d" % subject_id

@@ -40,7 +40,6 @@ import numpy as np
 n_famous, n_unfamiliar = len(epochs['face/famous']), len(epochs['scrambled'])
 y = np.r_[np.ones((n_famous, )), np.zeros((n_unfamiliar, ))]
 epochs = mne.concatenate_epochs([epochs['face/famous'], epochs['scrambled']])
-epochs[('face/famous', 'scrambled')]
 ###############################################################################
 # Let us restrict ourselves to the occipital channels
 from mne.selection import read_selection

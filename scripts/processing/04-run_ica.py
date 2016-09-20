@@ -13,7 +13,7 @@ import mne
 from mne.preprocessing import ICA
 from mne.parallel import parallel_func
 
-from config import study_path, meg_dir, N_JOBS
+from library.config import study_path, meg_dir, N_JOBS
 
 def run_ica(subject_id):
     subject = "sub%03d" % subject_id

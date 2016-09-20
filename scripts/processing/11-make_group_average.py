@@ -11,7 +11,7 @@ import numpy as np
 import mne
 from mne.minimum_norm import apply_inverse, read_inverse_operator
 
-from config import meg_dir, subjects_dir, spacing
+from library.config import meg_dir, subjects_dir, spacing
 
 stcs = list()
 contrasts = list()

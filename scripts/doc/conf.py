@@ -29,6 +29,7 @@ import sphinx_bootstrap_theme
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
@@ -307,3 +308,10 @@ sphinx_gallery_conf = {
     'find_mayavi_figures': find_mayavi_figures,
     'default_thumb_file': os.path.join('_static', 'mne_helmet.png'),
 }
+
+# sphinx gallery should see the library folder
+import sys
+import os.path as op
+
+path = op.join(op.dirname(__file__), '../results/')
+sys.path.insert(0, path)

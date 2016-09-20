@@ -6,23 +6,17 @@ Plotting the analysis chain (Subject 2)
 Run the analysis.
 """
 
+import sys
 import os
 import os.path as op
 import numpy as np
 
 import mne
 
+from library.config import study_path
 ###############################################################################
 # Configuration
-user = os.environ['USER']
-if user == 'gramfort':
-    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
-    N_JOBS = 8
-elif user == 'jleppakangas' or user == 'mjas':
-    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
-    N_JOBS = 4
-else:
-    study_path = op.join(op.dirname(__file__), '..', '..', '..')
+
 subjects_dir = os.path.join(study_path, 'subjects')
 meg_dir = os.path.join(study_path, 'MEG')
 

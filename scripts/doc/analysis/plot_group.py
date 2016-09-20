@@ -19,14 +19,19 @@ faces_fname = op.join(study_path, 'MEG', 'eeg_faces-ave.fif')
 faces = mne.read_evokeds(faces_fname)[0]
 faces.plot_joint()
 
+famous_fname = op.join(study_path, 'MEG', 'eeg_famous-ave.fif')
+famous = mne.read_evokeds(famous_fname)[0]
+
+unfamiliar_fname = op.join(study_path, 'MEG', 'eeg_unfamiliar-ave.fif')
+unfamiliar = mne.read_evokeds(unfamiliar_fname)[0]
+
 scrambled = mne.read_evokeds(op.join(study_path, 'MEG',
                                      'eeg_scrambled-ave.fif'))[0]
 scrambled.plot_joint()
 
-faces.comment = 'Faces'
-scrambled.comment = 'Scrambled'
 idx = faces.ch_names.index('EEG070')
-mne.viz.plot_compare_evokeds({'Faces': faces, 'Scrambled': scrambled}, [idx])
+mne.viz.plot_compare_evokeds({'Famous': famous, 'Unfamiliar': unfamiliar,
+                              'Scrambled': scrambled}, [idx])
 
 fname = op.join(study_path, 'MEG', 'contrast-average')
 stc = mne.read_source_estimate(fname, subject='fsaverage')

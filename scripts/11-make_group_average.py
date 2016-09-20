@@ -65,10 +65,15 @@ data = np.average([s.data for s in stcs], axis=0)
 stc = mne.SourceEstimate(data, stcs[0].vertices, stcs[0].tmin, stcs[0].tstep)
 stc.save(op.join(meg_dir, 'contrast-average'))
 
-for i in range(len(faces)):
+for i in range(len(faces)):  # pick good channels
+    fams[i] = fams[i].pick_channels(ch_names)
+    unfams[i] = unfams[i].pick_channels(ch_names)
     faces[i] = faces[i].pick_channels(ch_names)
     scrambled[i] = scrambled[i].pick_channels(ch_names)
-faces = mne.combine_evoked(faces)
-faces.save(op.join(meg_dir, 'eeg_faces-ave.fif'))
+
+fams = mne.combine_evoked(fams)
+fams.save(op.join(meg_dir, 'eeg_famous-ave.fif'))
+unfams = mne.combine_evoked(unfams)
+unfams.save(op.join(meg_dir, 'eeg_unfamiliar-ave.fif'))
 scrambled = mne.combine_evoked(scrambled)
 scrambled.save(op.join(meg_dir, 'eeg_scrambled-ave.fif'))

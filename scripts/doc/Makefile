@@ -71,7 +71,7 @@ html: generate_examples
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 generate_examples:
-	$(PYTHON) analysis/subject_template.py
+	$(PYTHON) analysis/generate_scripts.py
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
@@ -199,3 +199,23 @@ html_dev-pattern:
 	BUILD_DEV_HTML=1 $(SPHINXBUILD) -D plot_gallery=1 -D raise_gallery=1 -D abort_on_example_error=1 -D sphinx_gallery_conf.filename_pattern=$(PATTERN) -b html $(ALLSPHINXOPTS) _build/html
 	@echo
 	@echo "Build finished. The HTML pages are in _build/html"
+
+install:
+	rm -rf _build/doctrees _build/mne-biomag-group-demo.github.io
+	# first clone the pavanramkumar/mne-biomag-group-demo.github.io repo because it may ask
+	# for password and we don't want to delay this long build in
+	# the middle of it
+	# --no-checkout just fetches the root folder without content
+	# --depth 1 is a speed optimization since we don't need the
+	# history prior to the last commit
+	# -b gh-pages fetches only the branch for the gh-pages
+	git clone -b gh-pages --single-branch --no-checkout --depth 1 https://github.com/mne-tools/mne-biomag-group-demo _build/mne-biomag-group-demo.github.io
+	touch _build/mne-biomag-group-demo.github.io/.nojekyll
+	make html
+	cd _build/ && \
+	cp -r html/* mne-biomag-group-demo.github.io && \
+	cd mne-biomag-group-demo.github.io && \
+	git add * && \
+	git add .nojekyll && \
+	git commit -a -m 'Make install' && \
+	git push

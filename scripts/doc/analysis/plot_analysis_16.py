@@ -1,7 +1,7 @@
 """
-===========================
-Plotting the analysis chain
-===========================
+==========================================
+Plotting the analysis chain (Subject 16)
+==========================================
 
 Run the analysis.
 """
@@ -61,7 +61,6 @@ faces_evo.plot(spatial_colors=True, gfp=True, ylim={'eeg': (-10, 10)},
 
 ###############################################################################
 # Famous
-
 famous_evo.plot(spatial_colors=True, gfp=True,
                 window_title='Famous %s' % subject)
 
@@ -115,47 +114,3 @@ sitc.plot(idx, title='Scrambled ITC %s' % channel, baseline=(-0.1, 0.0),
 cov = mne.read_cov(op.join(meg_dir, subject, '%s-cov.fif' % subject))
 mne.viz.plot_cov(cov, faces_evo.info)
 faces_evo.plot_white(cov)
-
-"""
-###############################################################################
-# Trans
-fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
-                      '%s-trans.fif' % subject)
-mne.viz.plot_trans(famous_evo.info, fname_trans, subject=subject,
-                   subjects_dir=subjects_dir, meg_sensors=True,
-                   eeg_sensors=True)
-
-
-def plot_stc(cond):
-    fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
-    stc = mne.read_source_estimate(fname, subject)
-    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['cau'],
-                     hemi='both', time_viewer=False)
-    del stc
-    return brain
-
-###############################################################################
-# Faces
-brain = plot_stc('faces')
-brain.set_data_time_index(407)
-
-###############################################################################
-# Famous
-brain = plot_stc('famous')
-brain.set_data_time_index(407)
-
-###############################################################################
-# Unfamiliar
-brain = plot_stc('unfamiliar')
-brain.set_data_time_index(407)
-
-###############################################################################
-# Scrambled
-brain = plot_stc('scrambled')
-brain.set_data_time_index(407)
-
-###############################################################################
-# Faces - scrambled
-brain = plot_stc('contrast')
-brain.set_data_time_index(407)
-"""

@@ -32,4 +32,4 @@ fname = op.join(study_path, 'MEG', 'contrast-average')
 stc = mne.read_source_estimate(fname, subject='fsaverage')
 brain = stc.plot(views=['cau'], hemi='both', subject='fsaverage',
                  subjects_dir=subjects_dir)
-brain.set_data_time_index(407)
+brain.set_data_time_index(204)

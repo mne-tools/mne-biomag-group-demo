@@ -27,8 +27,9 @@ def run_events(subject_id):
         raw = mne.io.Raw(run_fname)
 
         events = mne.find_events(raw, stim_channel='STI101',
-                                 consecutive='increasing',
-                                 min_duration=0.003, verbose=True)
+                                 consecutive='increasing', mask=4352,
+                                 mask_type='not_and', min_duration=0.003,
+                                 verbose=True)
 
         print("S %s - R %s" % (subject, run))
 

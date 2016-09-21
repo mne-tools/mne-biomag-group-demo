@@ -17,10 +17,11 @@ from library.config import meg_dir, subjects_dir, spacing
 stcs = list()
 fams = list()
 unfams = list()
-exclude = []
-#exclude = [1, 5, 16]  # Excluded subjects
 scrambled = list()
 ch_names = list()
+exclude = []
+#exclude = [1, 5, 16]  # Excluded subjects
+
 for run in range(1, 20):
     if run in exclude:
         continue

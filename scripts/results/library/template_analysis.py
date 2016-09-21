@@ -6,7 +6,6 @@ Plotting the analysis chain (Subject {{subject_id}})
 Run the analysis.
 """
 
-import sys
 import os
 import os.path as op
 import numpy as np

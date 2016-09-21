@@ -5,28 +5,14 @@ Group analysis
 
 Run the group analysis.
 """
-
-import os
 import os.path as op
 
 import mne
 
-user = os.environ['USER']
-if user == 'gramfort':
-    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
-    N_JOBS = 8
-elif user == 'jleppakangas' or user == 'mjas':
-    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
-    N_JOBS = 4
-else:
-    study_path = op.join(op.dirname(__file__), '..', '..', '..')
+from library.config import study_path
 
 subjects_dir = op.join(study_path, 'subjects')
 meg_dir = op.join(study_path, 'MEG')
-
-faces_fname = op.join(study_path, 'MEG', 'eeg_faces-ave.fif')
-faces = mne.read_evokeds(faces_fname)[0]
-faces.plot_joint()
 
 famous_fname = op.join(study_path, 'MEG', 'eeg_famous-ave.fif')
 famous = mne.read_evokeds(famous_fname)[0]
@@ -38,7 +24,7 @@ scrambled = mne.read_evokeds(op.join(study_path, 'MEG',
                                      'eeg_scrambled-ave.fif'))[0]
 scrambled.plot_joint()
 
-idx = faces.ch_names.index('EEG070')
+idx = famous.ch_names.index('EEG070')
 mne.viz.plot_compare_evokeds({'Famous': famous, 'Unfamiliar': unfamiliar,
                               'Scrambled': scrambled}, [idx])
 

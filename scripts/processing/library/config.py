@@ -15,7 +15,7 @@ elif user == 'jleppakangas' or user == 'mjas':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
     N_JOBS = 4
 else:
-    study_path = os.path.join(os.path.dirname(__file__), '..')
+    study_path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
     N_JOBS = 1
 
 subjects_dir = os.path.join(study_path, 'subjects')

@@ -1,8 +1,14 @@
 """
-Blabla
-======================
+Construct epochs
+================
 
-blabla
+The epochs are constructed by using the events created in script 03. MNE
+supports hierarchical events that allows selection to different groups more
+easily. Some channels were not properly defined during acquisition, sot they
+are redefined before epoching. Bad EEG channels are interpolated and epochs
+containing blinks are rejected. ECG artifacts are corrected using ICA. Finally
+the epochs are saved to disk. To save space, the epoch data is decimated by
+a factor of 2.
 """
 
 import os
@@ -118,4 +124,4 @@ def run_epochs(subject_id):
 
 
 parallel, run_func, _ = parallel_func(run_epochs, n_jobs=N_JOBS)
-parallel(run_func(subject_id) for subject_id in range(1, 2))
+parallel(run_func(subject_id) for subject_id in range(1, 20))

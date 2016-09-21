@@ -19,6 +19,7 @@ from library.config import study_path, meg_dir, N_JOBS
 if not op.exists(meg_dir):
     os.mkdir(meg_dir)
 
+
 def run_filter(subject_id):
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
@@ -38,9 +39,7 @@ def run_filter(subject_id):
         if not op.exists(op.join(meg_dir, subject)):
             os.mkdir(op.join(meg_dir, subject))
 
-        raw.filter(1, 40, l_trans_bandwidth=0.5, h_trans_bandwidth='auto',
-                   phase='zero', fir_window='hamming', filter_length='auto',
-                   n_jobs=N_JOBS)
+        raw.filter(1, 40)
         raw.save(raw_out, overwrite=True)
 
 

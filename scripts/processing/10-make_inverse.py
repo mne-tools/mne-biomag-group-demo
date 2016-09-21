@@ -1,8 +1,8 @@
 """
-Blabla
-======================
+Inverse solution
+================
 
-blabla
+Compute inverse solution for each evoked data set.
 """
 
 import os.path as op
@@ -13,6 +13,7 @@ from mne.minimum_norm import (make_inverse_operator, apply_inverse,
                               write_inverse_operator)
 
 from library.config import meg_dir, spacing, N_JOBS
+
 
 def run_inverse(subject_id):
     subject = "sub%03d" % subject_id
@@ -26,16 +27,13 @@ def run_inverse(subject_id):
 
     evokeds = mne.read_evokeds(fname_ave, condition=[0, 1, 2, 3, 4])
     cov = mne.read_cov(fname_cov)
-    # cov = mne.cov.regularize(cov, evokeds[0].info,
-    #                                mag=0.05, grad=0.05, eeg=0.1, proj=True)
 
     forward = mne.read_forward_solution(fname_fwd, surf_ori=True)
-    # forward = mne.pick_types_forward(forward, meg=True, eeg=False)
 
     # make an M/EEG, MEG-only, and EEG-only inverse operators
     info = evokeds[0].info
-    inverse_operator = make_inverse_operator(info, forward, cov,
-                                             loose=0.2, depth=0.8)
+    inverse_operator = make_inverse_operator(info, forward, cov, loose=0.2,
+                                             depth=0.8)
 
     write_inverse_operator(fname_inv, inverse_operator)
 

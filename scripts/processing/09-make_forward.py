@@ -1,8 +1,8 @@
 """
-Blabla
-======================
+Forward solution
+================
 
-blabla
+Calculate forward solution for MEG channels.
 """
 
 import os.path as op
@@ -10,7 +10,8 @@ import mne
 
 from mne.parallel import parallel_func
 
-from library.config import study_path, meg_dir, subjects_dir, spacing, N_JOBS, mindist
+from library.config import (study_path, meg_dir, subjects_dir, spacing, N_JOBS,
+                            mindist)
 
 
 def run_forward(subject_id):
@@ -20,7 +21,8 @@ def run_forward(subject_id):
 
     fname_ave = op.join(data_path, '%s-ave.fif' % subject)
     fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
-    fname_trans = op.join(study_path, 'ds117', subject, 'MEG', '%s-trans.fif' % subject)
+    fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
+                          '%s-trans.fif' % subject)
 
     src = mne.setup_source_space(subject, spacing=spacing,
                                  subjects_dir=subjects_dir, overwrite=True,

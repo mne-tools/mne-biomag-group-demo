@@ -1,8 +1,10 @@
 """
-Blabla
-======================
+Evoked data and covariance
+==========================
 
-blabla
+The evoked data sets are created by averaging different categories of epochs.
+The evoked data is saved using categories 'famous', 'scrambled', 'unfamiliar',
+'contrast' and 'faces'. Covariance matrix is also computed and saved,
 """
 
 import os.path as op
@@ -19,6 +21,7 @@ def run_evoked(subject_id):
 
     data_path = op.join(meg_dir, subject)
     epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject))
+
     evoked_famous = epochs['face/famous'].average()
     evoked_scrambled = epochs['scrambled'].average()
     evoked_unfamiliar = epochs['face/unfamiliar'].average()

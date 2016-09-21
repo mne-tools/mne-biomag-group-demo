@@ -19,8 +19,7 @@ fams = list()
 unfams = list()
 scrambled = list()
 ch_names = list()
-exclude = []
-#exclude = [1, 5, 16]  # Excluded subjects
+exclude = [1, 5, 16]  # Excluded subjects
 
 for run in range(1, 20):
     if run in exclude:

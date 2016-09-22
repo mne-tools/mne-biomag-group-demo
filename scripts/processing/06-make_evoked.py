@@ -33,7 +33,7 @@ def run_evoked(subject_id):
 
     contrast = mne.combine_evoked([evoked_famous, evoked_unfamiliar,
                                    evoked_scrambled], weights=[0.5, 0.5, -1.])
-    contrast.comment = 'contrast'
+    contrast.comment = 'faces - scrambled'
     faces = mne.combine_evoked([evoked_famous, evoked_unfamiliar])
     faces.comment = 'faces'
 

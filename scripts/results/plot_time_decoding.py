@@ -10,49 +10,50 @@ The contrast across different sensors are combined into a single plot.
 """
 
 ###############################################################################
-import os.path as op
-import mne
+# Let us first import the necessary libraries
+###############################################################################
+
 import os
-###############################################################################
-# We analyze only one subject. Change ``meg_dir`` to point to your directory
-
-subject_id = 1
-subject = "sub%03d" % subject_id
-user = os.environ['USER']
-if user == 'gramfort':
-    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
-    N_JOBS = 8
-elif user == 'jleppakangas' or user == 'mjas':
-    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
-    N_JOBS = 4
-else:
-    study_path = op.join(op.dirname(__file__), '..', '..', '..')
-subjects_dir = os.path.join(study_path, 'subjects')
-meg_dir = os.path.join(study_path, 'MEG')
-data_path = op.join(meg_dir, subject)
-epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject))
-
-###############################################################################
-# We define the labels for the epochs by pooling together all 'famous'
-# and all 'scrambled' epochs
 import numpy as np
+import matplotlib.pyplot as plt
+from scipy.io import loadmat
+from scipy.stats import sem
 
-n_famous, n_unfamiliar = len(epochs['face/famous']), len(epochs['scrambled'])
-y = np.r_[np.ones((n_famous, )), np.zeros((n_unfamiliar, ))]
-epochs = mne.concatenate_epochs([epochs['face/famous'], epochs['scrambled']])
-###############################################################################
-# Let us restrict ourselves to the occipital channels
-from mne.selection import read_selection
-ch_names = [ch_name.replace(' ', '') for ch_name
-            in read_selection('occipital')]
-epochs.pick_channels(ch_names)
+from library.config import study_path
+
+meg_dir = os.path.join(study_path, 'MEG')
 
 ###############################################################################
-# Now we fit and plot the time decoder
-from mne.decoding import TimeDecoding
+# Now we loop over subjects to load the scores
+###############################################################################
 
-times = dict(step=0.005) # fit a classifier only ever 5 ms
-td = TimeDecoding(predict_mode='cross-validation', times=times)
-td.fit(epochs, y)
-td.score(epochs)
-td.plot(title="Time decoding (famous vs. scrambled)")
+scores = list()
+for subject_id in range(1, 20):
+    subject = "sub%03d" % subject_id
+    data_path = os.path.join(meg_dir, subject)
+
+    # Load the scores for the subject
+    fname_td = os.path.join(data_path, '%s-td-auc-famous.fif' % subject)
+    mat = loadmat(fname_td)
+    scores.append(mat['scores'][0])
+
+###############################################################################
+# ... and average them
+###############################################################################
+
+mean_scores = np.mean(scores, axis=0)
+sem_scores = sem(scores)
+times = mat['times'][0]
+
+###############################################################################
+# Let's plot the mean AUC score across subjects
+###############################################################################
+
+plt.plot(times, mean_scores, 'b')
+plt.fill_between(times, mean_scores - sem_scores,
+                 mean_scores + sem_scores, color='b', alpha=0.2)
+plt.axhline(0.5, color='k', linestyle='--', label='Chance level')
+plt.axvline(0.0, linestyle='--')
+plt.legend()
+plt.title('Time decoding (famous vs scrambled)')
+plt.show()

@@ -50,6 +50,8 @@ times = mat['times'][0]
 ###############################################################################
 
 plt.plot(times, mean_scores, 'b')
+plt.xlabel('Time (s)')
+plt.ylabel('Area under curve (AUC)')
 plt.fill_between(times, mean_scores - sem_scores,
                  mean_scores + sem_scores, color='b', alpha=0.2)
 plt.axhline(0.5, color='k', linestyle='--', label='Chance level')

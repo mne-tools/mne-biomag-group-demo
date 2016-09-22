@@ -11,7 +11,7 @@ Authors
 -------
 
 - [Alexandre Gramfort](http://alexandre.gramfort.net), Telecom ParisTech
-- Mainak Jas, Telecom ParisTech
+- [Mainak Jas](http://perso.telecom-paristech.fr/~mjas/), Telecom ParisTech
 - Jaakko Leppäkangas, Telecom ParisTech
 - [Denis Engemann](http://denis-engemann.de), Neurospin, CEA/INSERM, UNICOG Team
 

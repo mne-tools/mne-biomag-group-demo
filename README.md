@@ -13,7 +13,7 @@ Authors
 - [Alexandre Gramfort](http://alexandre.gramfort.net), Telecom ParisTech
 - Mainak Jas, Telecom ParisTech
 - Jaakko Leppäkangas, Telecom ParisTech
-- Denis Engemann, INRIA, Parietal Team
+- [Denis Engemann](http://denis-engemann.de), Neurospin, CEA/INSERM, UNICOG Team
 
 Abstract (of the satellite meeting)
 -----------------------------------

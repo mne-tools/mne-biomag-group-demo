@@ -37,6 +37,7 @@ def run_time_decoding(subject_id):
     y = np.r_[np.ones((n_famous, )), np.zeros((n_unfamiliar, ))]
     epochs = mne.concatenate_epochs([epochs['face/famous'],
                                     epochs['scrambled']])
+    epochs.apply_baseline()
 
     # Let us restrict ourselves to the occipital channels
     from mne.selection import read_selection

@@ -13,27 +13,22 @@ from library.config import meg_dir, study_path
 
 subjects_dir = op.join(study_path, 'subjects')
 
-famous_fname = op.join(meg_dir, 'eeg_famous-ave.fif')
-famous = mne.read_evokeds(famous_fname)[0]
+evokeds = mne.read_evokeds(op.join(study_path, 'MEG', 'grand_average-ave.fif'))
+evoked_famous, evoked_scrambled, evoked_unfamiliar = evokeds
 
-unfamiliar_fname = op.join(meg_dir, 'eeg_unfamiliar-ave.fif')
-unfamiliar = mne.read_evokeds(unfamiliar_fname)[0]
+evokeds[0].plot_joint(title='Famous')
+evokeds[1].plot_joint(title='Scrambled')
+evokeds[2].plot_joint(title='Unfamiliar')
 
-scrambled = mne.read_evokeds(op.join(meg_dir,
-                                     'eeg_scrambled-ave.fif'))[0]
-famous.plot_joint(title='Famous')
-unfamiliar.plot_joint(title='Unfamiliar')
-scrambled.plot_joint('Scrambled')
+idx = evoked_famous.ch_names.index('EEG070')
+mapping = {'Famous': evokeds[0], 'Scrambled': evokeds[1],
+           'Unfamiliar': evokeds[2]}
+mne.viz.plot_compare_evokeds(mapping, [idx], title='EEG070 (No baseline)')
 
-idx = famous.ch_names.index('EEG070')
-mne.viz.plot_compare_evokeds({'Famous': famous, 'Unfamiliar': unfamiliar,
-                              'Scrambled': scrambled}, [idx])
-
-for evoked in [famous, unfamiliar, scrambled]:
+for evoked in evokeds:
     evoked.apply_baseline()
-mne.viz.plot_compare_evokeds({'Famous': famous, 'Unfamiliar': unfamiliar,
-                              'Scrambled': scrambled}, [idx],
-                             title='EEG070 Baseline from -200ms to 0ms',)
+mne.viz.plot_compare_evokeds(mapping, [idx],
+                             title='EEG070 (Baseline from -200ms to 0ms)',)
 
 fname = op.join(meg_dir, 'contrast-average')
 stc = mne.read_source_estimate(fname, subject='fsaverage')

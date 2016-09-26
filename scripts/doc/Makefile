@@ -57,10 +57,12 @@ clean:
 
 html-noplot:
 	cp index_custom.rst auto_examples/index_custom.rst
+	cp index_scripts.rst auto_scripts/index_scripts.rst
 	$(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 	mv $(BUILDDIR)/html/auto_examples/index_custom.html $(BUILDDIR)/html/auto_examples/index.html
+	mv $(BUILDDIR)/html/auto_scripts/index_scripts.html $(BUILDDIR)/html/auto_scripts/index.html
 
 html_abort_on_example_error:
 	$(SPHINXBUILD) -D abort_on_example_error=1 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
@@ -68,11 +70,10 @@ html_abort_on_example_error:
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 html: generate_examples
-	cp index_custom.rst auto_examples/index_custom.rst
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
-	mv $(BUILDDIR)/html/auto_examples/index_custom.html $(BUILDDIR)/html/auto_examples/index.html
+	make html-noplot
 
 generate_examples:
 	$(PYTHON) ../results/library/generate_scripts.py

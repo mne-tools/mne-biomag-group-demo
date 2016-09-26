@@ -1,6 +1,7 @@
 """
-Sensor cluster level statistics on EEG
-======================================
+============================================================
+Non-parametric spatio-temporal statistics on EEG sensor data
+============================================================
 
 Run a non-parametric spatio-temporal cluster stats on EEG sensors
 on the contrast faces vs. scrambled.
@@ -9,12 +10,12 @@ on the contrast faces vs. scrambled.
 import os.path as op
 import numpy as np
 from scipy import stats
+from scipy import spatial
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 import mne
 from mne.stats import permutation_cluster_1samp_test
-from mne.channels import read_ch_connectivity
 from mne.viz import plot_topomap
 
 from library.config import meg_dir
@@ -61,11 +62,18 @@ threshold = -ppf(p_thresh, n_samples - 1)
 if np.sign(tail) < 0:
     threshold = -threshold
 
-connectivity, ch_names = read_ch_connectivity('neuromag306mag')
+# Make a triangulation between EEG channels locations to
+# use as connectivity for cluster level stat
+# XXX : make a mne.channels.make_eeg_connectivity function
+lay = mne.channels.make_eeg_layout(contrast.info)
+neigh = spatial.Delaunay(lay.pos[:, :2]).vertices
+connectivity = mne.surface.mesh_edges(neigh)
+
+data = np.transpose(data, (0, 2, 1))  # transpose for clustering
 
 cluster_stats = permutation_cluster_1samp_test(
     data, threshold=threshold, n_jobs=2, verbose=True, tail=1,
-    step_down_p=0.05, connectivity=connectivity, out_type='indices',
+    connectivity=connectivity, out_type='indices',
     check_disjoint=True)
 
 T_obs, clusters, p_values, _ = cluster_stats
@@ -73,11 +81,17 @@ good_cluster_inds = np.where(p_values < p_accept)[0]
 
 print("Good clusters: %s" % good_cluster_inds)
 
+##############################################################################
+# Visualize the spatio-temporal clusters
+
 times = contrast.times * 1e3
 colors = 'r', 'steelblue'
 linestyles = '-', '--'
 
 pos = mne.find_layout(contrast.info).pos
+
+T_obs_max = 5.
+T_obs_min = -T_obs_max
 
 # loop over significant clusters
 for i_clu, clu_idx in enumerate(good_cluster_inds):
@@ -86,15 +100,15 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     ch_inds = np.unique(space_inds)
     time_inds = np.unique(time_inds)
 
-    # get topography for F stat
-    f_map = T_obs[time_inds, ...].mean(axis=0)
+    # get topography for T0 stat
+    T_obs_map = T_obs[time_inds, ...].mean(axis=0)
 
     # get signals at significant sensors
     signals = data[..., ch_inds].mean(axis=-1)
     sig_times = times[time_inds]
 
     # create spatial mask
-    mask = np.zeros((f_map.shape[0], 1), dtype=bool)
+    mask = np.zeros((T_obs_map.shape[0], 1), dtype=bool)
     mask[ch_inds, :] = True
 
     # initialize figure
@@ -103,8 +117,8 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     fig.suptitle(title, fontsize=14)
 
     # plot average test statistic and mark significant sensors
-    image, _ = plot_topomap(f_map, pos, mask=mask, axes=ax_topo,
-                            cmap='Reds', vmin=np.min, vmax=np.max,
+    image, _ = plot_topomap(T_obs_map, pos, mask=mask, axes=ax_topo,
+                            vmin=T_obs_min, vmax=T_obs_max,
                             show=False)
 
     # advanced matplotlib for showing image with figure and colorbar
@@ -114,7 +128,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     # add axes for colorbar
     ax_colorbar = divider.append_axes('right', size='5%', pad=0.05)
     plt.colorbar(image, cax=ax_colorbar)
-    ax_topo.set_xlabel('Averaged F-map ({:0.1f} - {:0.1f} ms)'.format(
+    ax_topo.set_xlabel('Averaged T-map ({:0.1f} - {:0.1f} ms)'.format(
         *sig_times[[0, -1]]
     ))
 
@@ -128,7 +142,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     ax_signals.axvline(0, color='k', linestyle=':', label='stimulus onset')
     ax_signals.set_xlim([times[0], times[-1]])
     ax_signals.set_xlabel('time [ms]')
-    ax_signals.set_ylabel('evoked magnetic fields [fT]')
+    ax_signals.set_ylabel('evoked [uV]')
 
     # plot significant time range
     ymin, ymax = ax_signals.get_ylim()

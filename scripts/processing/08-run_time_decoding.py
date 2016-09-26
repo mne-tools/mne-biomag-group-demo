@@ -19,6 +19,7 @@ import mne
 from mne.parallel import parallel_func
 
 from library.config import meg_dir
+
 ###############################################################################
 # Then we write a function to do time decoding on one subject
 

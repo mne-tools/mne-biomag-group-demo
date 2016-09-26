@@ -1,7 +1,7 @@
 """
-===============================================
-Run non-parametric statistics on one EEG sensor
-===============================================
+===========================================
+Non-parametric statistics on one EEG sensor
+===========================================
 
 Run a non-parametric cluster stats on sensor EEG070
 on the contrast faces vs. scrambled.

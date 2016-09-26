@@ -17,7 +17,7 @@ Authors
 - `Alexandre Gramfort <http://alexandre.gramfort.net/>`_, Telecom ParisTech
 - `Mainak Jas <http://perso.telecom-paristech.fr/~mjas/>`_, Telecom ParisTech
 - `Jaakko Leppäkangas <https://github.com/jaeilepp>`_, Telecom ParisTech
-- `Denis Engemann <http://www.denis-engemann.de/>`_, INRIA, Parietal Team
+- `Denis Engemann <http://www.denis-engemann.de/>`_, INRIA, Parietal team
 
 Content
 -------
@@ -69,9 +69,12 @@ Acquisition details
 What's next?
 ------------
 
+Take a look at our scripts and results
+
 .. toctree::
     :maxdepth: 2
 
+    /auto_scripts/index
     /auto_examples/index
 
 

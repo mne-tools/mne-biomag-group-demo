@@ -127,9 +127,7 @@ html_theme_options = {
     'navbar_sidebarrel': False,
     'bootstrap_version': "3",
     'navbar_links': [
-        ("Subjects", "auto_examples/index"),
-        ("Group", "auto_examples/plot_group"),
-        ("Comparison", "auto_examples/plot_compare"),
+        ("Results", "auto_examples/index"),
         ("Processing Scripts", "auto_scripts/index"),
     ],
 }

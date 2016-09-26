@@ -1,3 +1,10 @@
+"""
+Sensor level statistics
+=======================
+
+Compute statistics on the sensors
+"""
+
 import os.path as op
 import numpy as np
 import matplotlib.pyplot as plt

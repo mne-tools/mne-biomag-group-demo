@@ -6,7 +6,6 @@ Plotting the analysis chain (Subject 9)
 Run the analysis.
 """
 
-import sys
 import os
 import os.path as op
 import numpy as np
@@ -108,3 +107,28 @@ sitc.plot(idx, title='Scrambled ITC %s' % channel, baseline=(-0.1, 0.0),
 cov = mne.read_cov(op.join(meg_dir, subject, '%s-cov.fif' % subject))
 mne.viz.plot_cov(cov, faces_evo.info)
 faces_evo.plot_white(cov)
+
+###############################################################################
+# Trans
+fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
+                      '%s-trans.fif' % subject)
+mne.viz.plot_trans(famous_evo.info, fname_trans, subject=subject,
+                   subjects_dir=subjects_dir, meg_sensors=True,
+                   eeg_sensors=True)
+
+###############################################################################
+# Faces
+
+
+def plot_stc(cond):
+    fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
+    stc = mne.read_source_estimate(fname, subject)
+    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
+                     hemi='both', initial_time=0.17, time_unit='s')
+    return brain
+
+brain = plot_stc('faces')
+
+###############################################################################
+# Faces - scrambled
+brain = plot_stc('contrast')

@@ -1,12 +1,14 @@
 """
-Sensor level statistics
-=======================
+Sensor cluster level statistics on EEG
+======================================
 
-Compute statistics on the sensors
+Run a non-parametric spatio-temporal cluster stats on EEG sensors
+on the contrast faces vs. scrambled.
 """
 
 import os.path as op
 import numpy as np
+from scipy import stats
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -17,27 +19,52 @@ from mne.viz import plot_topomap
 
 from library.config import meg_dir
 
-fsave_vertices = [np.arange(10242), np.arange(10242)]
-contrast_data = list()
+##############################################################################
+# Read all the data
+
+exclude = [1, 5, 16]  # Excluded subjects
+
+contrasts = list()
+
 for subject_id in range(1, 20):
+    if subject_id in exclude:
+        continue
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
-    evoked = mne.read_evokeds(op.join(data_path, '%s-ave.fif' % subject))
-    contrast = evoked[3]
-    contrast.pick_types(meg='mag')
+    contrast = mne.read_evokeds(op.join(data_path, '%s-ave.fif' % subject),
+                                condition='contrast')
+    contrast.pick_types(meg=False, eeg=True)
     contrast.apply_baseline((-0.2, 0.0))
-    contrast_data.append(contrast.data.T)
-contrast_data = np.array(contrast_data)
-# set cluster threshold
-threshold = 5.0
+    contrasts.append(contrast)
+
+contrast = mne.combine_evoked(contrasts)
+
+##############################################################################
+# Assemble the data and run the cluster stats on channel data
+
+data = np.array([c.data for c in contrasts])
+
+n_permutations = 1  # number of permutations to run
+
 # set family-wise p-value
 p_accept = 0.01
+
+connectivity = None
+tail = 0.  # for two sided test
+
+# set cluster threshold
+ppf = stats.t.ppf
+p_thresh = p_accept / (1 + (tail == 0))
+n_samples = len(data)
+threshold = -ppf(p_thresh, n_samples - 1)
+if np.sign(tail) < 0:
+    threshold = -threshold
 
 connectivity, ch_names = read_ch_connectivity('neuromag306mag')
 
 cluster_stats = permutation_cluster_1samp_test(
-    contrast_data, threshold=threshold, n_jobs=2, verbose=True, tail=1,
+    data, threshold=threshold, n_jobs=2, verbose=True, tail=1,
     step_down_p=0.05, connectivity=connectivity, out_type='indices',
     check_disjoint=True)
 
@@ -63,7 +90,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     f_map = T_obs[time_inds, ...].mean(axis=0)
 
     # get signals at significant sensors
-    signals = contrast_data[..., ch_inds].mean(axis=-1)
+    signals = data[..., ch_inds].mean(axis=-1)
     sig_times = times[time_inds]
 
     # create spatial mask

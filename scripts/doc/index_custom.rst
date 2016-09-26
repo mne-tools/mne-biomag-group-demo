@@ -52,8 +52,8 @@ Group analysis
 
     <div style='clear:both'></div>
 
-Demos
-=====
+Statistics
+==========
 
 .. raw:: html
 
@@ -94,6 +94,33 @@ Demos
    :hidden:
 
    /auto_examples/plot_sensor_cluster_stats_eeg_channel
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run a non-parametric spatio-temporal cluster stats on EEG sensors on the contrast faces vs. scr...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_sensor_spatio_temporal_cluster_stats_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_sensor_spatio_temporal_cluster_stats.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_sensor_spatio_temporal_cluster_stats
+
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+Demos
+=====
 
 .. raw:: html
 

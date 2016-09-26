@@ -2,7 +2,7 @@
 Maxwell filtering
 =================
 
-Demonstrates maxwell filtering for one run (sub001, run01) using MNE-python.
+Demonstrates maxwell filtering for one run (sub002, run01) using MNE-python.
 """
 
 import os.path as op
@@ -15,7 +15,7 @@ from library.config import study_path, cal, ctc
 
 event_ids = [5, 6, 7]  # Famous faces
 
-subject = "sub001"
+subject = "sub002"
 
 raw_fname_in = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
 sss_fname_in = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_sss.fif')
@@ -24,7 +24,7 @@ sss_fname_in = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_sss.fif')
 # First the filtered raw data.
 raw = mne.io.read_raw_fif(raw_fname_in, preload=True)
 
-raw.info['bads'] = ['MEG1031', 'MEG1111']  # set bads
+raw.info['bads'] = ['MEG1031', 'MEG1111', 'MEG2032']  # set bads
 picks = mne.pick_types(raw.info, meg=True, exclude='bads')
 raw.filter(1, 40, fir_window='hann', l_trans_bandwidth=0.5, phase='zero',
            h_trans_bandwidth='auto', filter_length='10s')

@@ -223,3 +223,23 @@ install:
 	git add .nojekyll && \
 	git commit -a -m 'Make install' && \
 	git push
+
+install-noplot:
+	rm -rf _build/doctrees _build/mne-biomag-group-demo.github.io
+	# first clone the pavanramkumar/mne-biomag-group-demo.github.io repo because it may ask
+	# for password and we don't want to delay this long build in
+	# the middle of it
+	# --no-checkout just fetches the root folder without content
+	# --depth 1 is a speed optimization since we don't need the
+	# history prior to the last commit
+	# -b gh-pages fetches only the branch for the gh-pages
+	git clone -b gh-pages --single-branch --no-checkout --depth 1 https://github.com/mne-tools/mne-biomag-group-demo _build/mne-biomag-group-demo.github.io
+	touch _build/mne-biomag-group-demo.github.io/.nojekyll
+	make html-noplot
+	cd _build/ && \
+	cp -r html/* mne-biomag-group-demo.github.io && \
+	cd mne-biomag-group-demo.github.io && \
+	git add * && \
+	git add .nojekyll && \
+	git commit -a -m 'Make install' && \
+	git push

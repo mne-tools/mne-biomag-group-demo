@@ -97,6 +97,26 @@ Demos
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Demonstrates maxwell filtering for one run (sub001, run01) using MNE-python. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_maxfilter_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_maxfilter.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_maxfilter
+
+.. raw:: html
+
     <div style='clear:both'></div>
 
 Single subject analysis

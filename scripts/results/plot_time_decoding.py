@@ -11,7 +11,6 @@ The contrast across different sensors are combined into a single plot.
 
 ###############################################################################
 # Let us first import the necessary libraries
-###############################################################################
 
 import os
 import numpy as np
@@ -25,7 +24,6 @@ meg_dir = os.path.join(study_path, 'MEG')
 
 ###############################################################################
 # Now we loop over subjects to load the scores
-###############################################################################
 
 scores = list()
 for subject_id in range(1, 20):
@@ -33,13 +31,12 @@ for subject_id in range(1, 20):
     data_path = os.path.join(meg_dir, subject)
 
     # Load the scores for the subject
-    fname_td = os.path.join(data_path, '%s-td-auc-famous.fif' % subject)
+    fname_td = os.path.join(data_path, '%s-td-auc-famous.mat' % subject)
     mat = loadmat(fname_td)
     scores.append(mat['scores'][0])
 
 ###############################################################################
 # ... and average them
-###############################################################################
 
 mean_scores = np.mean(scores, axis=0)
 sem_scores = sem(scores)
@@ -47,7 +44,6 @@ times = mat['times'][0]
 
 ###############################################################################
 # Let's plot the mean AUC score across subjects
-###############################################################################
 
 plt.plot(times, mean_scores, 'b')
 plt.xlabel('Time (s)')

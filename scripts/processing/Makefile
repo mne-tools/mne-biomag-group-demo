@@ -7,6 +7,8 @@ preproc:
 	$(PYTHON) 05-make_epochs.py
 	$(PYTHON) 06-make_evoked.py
 	$(PYTHON) 07-time_frequency.py
-	$(PYTHON) 08-make_watershed.py
-	$(PYTHON) 09-make_forward.py
-	$(PYTHON) 10-make_inverse.py
+	$(PYTHON) 08-group_average_sensors.py
+	$(PYTHON) 11-make_watershed.py
+	$(PYTHON) 12-make_forward.py
+	$(PYTHON) 13-make_inverse.py
+	$(PYTHON) 14-group_average_source.py

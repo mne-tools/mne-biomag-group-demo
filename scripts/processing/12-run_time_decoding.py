@@ -63,6 +63,7 @@ def run_time_decoding(subject_id, condition1, condition2):
 
 ###############################################################################
 # Finally we make this script parallel across subjects and write the results
+#
 # .. warning::
 #    This may take a large amount of memory because the epochs will be
 #    replicated for each parallel job

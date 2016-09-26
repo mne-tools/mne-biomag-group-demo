@@ -11,7 +11,6 @@ The contrast across different sensors are combined into a single plot.
 
 ###############################################################################
 # Let us first import the libraries
-###############################################################################
 
 import os
 import numpy as np
@@ -19,24 +18,22 @@ import numpy as np
 import mne
 from mne.parallel import parallel_func
 
-from library.config import study_path
+from library.config import meg_dir
 ###############################################################################
 # Then we write a function to do time decoding on one subject
-###############################################################################
 
 
-def run_time_decoding(subject_id):
+def run_time_decoding(subject_id, condition1, condition2):
     subject = "sub%03d" % subject_id
-    meg_dir = os.path.join(study_path, 'MEG')
     data_path = os.path.join(meg_dir, subject)
     epochs = mne.read_epochs(os.path.join(data_path, '%s-epo.fif' % subject))
 
     # We define the epochs and the labels
-    n_famous = len(epochs['face/famous'])
-    n_unfamiliar = len(epochs['scrambled'])
-    y = np.r_[np.ones((n_famous, )), np.zeros((n_unfamiliar, ))]
-    epochs = mne.concatenate_epochs([epochs['face/famous'],
-                                    epochs['scrambled']])
+    n_cond1 = len(epochs[condition1])
+    n_cond2 = len(epochs[condition2])
+    y = np.r_[np.ones((n_cond1, )), np.zeros((n_cond2, ))]
+    epochs = mne.concatenate_epochs([epochs[condition1],
+                                    epochs[condition2]])
     epochs.apply_baseline()
 
     # Let us restrict ourselves to the occipital channels
@@ -48,14 +45,17 @@ def run_time_decoding(subject_id):
     # Now we fit and plot the time decoder
     from mne.decoding import TimeDecoding
 
-    times = dict(step=0.005)  # fit a classifier only ever 5 ms
+    times = dict(step=0.005)  # fit a classifier only every 5 ms
     # Use AUC because chance level is same regardless of the class balance
     td = TimeDecoding(predict_mode='cross-validation',
                       times=times, scorer='roc_auc')
     td.fit(epochs, y)
 
     # let's save the scores now
-    fname_td = os.path.join(data_path, '%s-td-auc-famous.mat' % subject)
+    a_vs_b = '%s_vs_%s' % (os.path.basename(condition1),
+                           os.path.basename(condition2))
+    fname_td = os.path.join(data_path, '%s-td-auc-%s.mat'
+                            % (subject, a_vs_b))
     from scipy.io import savemat
     savemat(fname_td, {'scores': td.score(epochs),
                        'times': td.times_['times']})
@@ -63,8 +63,12 @@ def run_time_decoding(subject_id):
 
 ###############################################################################
 # Finally we make this script parallel across subjects and write the results
-# Warning: This may take a large amount of memory because the epochs will be
-# replicated for each parallel job
-###############################################################################
+# .. warning::
+#    This may take a large amount of memory because the epochs will be
+#    replicated for each parallel job
+
 parallel, run_func, _ = parallel_func(run_time_decoding, n_jobs=-1)
-parallel(run_func(subject_id) for subject_id in range(1, 20))
+parallel(run_func(subject_id, 'face/famous', 'scrambled')
+         for subject_id in range(1, 20))
+parallel(run_func(subject_id, 'face/famous', 'face/unfamiliar')
+         for subject_id in range(1, 20))

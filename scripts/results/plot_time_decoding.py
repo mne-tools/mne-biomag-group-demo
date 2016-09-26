@@ -4,9 +4,10 @@ Time Decoding
 =============
 
 Time decoding fits a Logistic Regression model for every time point in the
-epoch. In this example, we contrast the condition 'famous' against 'scrambled'
-using this approach. The end result is an averaging effect across sensors.
-The contrast across different sensors are combined into a single plot.
+epoch. In this example, we contrast the condition `'famous'` vs `'scrambled'`
+and `'famous'` vs `'unfamiliar'` using this approach. The end result is an
+averaging effect across sensors. The contrast across different sensors are
+combined into a single plot.
 """
 
 ###############################################################################

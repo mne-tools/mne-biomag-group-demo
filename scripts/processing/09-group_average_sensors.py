@@ -11,9 +11,8 @@ import mne
 
 from library.config import meg_dir
 
-famous = list()
-unfamiliar = list()
-scrambled = list()
+all_evokeds = list()
+
 exclude = [1, 5, 16]  # Excluded subjects
 
 for run in range(1, 20):
@@ -25,16 +24,12 @@ for run in range(1, 20):
 
     evokeds = mne.read_evokeds(op.join(meg_dir, subject,
                                        '%s-ave.fif' % subject))
-    for evoked in evokeds[:3]:
+    for evoked in evokeds:
         evoked.pick_types(meg=False, eeg=True)  # pick only EEG channels
-    famous.append(evokeds[0])
-    scrambled.append(evokeds[1])
-    unfamiliar.append(evokeds[2])
 
 
-famous = mne.combine_evoked(famous)
-famous.save(op.join(meg_dir, 'eeg_famous-ave.fif'))
-unfamiliar = mne.combine_evoked(unfamiliar)
-unfamiliar.save(op.join(meg_dir, 'eeg_unfamiliar-ave.fif'))
-scrambled = mne.combine_evoked(scrambled)
-scrambled.save(op.join(meg_dir, 'eeg_scrambled-ave.fif'))
+for idx, evokeds in enumerate(all_evokeds):
+    all_evokeds[idx] = mne.combine_evoked(evokeds)
+
+mne.evoked.write_evokeds(op.join(meg_dir, 'grand_average-ave.fif'),
+                         all_evokeds)

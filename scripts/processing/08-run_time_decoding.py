@@ -70,7 +70,7 @@ def run_time_decoding(subject_id, condition1, condition2):
 #    replicated for each parallel job
 
 parallel, run_func, _ = parallel_func(run_time_decoding, n_jobs=-1)
-parallel(run_func(subject_id, 'face/famous', 'scrambled')
+parallel(run_func(subject_id, 'face', 'scrambled')
          for subject_id in range(1, 20))
 parallel(run_func(subject_id, 'face/famous', 'face/unfamiliar')
          for subject_id in range(1, 20))

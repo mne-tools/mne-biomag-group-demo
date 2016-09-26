@@ -55,7 +55,7 @@ def run_time_decoding(subject_id):
     td.fit(epochs, y)
 
     # let's save the scores now
-    fname_td = os.path.join(data_path, '%s-td-auc-famous.fif' % subject)
+    fname_td = os.path.join(data_path, '%s-td-auc-famous.mat' % subject)
     from scipy.io import savemat
     savemat(fname_td, {'scores': td.score(epochs),
                        'times': td.times_['times']})

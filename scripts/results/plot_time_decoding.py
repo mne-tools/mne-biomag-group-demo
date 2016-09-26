@@ -23,8 +23,8 @@ from library.config import meg_dir
 
 ###############################################################################
 # Now we loop over subjects to load the scores
-a_vs_bs = ['famous_vs_scrambled', 'famous_vs_unfamiliar']
-scores = {'famous_vs_scrambled': list(), 'famous_vs_unfamiliar': list()}
+a_vs_bs = ['face_vs_scrambled', 'famous_vs_unfamiliar']
+scores = {'face_vs_scrambled': list(), 'famous_vs_unfamiliar': list()}
 for subject_id in range(1, 20):
     subject = "sub%03d" % subject_id
     data_path = os.path.join(meg_dir, subject)
@@ -58,4 +58,24 @@ for a_vs_b in a_vs_bs:
     plt.axvline(0.0, linestyle='--')
     plt.legend()
     plt.title('Time decoding (%s)' % a_vs_b)
-    plt.show()
+
+###############################################################################
+# It seems that `'famous'` vs `'unfamiliar'` gives much noisier time course of
+# decoding scores than `'faces'` vs `'scrambled'`. To verify that this is not
+# due to bad subjects
+fig, axes = plt.subplots(4, 5, sharex=True, sharey=True, figsize=(12, 8))
+axes = axes.ravel()
+for idx in range(19):
+    axes[idx].axhline(0.5, color='k', linestyle='--', label='Chance level')
+    axes[idx].axvline(0.0, color='k', linestyle='--')
+    for a_vs_b in a_vs_bs:
+        axes[idx].plot(times, scores[a_vs_b][idx], label=a_vs_b)
+        axes[idx].set_title('sub%03d' % (idx + 1))
+
+axes[-1].axis('off')
+axes[-2].legend(bbox_to_anchor=(2.35, 0.5), loc='center right', fontsize=12)
+fig.text(0.5, 0, 'Time (s)', ha='center', fontsize=16)
+fig.text(0.01, 0.5, 'Area under curve (AUC)', va='center',
+         rotation='vertical', fontsize=16)
+plt.subplots_adjust(bottom=0.06, left=0.06, right=0.98, top=0.95)
+plt.show()

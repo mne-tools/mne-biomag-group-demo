@@ -9,12 +9,10 @@ import os.path as op
 
 import mne
 
-from library.config import meg_dir, study_path
-
-subjects_dir = op.join(study_path, 'subjects')
+from library.config import meg_dir, subjects_dir, study_path
 
 evokeds = mne.read_evokeds(op.join(study_path, 'MEG', 'grand_average-ave.fif'))
-evoked_famous, evoked_scrambled, evoked_unfamiliar = evokeds
+evoked_famous, evoked_scrambled, evoked_unfamiliar = evokeds[:3]
 
 evokeds[0].plot_joint(title='Famous')
 evokeds[1].plot_joint(title='Scrambled')
@@ -32,6 +30,8 @@ mne.viz.plot_compare_evokeds(mapping, [idx],
 
 fname = op.join(meg_dir, 'contrast-average')
 stc = mne.read_source_estimate(fname, subject='fsaverage')
-brain = stc.plot(views=['cau'], hemi='both', subject='fsaverage',
-                 subjects_dir=subjects_dir)
-brain.set_data_time_index(204)
+t_idx = stc.time_as_index(0.17)  # Plot at 170 ms
+brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
+                 subjects_dir=subjects_dir, initial_time=0.17, time_unit='s')
+
+brain.set_data_time_index(t_idx)

@@ -5,7 +5,7 @@ The code contains the [MNE](http://martinos.org/mne/) contribution to the [Bioma
 
 ["How to perform MEG group analysis with free academic software"](http://www.biomag2016.org/satellite_meetings2.php)
 
-Results of our analysis is presented [here](http://mne-tools.github.io/mne-biomag-group-demo/scripts/doc/_build/html/)
+Results of our analysis is presented [here](mne-tools.github.io/mne-biomag-group-demo/)
 
 Authors
 -------

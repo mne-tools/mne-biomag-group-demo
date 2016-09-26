@@ -11,7 +11,7 @@ import mne
 
 from library.config import meg_dir
 
-all_evokeds = list()
+all_evokeds = [[], [], [], [], []]  # Container for all the categories
 
 exclude = [1, 5, 16]  # Excluded subjects
 
@@ -24,12 +24,13 @@ for run in range(1, 20):
 
     evokeds = mne.read_evokeds(op.join(meg_dir, subject,
                                        '%s-ave.fif' % subject))
-    for evoked in evokeds:
-        evoked.pick_types(meg=False, eeg=True)  # pick only EEG channels
+    for idx, evoked in enumerate(evokeds):
+        evoked.pick_types(meg=False, eeg=True)  # Pick only EEG channels
+        all_evokeds[idx].append(evoked)  # Insert to the container
 
 
 for idx, evokeds in enumerate(all_evokeds):
-    all_evokeds[idx] = mne.combine_evoked(evokeds)
+    all_evokeds[idx] = mne.combine_evoked(evokeds)  # Combine subjects
 
 mne.evoked.write_evokeds(op.join(meg_dir, 'grand_average-ave.fif'),
                          all_evokeds)

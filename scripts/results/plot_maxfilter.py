@@ -51,6 +51,7 @@ raw_sss.filter(1, 40, fir_window='hann', l_trans_bandwidth=0.5, phase='zero',
 evoked_after = Epochs(raw, events, event_id=event_ids, picks=picks).average()
 evoked_sss = Epochs(raw_sss, events, event_id=event_ids, picks=picks).average()
 
+
 ###############################################################################
 # Plotting
 evoked_before.plot(spatial_colors=True,

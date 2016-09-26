@@ -28,12 +28,13 @@ fname = op.join(meg_dir, subject, 'run_01_filt_sss_raw.fif')
 raw_filt = mne.io.read_raw_fif(fname)
 
 ###############################################################################
-# Filtering
+# Filtering :ref:`sphx_glr_auto_scripts_02-python_filtering.py`.
 raw.plot_psd()
 raw_filt.plot_psd()
 
 ###############################################################################
-# Events
+# Events :ref:`sphx_glr_auto_scripts_03-run_extract_events.py`.
+# Epochs :ref:`sphx_glr_auto_scripts_05-make_epochs.py`.
 events = mne.read_events(op.join(meg_dir, subject, 'run_01_filt_sss-eve.fif'))
 fig = mne.viz.plot_events(events, show=False)
 fig.suptitle('Events from run 01')
@@ -42,7 +43,7 @@ epochs = mne.read_epochs(op.join(meg_dir, subject, subject + '-epo.fif'))
 epochs.plot_drop_log()
 
 ###############################################################################
-# Evoked responses
+# Evoked responses :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
 evo_fname = op.join(meg_dir, subject, '%s-ave.fif' % subject)
 evoked = mne.read_evokeds(evo_fname)
 
@@ -81,7 +82,7 @@ unfamiliar_evo.plot_topomap(times=times, title='Unfamiliar %s' % subject)
 contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject)
 
 ###############################################################################
-# TFR
+# TFR :ref:`sphx_glr_auto_scripts_07-time_frequency.py`.
 fpower = mne.time_frequency.read_tfrs(
     op.join(meg_dir, subject, '%s-faces-tfr.h5' % subject))[0]
 fitc = mne.time_frequency.read_tfrs(
@@ -103,7 +104,7 @@ sitc.plot(idx, title='Scrambled ITC %s' % channel, baseline=(-0.1, 0.0),
 
 
 ###############################################################################
-# Covariance
+# Covariance :ref:`sphx_glr_auto_scripts_06-make_evoked.py`.
 cov = mne.read_cov(op.join(meg_dir, subject, '%s-cov.fif' % subject))
 mne.viz.plot_cov(cov, faces_evo.info)
 faces_evo.plot_white(cov)
@@ -117,7 +118,7 @@ mne.viz.plot_trans(famous_evo.info, fname_trans, subject=subject,
                    eeg_sensors=True)
 
 ###############################################################################
-# Faces
+# Faces :ref:`sphx_glr_auto_scripts_13-make_inverse.py`.
 
 
 def plot_stc(cond):

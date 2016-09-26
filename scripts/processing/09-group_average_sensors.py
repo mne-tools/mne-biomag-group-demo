@@ -25,7 +25,6 @@ for run in range(1, 20):
     evokeds = mne.read_evokeds(op.join(meg_dir, subject,
                                        '%s-ave.fif' % subject))
     for idx, evoked in enumerate(evokeds):
-        evoked.pick_types(meg=False, eeg=True)  # Pick only EEG channels
         all_evokeds[idx].append(evoked)  # Insert to the container
 
 

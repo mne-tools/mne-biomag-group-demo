@@ -21,7 +21,7 @@ for subject_id in range(1, 20):
 times = np.arange(0.1, 0.26, 0.025)
 
 ###############################################################################
-# Evoked responses on EEG.
+# Evoked responses on EEG. :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
 picks = mne.pick_types(evokeds[0][0].info, meg=False, eeg=True)
 for idx, evoked in enumerate(evokeds):
     for cond in range(3):

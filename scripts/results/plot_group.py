@@ -30,8 +30,7 @@ mne.viz.plot_compare_evokeds(mapping, [idx],
 
 fname = op.join(meg_dir, 'contrast-average')
 stc = mne.read_source_estimate(fname, subject='fsaverage')
-t_idx = stc.time_as_index(0.17)  # Plot at 170 ms
-brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
-                 subjects_dir=subjects_dir, initial_time=0.17, time_unit='s')
 
-brain.set_data_time_index(t_idx)
+brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
+                 subjects_dir=subjects_dir, initial_time=0.17, time_unit='s',
+                 clim={'lims':[99.75, 99.88, 99.98]})

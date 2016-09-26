@@ -123,14 +123,12 @@ mne.viz.plot_trans(famous_evo.info, fname_trans, subject=subject,
 def plot_stc(cond):
     fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
     stc = mne.read_source_estimate(fname, subject)
-    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['cau'],
-                     hemi='both', time_viewer=False)
+    brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
+                     hemi='both', initial_time=0.17, time_unit='s')
     return brain
 
 brain = plot_stc('faces')
-brain.set_data_time_index(204)
 
 ###############################################################################
 # Faces - scrambled
 brain = plot_stc('contrast')
-brain.set_data_time_index(204)

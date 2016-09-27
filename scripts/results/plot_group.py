@@ -23,8 +23,8 @@ evokeds[2].plot_joint(title='Unfamiliar')
 for evoked in evokeds:  # pick only EEG channels
     evoked.pick_types(meg=False, eeg=True)
 idx = evokeds[0].ch_names.index('EEG070')
-assert evokeds[1].ch_names[idx] == 'EEG0070'
-assert evokeds[2].ch_names[idx] == 'EEG0070'
+assert evokeds[1].ch_names[idx] == 'EEG070'
+assert evokeds[2].ch_names[idx] == 'EEG070'
 mapping = {'Famous': evokeds[0], 'Scrambled': evokeds[1],
            'Unfamiliar': evokeds[2]}
 mne.viz.plot_compare_evokeds(mapping, [idx], title='EEG070 (No baseline)')

@@ -8,7 +8,6 @@ Builds an html report containing all the relevant analysis plots.
 from mayavi import mlab
 import os.path as op
 
-from mne.parallel import parallel_func
 from mne import Report
 import mne
 
@@ -104,5 +103,3 @@ rep.add_figs_to_section(fig, 'Avergae faces - scrambled')
 rep.save(fname=op.join(meg_dir, 'report_average.html'),
          open_browser=False, overwrite=True)
 
-parallel, run_func, _ = parallel_func(make_report, n_jobs=N_JOBS)
-parallel(run_func(subject_id) for subject_id in range(1, 20))

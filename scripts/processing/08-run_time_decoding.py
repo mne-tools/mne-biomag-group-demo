@@ -18,7 +18,7 @@ import numpy as np
 import mne
 from mne.parallel import parallel_func
 
-from library.config import meg_dir
+from library.config import meg_dir, N_JOBS
 
 ###############################################################################
 # Then we write a function to do time decoding on one subject
@@ -69,7 +69,7 @@ def run_time_decoding(subject_id, condition1, condition2):
 #    This may take a large amount of memory because the epochs will be
 #    replicated for each parallel job
 
-parallel, run_func, _ = parallel_func(run_time_decoding, n_jobs=-1)
+parallel, run_func, _ = parallel_func(run_time_decoding, n_jobs=N_JOBS)
 parallel(run_func(subject_id, 'face', 'scrambled')
          for subject_id in range(1, 20))
 parallel(run_func(subject_id, 'face/famous', 'face/unfamiliar')

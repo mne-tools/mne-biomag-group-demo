@@ -60,6 +60,7 @@ html-noplot:
 	cp index_scripts.rst auto_scripts/index_scripts.rst
 	cp 00-fetch_data.rst auto_scripts/00-fetch_data.rst
 	cp 01-run_anatomy.rst auto_scripts/01-run_anatomy.rst
+
 	cp ../processing/00-fetch_data.ipy auto_scripts/00-fetch_data.ipy
 	cp ../processing/01-run_anatomy.ipy auto_scripts/01-run_anatomy.ipy
 	$(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

@@ -1,12 +1,7 @@
 .. _general_analysis:
 
-
 Group analysis
 ==============
-
-.. contents:: Contents
-   :local:
-   :depth: 2
 
 .. raw:: html
 

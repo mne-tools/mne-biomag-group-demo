@@ -12,7 +12,6 @@ import mne
 from library.config import meg_dir, subjects_dir
 
 evokeds = mne.read_evokeds(op.join(meg_dir, 'grand_average-ave.fif'))[:3]
-# evoked_famous, evoked_scrambled, evoked_unfamiliar = evokeds[:3]
 
 ###############################################################################
 # Sensor-space. See :ref:`sphx_glr_auto_scripts_09-group_average_sensors.py`
@@ -20,11 +19,9 @@ evokeds[0].plot_joint(title='Famous')
 evokeds[1].plot_joint(title='Scrambled')
 evokeds[2].plot_joint(title='Unfamiliar')
 
-for evoked in evokeds:  # pick only EEG channels
-    evoked.pick_types(meg=False, eeg=True)
 idx = evokeds[0].ch_names.index('EEG070')
-assert evokeds[1].ch_names[idx] == 'EEG0070'
-assert evokeds[2].ch_names[idx] == 'EEG0070'
+assert evokeds[1].ch_names[idx] == 'EEG070'
+assert evokeds[2].ch_names[idx] == 'EEG070'
 mapping = {'Famous': evokeds[0], 'Scrambled': evokeds[1],
            'Unfamiliar': evokeds[2]}
 mne.viz.plot_compare_evokeds(mapping, [idx], title='EEG070 (No baseline)')

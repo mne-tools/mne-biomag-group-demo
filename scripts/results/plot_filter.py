@@ -25,19 +25,21 @@ raw = mne.io.RawArray(np.array([data]), info)
 # We lowpass filter the data and plot the frequency spectrum and the impulse
 # response of the filter.
 raw.filter(None, 40)
-raw.plot_psd(fmin=20, fmax=60)
 plt.plot(times, raw[0][0][0])
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude')
 plt.title('Impulse response')
 plt.show()
+raw.plot_psd(fmin=20, fmax=60)
+
 
 ###############################################################################
 # Let's do the same after highpass filtering at 1 Hz.
 raw.filter(1, None)
-raw.plot_psd(fmax=10)
 plt.plot(times, raw[0][0][0])
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude')
 plt.title('Impulse response')
 plt.show()
+raw.plot_psd(fmax=10)
+

@@ -212,7 +212,7 @@ html_dev-pattern:
 
 install:
 	rm -rf _build/doctrees _build/mne-biomag-group-demo.github.io
-	# first clone the pavanramkumar/mne-biomag-group-demo.github.io repo because it may ask
+	# first clone the mne-tools/mne-biomag-group-demo.github.io repo because it may ask
 	# for password and we don't want to delay this long build in
 	# the middle of it
 	# --no-checkout just fetches the root folder without content
@@ -232,7 +232,7 @@ install:
 
 install-noplot:
 	rm -rf _build/doctrees _build/mne-biomag-group-demo.github.io
-	# first clone the pavanramkumar/mne-biomag-group-demo.github.io repo because it may ask
+	# first clone the mne-tools/mne-biomag-group-demo.github.io repo because it may ask
 	# for password and we don't want to delay this long build in
 	# the middle of it
 	# --no-checkout just fetches the root folder without content

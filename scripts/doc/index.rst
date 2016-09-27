@@ -71,12 +71,8 @@ What's next?
 
 Take a look at our scripts and results
 
-.. toctree::
-    :maxdepth: 2
-
-    /auto_scripts/index
-    /auto_examples/index
-
+* :doc:`auto_scripts/index`
+* :doc:`auto_examples/index`
 
 **Disclaimer** : The scripts provide very little details on the tools used. We recommend you to visit the `MNE web site <http://martinos.org/mne/>`_ and especially the `tutorials <http://martinos.org/mne/stable/tutorials.html>`_ to learn more.
 

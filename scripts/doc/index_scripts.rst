@@ -45,6 +45,26 @@ Setup
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Config for paths">
+
+.. only:: html
+
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_02-python_filtering_thumb.png
+
+        :ref:`sphx_glr_auto_library_config.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/config
+
+.. raw:: html
+
     <div style='clear:both'></div>
 
 Sensor space

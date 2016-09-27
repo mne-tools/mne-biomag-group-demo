@@ -7,6 +7,56 @@ Processing scripts
    :local:
    :depth: 2
 
+Setup 
+^^^^^
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The data are bandpass filtered (1 - 40 Hz) using linear-phase fir filter with delay compensatio...">
+
+.. only:: html
+
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_02-python_filtering_thumb.png
+
+        :ref:`sphx_glr_auto_scripts_00-fetch_data.ipy`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/02-python_filtering
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The events are extracted from stimulus channel 'STI101'. The events are saved to the subject's ...">
+
+.. only:: html
+
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_03-run_extract_events_thumb.png
+
+        :ref:`sphx_glr_auto_scripts_01-run_anatomy.ipy`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/03-run_extract_events
+
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+Sensor space
+^^^^^^^^^^^^
+
 .. raw:: html
 
     <div class="sphx-glr-thumbcontainer" tooltip="The data are bandpass filtered (1 - 40 Hz) using linear-phase fir filter with delay compensatio...">
@@ -166,6 +216,13 @@ Processing scripts
    :hidden:
 
    /auto_scripts/09-group_average_sensors
+
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+Source space
+^^^^^^^^^^^^
 
 .. raw:: html
 

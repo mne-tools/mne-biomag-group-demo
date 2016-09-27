@@ -12,7 +12,7 @@ import mne
 ###############################################################################
 # First we create some data with 30000 samples of zeros with an impulse at the
 # middle. Then we construct a raw data structure and set a sampling frequency
-# to 1000. Thus, we have 20 seconds of data with an impulse at 15 seconds.
+# to 1000. Thus, we have 30 seconds of data with an impulse at 15 seconds.
 n_samples = 30000
 sfreq = 1000
 info = mne.create_info(ch_names=['test'], sfreq=sfreq, ch_types=['eeg'])
@@ -29,6 +29,7 @@ plt.plot(times, raw[0][0][0])
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude')
 plt.title('Impulse response')
+plt.xlim((14, 16))
 plt.show()
 raw.plot_psd(fmin=20, fmax=60)
 
@@ -40,5 +41,6 @@ plt.plot(times, raw[0][0][0])
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude')
 plt.title('Impulse response')
+plt.xlim((14, 16))
 plt.show()
 raw.plot_psd(fmax=10)

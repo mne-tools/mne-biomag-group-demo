@@ -2,7 +2,7 @@
 Maxwell filtering
 =================
 
-Demonstrates maxwell filtering for one run (sub002, run01) using MNE-python.
+Demonstrates maxwell filtering for one run (sub003, run01) using MNE-python.
 """
 
 import os.path as op

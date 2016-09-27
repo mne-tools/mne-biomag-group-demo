@@ -1,7 +1,7 @@
 .. _general_analysis:
 
-Analysis Gallery
-================
+Results
+=======
 
 .. contents:: Contents
    :local:

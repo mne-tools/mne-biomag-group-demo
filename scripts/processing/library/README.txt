@@ -1,7 +1,7 @@
 .. _library:
 
-Analysis Gallery
-================
+Library
+=======
 
 .. contents:: Contents
    :local:

@@ -22,6 +22,9 @@ from mne.preprocessing import create_ecg_epochs, read_ica
 
 from library.config import meg_dir, N_JOBS, map_subjects
 
+###############################################################################
+# We define the events and the onset and offset of the epochs
+
 events_id = {
     'face/famous/first': 5,
     'face/famous/immediate': 6,
@@ -38,6 +41,9 @@ tmin, tmax = -0.2, 0.8
 reject = dict(grad=4000e-13, mag=4e-12, eog=180e-6)
 baseline = None
 
+
+###############################################################################
+# Now we define a function to extract epochs for one subject
 
 def run_epochs(subject_id):
     subject = "sub%03d" % subject_id
@@ -120,6 +126,9 @@ def run_epochs(subject_id):
     epochs = mne.epochs.concatenate_epochs(all_epochs)
     epochs.save(op.join(data_path, '%s-epo.fif' % subject))
 
+
+###############################################################################
+# Let us make the script parallel across subjects
 
 parallel, run_func, _ = parallel_func(run_epochs, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))

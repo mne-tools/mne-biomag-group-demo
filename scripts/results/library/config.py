@@ -38,3 +38,5 @@ if not os.path.isdir(subjects_dir):
 
 ctc = os.path.join(os.path.dirname(__file__), 'ct_sparse.fif')
 cal = os.path.join(os.path.dirname(__file__), 'sss_cal.dat')
+
+ylim = {'eeg': [-10, 10], 'mag': [-10, 10], 'grad': [-40, 40]}

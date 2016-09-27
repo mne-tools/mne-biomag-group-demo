@@ -9,15 +9,15 @@ import os.path as op
 
 import mne
 
-from library.config import meg_dir, subjects_dir
+from library.config import meg_dir, subjects_dir, ylim
 
 evokeds = mne.read_evokeds(op.join(meg_dir, 'grand_average-ave.fif'))[:3]
 
 ###############################################################################
 # Sensor-space. See :ref:`sphx_glr_auto_scripts_09-group_average_sensors.py`
-evokeds[0].plot_joint(title='Famous')
-evokeds[1].plot_joint(title='Scrambled')
-evokeds[2].plot_joint(title='Unfamiliar')
+evokeds[0].plot_joint(title='Famous', ts_args={'ylim': ylim})
+evokeds[1].plot_joint(title='Scrambled', ts_args={'ylim': ylim})
+evokeds[2].plot_joint(title='Unfamiliar', ts_args={'ylim': ylim})
 
 idx = evokeds[0].ch_names.index('EEG070')
 assert evokeds[1].ch_names[idx] == 'EEG070'

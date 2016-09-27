@@ -12,7 +12,8 @@ import numpy as np
 
 import mne
 
-from library.config import study_path, meg_dir
+from library.config import study_path, meg_dir, ylim
+
 ###############################################################################
 # Configuration
 
@@ -49,27 +50,27 @@ evoked = mne.read_evokeds(evo_fname)
 ###############################################################################
 # Faces
 famous_evo, scrambled_evo, unfamiliar_evo, contrast_evo, faces_evo = evoked
-faces_evo.plot(spatial_colors=True, gfp=True, ylim={'eeg': (-10, 10)},
+faces_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
                window_title='Faces %s' % subject)
 
 ###############################################################################
 # Famous
-famous_evo.plot(spatial_colors=True, gfp=True,
+famous_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
                 window_title='Famous %s' % subject)
 
 ###############################################################################
 # Scrambled
-scrambled_evo.plot(spatial_colors=True, gfp=True,
+scrambled_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
                    window_title='Scrambled %s' % subject)
 
 ###############################################################################
 # Unfamiliar
-unfamiliar_evo.plot(spatial_colors=True, gfp=True,
+unfamiliar_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
                     window_title='Unfamiliar %s' % subject)
 
 ###############################################################################
 # Faces - scrambled
-contrast_evo.plot(spatial_colors=True, gfp=True,
+contrast_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
                   window_title='Faces - scrambled %s' % subject)
 
 ###############################################################################

@@ -4,7 +4,7 @@ Construct epochs
 
 The epochs are constructed by using the events created in script 03. MNE
 supports hierarchical events that allows selection to different groups more
-easily. Some channels were not properly defined during acquisition, sot they
+easily. Some channels were not properly defined during acquisition, so they
 are redefined before epoching. Bad EEG channels are interpolated and epochs
 containing blinks are rejected. ECG artifacts are corrected using ICA. Finally
 the epochs are saved to disk. To save space, the epoch data is decimated by
@@ -45,15 +45,14 @@ def run_epochs(subject_id):
 
     data_path = op.join(meg_dir, subject)
 
-    all_epochs = []
+    all_epochs = list()
 
-    # # Get all bad channels
-    all_bads = []
+    # Get all bad channels
+    mapping = map_subjects[subject_id]  # map to correct subject
+    all_bads = list()
     for run in range(1, 7):
         bads = list()
-        mapping = map_subjects[subject_id]
         bad_name = op.join('bads', mapping, 'run_%02d_raw_tr.fif_bad' % run)
-
         if os.path.exists(bad_name):
             with open(bad_name) as f:
                 for line in f:
@@ -76,7 +75,7 @@ def run_epochs(subject_id):
         raw.set_channel_types({'EEG061': 'eog',
                                'EEG062': 'eog',
                                'EEG063': 'ecg',
-                               'EEG064': 'misc'})  # EEG064 free floating el.)
+                               'EEG064': 'misc'})  # EEG064 free floating el.
         raw.rename_channels({'EEG061': 'EOG061',
                              'EEG062': 'EOG062',
                              'EEG063': 'ECG063'})

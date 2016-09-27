@@ -16,13 +16,15 @@ evoked_famous, evoked_scrambled, evoked_unfamiliar = evokeds[:3]
 
 ###############################################################################
 # Sensor-space. See :ref:`sphx_glr_auto_scripts_09-group_average_sensors.py`
-evokeds[0].plot_joint(title='Famous')
-evokeds[1].plot_joint(title='Scrambled')
-evokeds[2].plot_joint(title='Unfamiliar')
+evoked_famous.plot_joint(title='Famous')
+evoked_scrambled.plot_joint(title='Scrambled')
+evoked_unfamiliar.plot_joint(title='Unfamiliar')
 
 idx = evoked_famous.ch_names.index('EEG070')
-mapping = {'Famous': evokeds[0], 'Scrambled': evokeds[1],
-           'Unfamiliar': evokeds[2]}
+assert evoked_unfamiliar.ch_names[idx] == 'EEG0070'
+assert evoked_scrambled.ch_names[idx] == 'EEG0070'
+mapping = {'Famous': evoked_famous, 'Scrambled': evoked_scrambled,
+           'Unfamiliar': evoked_unfamiliar}
 mne.viz.plot_compare_evokeds(mapping, [idx], title='EEG070 (No baseline)')
 
 for evoked in evokeds:

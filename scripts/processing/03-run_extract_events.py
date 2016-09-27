@@ -25,9 +25,9 @@ def run_events(subject_id):
             continue
 
         raw = mne.io.Raw(run_fname)
-
+        mask = 4096 + 256  # mask for excluding high order bits
         events = mne.find_events(raw, stim_channel='STI101',
-                                 consecutive='increasing', mask=4352,
+                                 consecutive='increasing', mask=mask,
                                  mask_type='not_and', min_duration=0.003,
                                  verbose=True)
 

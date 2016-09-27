@@ -9,9 +9,9 @@ import os.path as op
 
 import mne
 
-from library.config import meg_dir, subjects_dir, study_path
+from library.config import meg_dir, subjects_dir
 
-evokeds = mne.read_evokeds(op.join(study_path, 'MEG', 'grand_average-ave.fif'))
+evokeds = mne.read_evokeds(op.join(meg_dir, 'grand_average-ave.fif'))
 evoked_famous, evoked_scrambled, evoked_unfamiliar = evokeds[:3]
 
 ###############################################################################
@@ -37,4 +37,4 @@ stc = mne.read_source_estimate(fname, subject='fsaverage')
 
 brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
                  subjects_dir=subjects_dir, initial_time=0.17, time_unit='s',
-                 clim={'lims':[99.75, 99.88, 99.98]})
+                 clim={'lims': [99.75, 99.88, 99.98]})

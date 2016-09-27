@@ -1,7 +1,7 @@
 """
-==========================================
-Plotting the analysis chain (Subject 13)
-==========================================
+======================
+Analysis for subject 13
+======================
 
 Run the analysis.
 """
@@ -12,12 +12,11 @@ import numpy as np
 
 import mne
 
-from library.config import study_path
+from library.config import study_path, meg_dir
 ###############################################################################
 # Configuration
 
 subjects_dir = os.path.join(study_path, 'subjects')
-meg_dir = os.path.join(study_path, 'MEG')
 
 subject = "sub%03d" % int(13)
 

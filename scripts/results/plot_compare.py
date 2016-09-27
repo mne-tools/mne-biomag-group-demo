@@ -10,9 +10,8 @@ import os.path as op
 import numpy as np
 
 import mne
-from library.config import study_path
+from library.config import meg_dir
 
-meg_dir = op.join(study_path, 'MEG')
 evokeds = list()
 for subject_id in range(1, 20):
     subject = "sub%03d" % subject_id

@@ -20,7 +20,7 @@ from mne.parallel import parallel_func
 from mne.io.constants import FIFF
 from mne.preprocessing import create_ecg_epochs, read_ica
 
-from library.config import study_path, meg_dir, N_JOBS, map_subjects
+from library.config import meg_dir, N_JOBS, map_subjects
 
 events_id = {
     'face/famous/first': 5,
@@ -107,8 +107,7 @@ def run_epochs(subject_id):
                             decim=2, reject=reject)
 
         # ICA
-        ica_name = op.join(study_path, 'MEG', subject,
-                           'run_%02d-ica.fif' % run)
+        ica_name = op.join(meg_dir, subject, 'run_%02d-ica.fif' % run)
         ica = read_ica(ica_name)
         n_max_ecg = 3  # use max 3 components
         ecg_epochs = create_ecg_epochs(raw, tmin=-.5, tmax=.5)

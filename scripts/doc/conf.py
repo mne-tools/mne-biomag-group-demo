@@ -129,6 +129,7 @@ html_theme_options = {
     'navbar_links': [
         ("Results", "auto_examples/index"),
         ("Processing Scripts", "auto_scripts/index"),
+        ("Library", "auto_library/index")
     ],
 }
 
@@ -302,8 +303,8 @@ sphinx_gallery_conf = {
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
         'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
         'mayavi': 'http://docs.enthought.com/mayavi/mayavi'},
-    'examples_dirs': ['../results', '../processing'],
-    'gallery_dirs': ['auto_examples', 'auto_scripts'],
+    'examples_dirs': ['../results', '../processing', '../processing/library'],
+    'gallery_dirs': ['auto_examples', 'auto_scripts', 'auto_library'],
     'find_mayavi_figures': find_mayavi_figures,
     'default_thumb_file': os.path.join('_static', 'mne_helmet.png'),
 }

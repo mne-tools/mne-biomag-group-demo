@@ -5,7 +5,7 @@ Setup
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="The data are bandpass filtered (1 - 40 Hz) using linear-phase fir filter with delay compensatio...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Fetch the data from OpenfMRI">
 
 .. only:: html
 
@@ -25,7 +25,7 @@ Setup
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="The events are extracted from stimulus channel 'STI101'. The events are saved to the subject's ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Run Freesurfer recon-all">
 
 .. only:: html
 

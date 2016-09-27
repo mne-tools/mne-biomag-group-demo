@@ -139,6 +139,26 @@ Demos
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot filters. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_filter_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_filter.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_filter
+
+.. raw:: html
+
     <div style='clear:both'></div>
 
 Single subject analysis

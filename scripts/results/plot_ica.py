@@ -3,7 +3,7 @@
 Remove ECG using ICA
 ====================
 
-Remove ICA using ECG.
+Remove ECG for sub005 using ICA.
 """
 import os
 import os.path as op
@@ -22,7 +22,6 @@ data_path = op.join(meg_dir, subject)
 ###############################################################################
 # Now we get the bad channels.
 
-# Get all bad channels
 mapping = map_subjects[subject_id]  # map to correct subject
 all_bads = list()
 
@@ -37,7 +36,7 @@ if os.path.exists(bad_name):
 # We read the data.
 
 run_fname = op.join(data_path, 'run_%02d_filt_sss_raw.fif' % run)
-raw = mne.io.Raw(run_fname, preload=True, add_eeg_ref=False)
+raw = mne.io.read_raw_fif(run_fname, preload=True, add_eeg_ref=False)
 
 ###############################################################################
 # We change the channel type for ECG and EOG.
@@ -65,5 +64,5 @@ ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
                                          threshold=0.8)
 ica.plot_sources(raw, exclude=ecg_inds)
 ica.plot_scores(scores_ecg, exclude=ecg_inds)
-ica.plot_components(ecg_inds)
+ica.plot_properties(raw, ecg_inds)
 ica.exclude += ecg_inds[:n_max_ecg]

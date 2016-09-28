@@ -48,7 +48,7 @@ evoked_1 = mne.Epochs(raw_1, events, event_id=event_ids,
 evoked_1.plot(spatial_colors=True)
 
 ###############################################################################
-# They're all over the place! The baselining effect of high pass filtering does
+# They're all over the place! The baselining effect of high-pass filtering does
 # not seem to work. Let's try removing the low frequency components by raising
 # the cut-off frequency to 2.5 Hz.
 raw_2 = raw.copy()
@@ -80,20 +80,33 @@ times = np.linspace(0, n_samples // sfreq, n_samples)
 raw = mne.io.RawArray(np.array([data]), info)
 
 ###############################################################################
-# We low pass filter the data and plot the frequency spectrum and the impulse
+# We low-pass filter the data and plot the frequency spectrum and the impulse
 # response of the filter.
-raw.filter(None, 40, **filt_params)
-plt.plot(times, raw[0][0][0])
+raw_1 = raw.copy()
+raw_1.filter(None, 40, **filt_params)
+plt.plot(times, raw_1[0][0][0])
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude')
 plt.title('Impulse response')
 plt.xlim((14, 16))
 plt.show()
-raw.plot_psd(fmin=20, fmax=60)
+raw_1.plot_psd(fmin=20, fmax=60)
 
 ###############################################################################
-# Let's do the same after high pass filtering at 2.5 Hz.
-raw.filter(2.5, None, **filt_params)
+# Let's do the same after high-pass filtering at 2.5 Hz.
+raw_1.filter(2.5, None, **filt_params)
+plt.plot(times, raw_1[0][0][0])
+plt.xlabel('Time (s)')
+plt.ylabel('Amplitude')
+plt.title('Impulse response')
+plt.xlim((14, 16))
+plt.show()
+raw_1.plot_psd(fmax=10)
+
+###############################################################################
+# We see that with the old defaults (MNE versions < 0.13) the transition is
+# much steeper.
+raw.filter(2.5, 40, l_trans_bandwidth=0.5)
 plt.plot(times, raw[0][0][0])
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude')

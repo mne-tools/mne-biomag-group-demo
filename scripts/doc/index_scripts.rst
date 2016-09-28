@@ -51,7 +51,7 @@ Setup
 
     .. figure:: /auto_scripts/images/thumb/sphx_glr_02-python_filtering_thumb.png
 
-        :ref:`sphx_glr_auto_library_config.py`
+        :ref:`sphx_glr_auto_scripts_library_config.py`
 
 .. raw:: html
 

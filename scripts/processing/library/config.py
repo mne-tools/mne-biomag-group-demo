@@ -38,3 +38,8 @@ map_subjects = {1: 'subject_01', 2: 'subject_02', 3: 'subject_03',
 
 if not os.path.isdir(subjects_dir):
     os.mkdir(subjects_dir)
+
+ctc = os.path.join(os.path.dirname(__file__), 'ct_sparse.fif')
+cal = os.path.join(os.path.dirname(__file__), 'sss_cal.dat')
+
+ylim = {'eeg': [-10, 10], 'mag': [-300, 300], 'grad': [-80, 80]}

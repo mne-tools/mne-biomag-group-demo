@@ -37,7 +37,7 @@ events = mne.find_events(raw, stim_channel='STI101', consecutive='increasing',
 evoked_before = Epochs(raw, events, event_id=event_ids, picks=picks).average()
 
 ###############################################################################
-# Then Maxfiltered and tSSS'd data.
+# Then Maxfiltered and SSS'd data.
 raw = mne.io.read_raw_fif(raw_fname_in, preload=True, add_eeg_ref=False)
 raw_sss = mne.io.read_raw_fif(sss_fname_in, preload=True, add_eeg_ref=False)
 raw.info['bads'] = bads
@@ -58,8 +58,8 @@ evoked_before.plot(spatial_colors=True, ylim=ylim,
                    titles={'grad': 'Gradiometers before SSS',
                            'mag': 'Magnetometers before SSS'})
 evoked_after.plot(spatial_colors=True, ylim=ylim,
-                  titles={'grad': 'tSSS gradiometers',
-                          'mag': 'tSSS magnetometers'})
+                  titles={'grad': 'SSS gradiometers',
+                          'mag': 'SSS magnetometers'})
 evoked_sss.plot(spatial_colors=True, ylim=ylim,
                 titles={'grad': 'Maxfilter (TM) gradiometers',
                         'mag': 'Maxfilter (TM) magnetometers'})

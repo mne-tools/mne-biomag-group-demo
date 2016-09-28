@@ -114,3 +114,14 @@ plt.title('Impulse response')
 plt.xlim((14, 16))
 plt.show()
 raw.plot_psd(fmax=10)
+
+###############################################################################
+# Comparison between versions 0.12 and 0,13.
+ax = plt.subplot(111)
+raw.plot_psd(ax=ax, fmax=6, color='blue', show=False)
+raw_1.plot_psd(ax=ax, fmax=6, color='red', show=False)
+plt.xlabel('Freq (Hz)')
+plt.ylabel('Power Spectral Density (dB/Hz)')
+plt.title('Frequency spectrum')
+plt.legend(['Default in MNE 0.12', 'Default in MNE 0.13'], loc='lower right')
+plt.show()

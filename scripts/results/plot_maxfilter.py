@@ -37,7 +37,7 @@ events = mne.find_events(raw, stim_channel='STI101', consecutive='increasing',
 evoked_before = Epochs(raw, events, event_id=event_ids, picks=picks).average()
 
 ###############################################################################
-# Then Maxfiltered and tSSS'd data.
+# Then Maxfiltered and SSS'd data.
 raw = mne.io.read_raw_fif(raw_fname_in, preload=True, add_eeg_ref=False)
 raw_sss = mne.io.read_raw_fif(sss_fname_in, preload=True, add_eeg_ref=False)
 raw.info['bads'] = bads

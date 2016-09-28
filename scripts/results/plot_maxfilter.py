@@ -58,8 +58,8 @@ evoked_before.plot(spatial_colors=True, ylim=ylim,
                    titles={'grad': 'Gradiometers before SSS',
                            'mag': 'Magnetometers before SSS'})
 evoked_after.plot(spatial_colors=True, ylim=ylim,
-                  titles={'grad': 'tSSS gradiometers',
-                          'mag': 'tSSS magnetometers'})
+                  titles={'grad': 'SSS gradiometers',
+                          'mag': 'SSS magnetometers'})
 evoked_sss.plot(spatial_colors=True, ylim=ylim,
                 titles={'grad': 'Maxfilter (TM) gradiometers',
                         'mag': 'Maxfilter (TM) magnetometers'})

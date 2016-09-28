@@ -45,22 +45,25 @@ Stimulation details
 * The face stimuli was superimposed on the fixation cross for a random duration of 800 to 1,000 ms
 * Interstimlus interval of 1,700 ms comprised a central white circle
 * Two types of stimulation patterns:
-    * Immediate: The image was presented consecutively
-    * Long: The two images were presented with 5-15 intervening stimuli
-  For the purposes of our analysis, we treat these two patterns of stimuli together
+
+  * Immediate: The image was presented consecutively
+  * Long: The two images were presented with 5-15 intervening stimuli
+* For the purposes of our analysis, we treat these two stimulation patterns of stimuli together
 * To maintain attention, subjects were asked to judge the symmetry of the image and respond with a keypress
 
 Acquisition details
 ^^^^^^^^^^^^^^^^^^^
 * Sampling frequency : 1100 Hz
 * Stimulation triggers: The trigger channel is STI101 with the following event codes:
-    * Famous faces: 5 (first), 6 (immediate), and 7 (long)
-    * Unfamiliar faces: 13 (first), 14 (immediate), and 15 (long)
-    * Scrambled faces: 17 (first), 18 (immediate), and 19 (long)
+
+  * Famous faces: 5 (first), 6 (immediate), and 7 (long)
+  * Unfamiliar faces: 13 (first), 14 (immediate), and 15 (long)
+  * Scrambled faces: 17 (first), 18 (immediate), and 19 (long)
 * Sensors
-    * 102 magnetometers
-    * 204 planar gradiometers
-    * 70 electrodes recorded with a nose reference (Easycap conforming to extended 10-20% system)
+
+  * 102 magnetometers
+  * 204 planar gradiometers
+  * 70 electrodes recorded with a nose reference (Easycap conforming to extended 10-20% system)
 * Two sets of bipolar electrodes were used to measure vertical (left eye; EEG062) and
   horizontal electro-oculograms (EEG061). Another set was used to measure ECG (EEG063)
 * A fixed 34 ms delay exists between the appearance of a trigger in the trigger channel STI101 and the appearance

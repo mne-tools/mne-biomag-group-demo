@@ -8,6 +8,8 @@ epoch. In this example, we contrast the condition `'famous'` vs `'scrambled'`
 and `'famous'` vs `'unfamiliar'` using this approach. The end result is an
 averaging effect across sensors. The contrast across different sensors are
 combined into a single plot.
+
+Analysis script: :ref:`sphx_glr_auto_scripts_08-run_time_decoding.py`
 """
 
 ###############################################################################
@@ -38,7 +40,6 @@ for subject_id in range(1, 20):
 
 ###############################################################################
 # ... and average them
-# (see :ref:`sphx_glr_auto_scripts_08-run_time_decoding.py`)
 times = mat['times'][0]
 mean_scores, sem_scores = dict(), dict()
 for a_vs_b in a_vs_bs:

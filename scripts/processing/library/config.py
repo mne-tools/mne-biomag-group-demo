@@ -1,11 +1,16 @@
 """
+===========
 Config file
-======================
+===========
 
-Configuration parameters for the study
+Configuration parameters for the study. Place them in a folder called
+``library/`` inside the ``results/`` and ``processing/`` folders.
 """
 
 import os
+
+###############################################################################
+# Let's set the path where the data is downloaded and stored.
 
 user = os.environ['USER']
 if user == 'gramfort':
@@ -21,6 +26,9 @@ else:
     study_path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
     N_JOBS = 1
 
+###############################################################################
+# The ``subjects_dir`` and ``meg_dir`` for reading anatomical and MEG files.
+
 subjects_dir = os.path.join(study_path, 'subjects')
 meg_dir = os.path.join(study_path, 'MEG')
 
@@ -28,6 +36,10 @@ os.environ["SUBJECTS_DIR"] = subjects_dir
 
 spacing = 'oct6'
 mindist = 5
+
+###############################################################################
+# Some mapping betwen filenames for bad sensors and subjects
+
 map_subjects = {1: 'subject_01', 2: 'subject_02', 3: 'subject_03',
                 4: 'subject_05', 5: 'subject_06', 6: 'subject_08',
                 7: 'subject_09', 8: 'subject_10', 9: 'subject_11',
@@ -38,6 +50,11 @@ map_subjects = {1: 'subject_01', 2: 'subject_02', 3: 'subject_03',
 
 if not os.path.isdir(subjects_dir):
     os.mkdir(subjects_dir)
+
+###############################################################################
+# The `cross talk file <https://github.com/mne-tools/mne-biomag-group-demo/blob/master/scripts/results/library/ct_sparse.fif>`_
+# and `calibration file <https://github.com/mne-tools/mne-biomag-group-demo/blob/master/scripts/results/library/sss_cal.dat>`_
+# are placed in the same folder.
 
 ctc = os.path.join(os.path.dirname(__file__), 'ct_sparse.fif')
 cal = os.path.join(os.path.dirname(__file__), 'sss_cal.dat')

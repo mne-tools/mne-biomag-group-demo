@@ -24,7 +24,7 @@ def run_events(subject_id):
         if not os.path.exists(run_fname):
             continue
 
-        raw = mne.io.Raw(run_fname)
+        raw = mne.io.Raw(run_fname, add_eeg_ref=False)
         mask = 4096 + 256  # mask for excluding high order bits
         events = mne.find_events(raw, stim_channel='STI101',
                                  consecutive='increasing', mask=mask,

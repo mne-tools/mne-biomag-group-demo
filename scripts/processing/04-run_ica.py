@@ -27,7 +27,7 @@ def run_ica(subject_id):
             warn('Could not find file %s. '
                  'Skipping run %s for subject %s.' % (run_fname, run, subject))
             continue
-        raw = mne.io.read_raw_fif(run_fname)
+        raw = mne.io.read_raw_fif(run_fname, add_eeg_ref=False)
         ica_name = op.join(meg_dir, subject, 'run_%02d-ica.fif' % run)
 
         ica = ICA(method='fastica', random_state=42, n_components=0.98)

@@ -10,13 +10,12 @@ import os.path as op
 import numpy as np
 
 import mne
-from mne.io.constants import FIFF
 from mne.preprocessing import create_ecg_epochs, read_ica
 
 from library.config import meg_dir, map_subjects
 
 ###############################################################################
-# We define the events and the onset and offset of the epochs
+# We define the events and the onset and offset of the epochs.
 
 events_id = {
     'face/famous/first': 5,
@@ -41,7 +40,7 @@ print("processing subject: %s" % subject)
 data_path = op.join(meg_dir, subject)
 
 ###############################################################################
-# Now we get the bad channels
+# Now we get the bad channels.
 
 # Get all bad channels
 mapping = map_subjects[subject_id]  # map to correct subject
@@ -55,19 +54,13 @@ if os.path.exists(bad_name):
             bads.append(line.strip())
 
 ###############################################################################
-# We remove the EEG reference so that we can change the channel type
-# for ECG and EOG
+# We read the data.
 
 run_fname = op.join(data_path, 'run_%02d_filt_sss_raw.fif' % run)
 raw = mne.io.Raw(run_fname, preload=True, add_eeg_ref=False)
-for idx, proj in enumerate(raw.info['projs']):  # find idx for EEG-ref
-    if proj['kind'] == FIFF.FIFFV_MNE_PROJ_ITEM_EEG_AVREF:
-        proj_idx = idx
-        break
-raw.del_proj(proj_idx)  # remove EEG average ref
 
 ###############################################################################
-# Then we change the channel type for ECG and EOG
+# We change the channel type for ECG and EOG.
 
 raw.set_channel_types({'EEG061': 'eog', 'EEG062': 'eog', 'EEG063': 'ecg',
                        'EEG064': 'misc'})  # EEG064 free floating el.
@@ -76,7 +69,7 @@ raw.rename_channels({'EEG061': 'EOG061', 'EEG062': 'EOG062',
 
 ###############################################################################
 # We remove the bad eye blink segments from the raw by marking
-# ``raw.annotations``. They will be removed before constructing epochs
+# ``raw.annotations``. They will be removed before constructing epochs.
 
 eog_events = mne.preprocessing.find_eog_events(raw)
 eog_events[:, 0] -= int(0.25 * raw.info['sfreq'])
@@ -86,7 +79,7 @@ annotations = mne.Annotations(eog_events[:, 0] / raw.info['sfreq'],
 raw.annotations = annotations  # Remove epochs with blinks
 
 ###############################################################################
-# must take into account the 34 ms delay in the trigger channel
+# Must take into account the 34 ms delay in the trigger channel.
 
 delay = int(0.0345 * raw.info['sfreq'])
 events = mne.read_events(op.join(data_path,
@@ -94,7 +87,7 @@ events = mne.read_events(op.join(data_path,
 events[:, 0] = events[:, 0] + delay
 
 ###############################################################################
-# Bad sensors are repaired
+# Bad sensors are repaired.
 
 raw.info['bads'] = bads
 raw.interpolate_bads()

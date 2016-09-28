@@ -17,7 +17,6 @@ import numpy as np
 
 import mne
 from mne.parallel import parallel_func
-from mne.io.constants import FIFF
 from mne.preprocessing import create_ecg_epochs, read_ica
 
 from library.config import meg_dir, N_JOBS, map_subjects
@@ -71,12 +70,7 @@ def run_epochs(subject_id):
         if not os.path.exists(run_fname):
             continue
 
-        raw = mne.io.Raw(run_fname, preload=True)
-        for idx, proj in enumerate(raw.info['projs']):  # find idx for EEG-ref
-            if proj['kind'] == FIFF.FIFFV_MNE_PROJ_ITEM_EEG_AVREF:
-                proj_idx = idx
-                break
-        raw.del_proj(proj_idx)  # remove EEG average ref
+        raw = mne.io.Raw(run_fname, preload=True, add_eeg_ref=False)
 
         raw.set_channel_types({'EEG061': 'eog',
                                'EEG062': 'eog',
@@ -109,7 +103,7 @@ def run_epochs(subject_id):
         # Read epochs
         epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
                             picks=picks, baseline=baseline, preload=True,
-                            decim=2, reject=reject)
+                            decim=2, reject=reject, add_eeg_ref=False)
 
         # ICA
         ica_name = op.join(meg_dir, subject, 'run_%02d-ica.fif' % run)

@@ -18,7 +18,7 @@ event_ids = [5, 6, 7]  # Famous faces
 subject = "sub003"
 bads = ['MEG1031', 'MEG1111', 'MEG2113']
 filter_params = dict(fir_window='hann', l_trans_bandwidth=0.5, phase='zero',
-                     h_trans_bandwidth='auto', filter_length='10s')
+                     h_trans_bandwidth='auto', filter_length='auto')
 
 raw_fname_in = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
 sss_fname_in = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_sss.fif')
@@ -51,7 +51,6 @@ raw_sss.filter(1, 40, **filter_params)
 evoked_after = Epochs(raw, events, event_id=event_ids, picks=picks).average()
 evoked_sss = Epochs(raw_sss, events, event_id=event_ids, picks=picks).average()
 
-
 ###############################################################################
 # Plotting
 ylim = dict(grad=(-100, 100), mag=(-400, 400))
@@ -59,8 +58,8 @@ evoked_before.plot(spatial_colors=True, ylim=ylim,
                    titles={'grad': 'Gradiometers before SSS',
                            'mag': 'Magnetometers before SSS'})
 evoked_after.plot(spatial_colors=True, ylim=ylim,
-                  titles={'grad': 'SSS gradiometers',
-                          'mag': 'SSS magnetometers'})
+                  titles={'grad': 'tSSS gradiometers',
+                          'mag': 'tSSS magnetometers'})
 evoked_sss.plot(spatial_colors=True, ylim=ylim,
                 titles={'grad': 'Maxfilter (TM) gradiometers',
                         'mag': 'Maxfilter (TM) magnetometers'})

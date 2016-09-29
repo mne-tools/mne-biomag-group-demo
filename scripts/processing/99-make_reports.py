@@ -98,7 +98,7 @@ brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
 brain.set_data_time_index(165)
 
 fig = mlab.gcf()
-rep.add_figs_to_section(fig, 'Avergae faces - scrambled')
+rep.add_figs_to_section(fig, 'Average faces - scrambled')
 
 rep.save(fname=op.join(meg_dir, 'report_average.html'),
          open_browser=False, overwrite=True)

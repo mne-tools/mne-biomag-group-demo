@@ -13,15 +13,15 @@ sfreq = 1100.
 
 
 ###############################################################################
-# The defaults in MNE 0.13 are slightly different from the defaults in
-# MNE 0.14. We define a convenience function to get the defaults for each
+# The defaults in MNE 0.12 are slightly different from the defaults in
+# MNE 0.13. We define a convenience function to get the defaults for each
 # version. For more detailed information regarding these choices, head over
 # to the `filtering tutorial <http://mne-tools.github.io/stable/auto_tutorials/plot_background_filtering.html>`_
 # on the MNE website.
 def get_filter_defaults(version, filter_type):
     window = 'hann'
     if version == '0.12':
-        f_w = 0.5  # Transition band (Hz)
+        f_w = 0.5  # Transition bandwidth (Hz)
         filter_dur = 10.  # seconds
     elif version == '0.13':
         if filter_type == 'highpass':
@@ -63,7 +63,6 @@ def plot_filter_response(ax, h, xlim, label):
             linewidth=2, zorder=4, label=label)
     ax.set(xlim=xlim, ylim=ylim, xlabel='Frequency (Hz)',
            ylabel='Amplitude (dB)')
-    ax.legend()
     box_off(ax)
 
 
@@ -100,7 +99,7 @@ fig, axes = plt.subplots(2, 2, figsize=(12, 8))
 
 xlim = dict(highpass=[0, 4.], lowpass=[35, 55])
 ylim = [-40, 10]  # for dB plots
-f_ps = [1., 40.]
+f_ps = [1., 40.]  # corner frequencies (Hz)
 filter_types = ['highpass', 'lowpass']
 
 for ax, f_p, filter_type in zip(axes.T, f_ps, filter_types):
@@ -120,16 +119,15 @@ for ax, f_p, filter_type in zip(axes.T, f_ps, filter_types):
     plot_impulse_response(ax[1], h, label=lbl)
 
     # Ideal gain
+    freq = [0, f_p, f_p, sfreq / 2.]
+    min_gain = 10 ** (ylim[0] / 20)
     if filter_type == "highpass":
-        ideal_gain = [0, 0, 1, 1]
+        gain = [min_gain, min_gain, 1, 1]
     else:
-        ideal_gain = [1, 1, 0, 0]
-    ideal_freq = [0, f_p, f_p, sfreq / 2.]
-    ideal_gain = np.array(ideal_gain, dtype=float)
-    ideal_gain[ideal_gain == 0.] = 10 ** (ylim[0] / 20)
-    ax[0].plot(ideal_freq, 20 * np.log10(ideal_gain), 'r--', alpha=0.5,
+        gain = [1, 1, min_gain, min_gain]
+    ax[0].plot(freq, 20 * np.log10(gain), 'r--', alpha=0.5,
                linewidth=4, zorder=3, label='Ideal')
-
+    ax[0].legend()
     ax[0].set_title(filter_type + " (cutoff %s Hz)" % f_p)
 
 plt.tight_layout()

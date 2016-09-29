@@ -32,6 +32,8 @@ make publication quality figures at the single subject and at the group level.
 
 The scripts are provided on `mne-biomag-group-demo github repository <https://github.com/mne-tools/mne-biomag-group-demo/>`_
 
+The code contains the `MNE <http://martinos.org/mne/>`_ contribution to the `Biomag 2016 <http://www.biomag2016.org/>`_ satellite meeting `"How to perform MEG group analysis with free academic software" <http://www.biomag2016.org/satellite_meetings2.php>`_
+
 Abstract (of the satellite meeting)
 -----------------------------------
 

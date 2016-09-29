@@ -1,3 +1,9 @@
+"""
+Select filters
+==============
+
+Here we look at the choice of filters
+"""
 import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
@@ -39,14 +45,12 @@ for ax, label in zip(axes, labels):
         # plot freqency response
         f, H = signal.freqz(h)
         f *= sfreq / (2 * np.pi)
-        ax.plot(f, 10 * np.log10((H * H.conj()).real),
+        ax.plot(f, 20 * np.log10(np.abs(H)),
                 linewidth=2, zorder=4, label='$f_p$=%0.1f Hz' % f_p)
-        xticks = [1, 2, 4, 10, 20, 40, 100, 200, 400]
-        ax.set(xlim=xlim, ylim=ylim, xticks=xticks, xlabel='Frequency (Hz)',
-               ylabel='Amplitude (dB)')
-        ax.set(xticklabels=xticks)
+        ax.set(xlim=xlim, ylim=ylim, xlabel='Frequency (Hz)')
         ax.set_title('MNE default %s ' % label)
     box_off(ax)
     plt.legend(loc='lower right', ncol=1)
+axes[0].set_ylabel('Amplitude (dB)')
 plt.tight_layout()
 plt.show()

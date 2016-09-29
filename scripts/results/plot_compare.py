@@ -21,11 +21,10 @@ times = np.arange(0.1, 0.26, 0.025)
 
 ###############################################################################
 # Evoked responses on EEG. :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
-picks = mne.pick_types(evokeds[0][0].info, meg=False, eeg=True)
 for idx, evoked in enumerate(evokeds):
     for cond in range(3):
         comm = evoked[cond].comment
-        evoked[cond].plot_joint(picks=picks, ts_args={'ylim': ylim},
+        evoked[cond].plot_joint(ts_args={'ylim': ylim},
                                 title='Subject %s %s' % (idx + 1, comm))
 
 ###############################################################################

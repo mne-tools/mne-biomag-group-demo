@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 sfreq = 1100.
 ylim = [-60, 10]  # for dB plots
-xlim = [0, 40.]
+xlim = [0, 5.]
 
 
 def box_off(ax):
@@ -17,7 +17,7 @@ def box_off(ax):
 fig, axes = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(12, 6))
 labels = ['v0.12', 'v0.13']
 for ax, label in zip(axes, labels):
-    for f_p in [1.0]:  # passband corner frequency
+    for f_p in [1, 1.5, 2.5]:  # passband corner frequency
         if label == 'v0.12':
             transition_band = 0.5
             filter_dur = 10
@@ -39,8 +39,8 @@ for ax, label in zip(axes, labels):
         # plot freqency response
         f, H = signal.freqz(h)
         f *= sfreq / (2 * np.pi)
-        ax.semilogx(f, 10 * np.log10((H * H.conj()).real),
-                    linewidth=2, zorder=4, label='$f_p$=%0.1f Hz' % f_p)
+        ax.plot(f, 10 * np.log10((H * H.conj()).real),
+                linewidth=2, zorder=4, label='$f_p$=%0.1f Hz' % f_p)
         xticks = [1, 2, 4, 10, 20, 40, 100, 200, 400]
         ax.set(xlim=xlim, ylim=ylim, xticks=xticks, xlabel='Frequency (Hz)',
                ylabel='Amplitude (dB)')

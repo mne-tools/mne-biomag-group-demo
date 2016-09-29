@@ -1,127 +1,89 @@
 """
-Filtering
-=========
+Select filters
+==============
 
-Plot filter properties.
+Here we look at the choice of filters both for low and high
+pass.
 """
 import numpy as np
+from scipy import signal
 import matplotlib.pyplot as plt
-import os.path as op
 
-import mne
+sfreq = 1100.
+ylim = [-40, 10]  # for dB plots
+xlim = dict(highpass=[0, 4.], lowpass=[35, 55])
 
-from library.config import study_path
 
-filt_params = dict(l_trans_bandwidth='auto', h_trans_bandwidth='auto',
-                   filter_length='auto', phase='zero', fir_window='hann')
+def box_off(ax):
+    """Helper to beautify plot."""
+    ax.grid(zorder=0)
+    for key in ('top', 'right'):
+        ax.spines[key].set_visible(False)
 
-###############################################################################
-# Let's look at some data from the multimodal faces data set.
-# First we read in the data from run 1 of subject 2.
-raw = mne.io.read_raw_fif(op.join(study_path, 'ds117', 'sub002', 'MEG',
-                                  'run_01_sss.fif'), add_eeg_ref=False)
 
-raw.set_channel_types({'EEG061': 'eog', 'EEG062': 'eog', 'EEG063': 'ecg',
-                       'EEG064': 'misc'})  # EEG064 free floating el.
-raw.rename_channels({'EEG061': 'EOG061', 'EEG062': 'EOG062',
-                     'EEG063': 'ECG063'})
-raw.set_eeg_reference()
+def design_filter(label, f_p, transition_band, filter_dur, window):
+    if label == 'highpass':
+        f_s = f_p - transition_band
+        # design the filter
+        freq = [0., f_s, f_p, sfreq / 2.]
+        gain = [0., 0., 1., 1.]
+    else:
+        f_s = f_p + transition_band
+        # design the filter
+        freq = [0., f_p, f_s, sfreq / 2.]
+        gain = [1., 1., 0., 0.]
 
-###############################################################################
-# Then we filter it at 1Hz with the defaults of MNE.
-raw_1 = raw.copy()
-raw_1.load_data()
-raw_1.filter(1, 40, **filt_params)
+    n = int(sfreq * filter_dur)
+    n += ~(n % 2)  # Type II filter can't have 0 attenuation at nyq
 
-raw_1.plot_psd(fmax=10)
+    h = signal.firwin2(n, freq, gain, nyq=sfreq / 2., window=window)
+    return h
 
-###############################################################################
-# We see that even though the attenuation close to 0Hz is sufficient enough,
-# the low frequency components at around 1Hz are still quite prominent. Lets
-# see how the famous faces look after averaging. (Notice that we do not
-# compensate for the delay or clean the data, so the figures are not comparable
-# to the final results).
-events = mne.find_events(raw_1)
-event_ids = [5, 6, 7]  # Famous faces
-evoked_1 = mne.Epochs(raw_1, events, event_id=event_ids,
-                      baseline=None).average()
-evoked_1.plot(spatial_colors=True)
 
-###############################################################################
-# They're all over the place! The baselining effect of high-pass filtering does
-# not seem to work. Let's try removing the low frequency components by raising
-# the cut-off frequency to 2.5 Hz.
-raw_2 = raw.copy()
-raw_2.load_data()
-raw_2.filter(2.5, 40, **filt_params)
-raw_2.plot_psd(fmax=10)
+def plot_filter(ax, h, xlim, label):
+    # plot freqency response
+    f, H = signal.freqz(h)
+    f *= sfreq / (2 * np.pi)
+    ax.plot(f, 20 * np.log10(np.abs(H)),
+            linewidth=2, zorder=4, label=label)
+    ax.set(xlim=xlim, ylim=ylim, xlabel='Frequency (Hz)')
+    box_off(ax)
 
-###############################################################################
-# We see that the low frequency 'peak' is gone and the transition is more
-# gradual. The 'auto' param automatically fits the transition bandwidth to
-# reduce ringing as much as possible.
-# Finally we plot the evoked responses, and we see that the fanning of the
-# signal is gone.
-evoked_2 = mne.Epochs(raw_2, events, event_id=event_ids,
-                      baseline=None).average()
-evoked_2.plot(spatial_colors=True)
 
-###############################################################################
-# Let's also plot the impulse response of the used filter. Here we create some
-# data with 30000 samples of zeros with an impulse at the middle. Then we
-# construct a raw data structure and set a sampling frequency to 1000. Thus,
-# we have 30 seconds of data with an impulse at 15 seconds.
-n_samples = 30000
-sfreq = 1000
-info = mne.create_info(ch_names=['test'], sfreq=sfreq, ch_types=['eeg'])
-data = np.zeros(n_samples)
-data[n_samples // 2] = 1e-6
-times = np.linspace(0, n_samples // sfreq, n_samples)
-raw = mne.io.RawArray(np.array([data]), info)
+fig, axes = plt.subplots(1, 2, sharey=True, figsize=(12, 4))
+f_ps = [1., 40.]
+labels = ['highpass', 'lowpass']
+for ax, f_p, label in zip(axes, f_ps, labels):
+    # MNE old defaults
+    transition_band = 0.5  # Hz
+    filter_dur = 10.  # seconds
+    window = 'hann'
+    h = design_filter(label, f_p, transition_band, filter_dur, window)
+    plot_filter(ax, h, xlim[label],
+                label='MNE (0.12)' + ('' if label == 'lowpass' else ' (Used)'))
 
-###############################################################################
-# We low-pass filter the data and plot the frequency spectrum and the impulse
-# response of the filter.
-raw_1 = raw.copy()
-raw_1.filter(None, 40, **filt_params)
-plt.plot(times, raw_1[0][0][0])
-plt.xlabel('Time (s)')
-plt.ylabel('Amplitude')
-plt.title('Impulse response')
-plt.xlim((14, 16))
-plt.show()
-raw_1.plot_psd(fmin=20, fmax=60)
+    # MNE new defaults
+    if label == "highpass":
+        transition_band = min(max(0.25 * f_p, 2.), f_p)  # Hz
+        ideal_gain = [0, 0, 1, 1]
+    else:
+        transition_band = min(max(0.25 * f_p, 2.), sfreq / 2. - f_p)  # Hz
+        ideal_gain = [1, 1, 0, 0]
 
-###############################################################################
-# Let's do the same after high-pass filtering at 2.5 Hz.
-raw_1.filter(2.5, None, **filt_params)
-plt.plot(times, raw_1[0][0][0])
-plt.xlabel('Time (s)')
-plt.ylabel('Amplitude')
-plt.title('Impulse response')
-plt.xlim((14, 16))
-plt.show()
-raw_1.plot_psd(fmax=10)
+    filter_dur = 6.6 / transition_band  # sec
+    window = 'hamming'
+    h = design_filter(label, f_p, transition_band, filter_dur, window)
+    plot_filter(ax, h, xlim[label],
+                label='MNE (0.13)' + ('' if label == 'highpass' else ' (Used)'))
 
-###############################################################################
-# We see that with the old defaults (MNE versions < 0.13) the transition is
-# much steeper.
-raw.filter(2.5, 40, l_trans_bandwidth=0.5)
-plt.plot(times, raw[0][0][0])
-plt.xlabel('Time (s)')
-plt.ylabel('Amplitude')
-plt.title('Impulse response')
-plt.xlim((14, 16))
-plt.show()
-raw.plot_psd(fmax=10)
+    ideal_freq = [0, f_p, f_p, sfreq / 2.]
+    ideal_gain = np.array(ideal_gain, dtype=float)
+    ideal_gain[ideal_gain == 0.] = 10 ** (ylim[0] / 20)
+    ax.plot(ideal_freq, 20 * np.log10(ideal_gain), 'r--', alpha=0.5, linewidth=4,
+            zorder=3, label='Ideal')
+    ax.legend()
+    ax.set_title(label + " (cutoff %s Hz)" % f_p)
 
-###############################################################################
-# Comparison between versions 0.12 and 0,13.
-ax = plt.subplot(111)
-raw.plot_psd(ax=ax, fmax=6, color='blue', show=False)
-raw_1.plot_psd(ax=ax, fmax=6, color='red', show=False)
-plt.xlabel('Freq (Hz)')
-plt.ylabel('Power Spectral Density (dB/Hz)')
-plt.title('Frequency spectrum')
-plt.legend(['Default in MNE 0.12', 'Default in MNE 0.13'], loc='lower right')
+axes[0].set_ylabel('Amplitude (dB)')
+plt.tight_layout()
 plt.show()

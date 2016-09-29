@@ -34,7 +34,7 @@ def run_evoked(subject_id):
     contrast = mne.combine_evoked([evoked_famous, evoked_unfamiliar,
                                    evoked_scrambled], weights=[0.5, 0.5, -1.])
     contrast.comment = 'contrast'
-    faces = mne.combine_evoked([evoked_famous, evoked_unfamiliar])
+    faces = mne.combine_evoked([evoked_famous, evoked_unfamiliar], 'nave')
     faces.comment = 'faces'
 
     mne.evoked.write_evokeds(op.join(data_path, '%s-ave.fif' % subject),

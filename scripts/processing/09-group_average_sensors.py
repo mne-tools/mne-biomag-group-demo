@@ -29,7 +29,7 @@ for run in range(1, 20):
 
 
 for idx, evokeds in enumerate(all_evokeds):
-    all_evokeds[idx] = mne.combine_evoked(evokeds)  # Combine subjects
+    all_evokeds[idx] = mne.combine_evoked(evokeds, 'equal')  # Combine subjects
 
 mne.evoked.write_evokeds(op.join(meg_dir, 'grand_average-ave.fif'),
                          all_evokeds)

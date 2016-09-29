@@ -36,7 +36,7 @@ for subject_id in range(1, 20):
     contrast.apply_baseline((-0.2, 0.0))
     contrasts.append(contrast)
 
-contrast = mne.combine_evoked(contrasts)
+contrast = mne.combine_evoked(contrasts, 'equal')
 
 channel = 'EEG070'
 idx = contrast.ch_names.index(channel)

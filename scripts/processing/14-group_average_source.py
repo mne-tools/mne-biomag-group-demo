@@ -19,6 +19,7 @@ faces_stcs = list()
 scrambled_stcs = list()
 exclude = [1, 5, 16]  # Excluded subjects
 
+grade = [np.arange(5121), np.arange(5121)]
 for run in range(1, 20):
     if run in exclude:
         continue
@@ -40,16 +41,16 @@ for run in range(1, 20):
     lambda2 = 1.0 / snr ** 2
     stc = apply_inverse(contrast, inv, lambda2, "dSPM", pick_ori=None)
     stcs.append(stc.morph(subject_from=subject, subject_to='fsaverage',
-                          subjects_dir=subjects_dir))
+                          subjects_dir=subjects_dir), grade=grade)
 
     stc = apply_inverse(faces, inv, lambda2, "dSPM", pick_ori=None)
     faces_stcs.append(stc.morph(subject_from=subject, subject_to='fsaverage',
-                                subjects_dir=subjects_dir))
+                                subjects_dir=subjects_dir), grade=grade)
 
     stc = apply_inverse(scrambled, inv, lambda2, "dSPM", pick_ori=None)
     scrambled_stcs.append(stc.morph(subject_from=subject,
                                     subject_to='fsaverage',
-                                    subjects_dir=subjects_dir))
+                                    subjects_dir=subjects_dir), grade=grade)
 
 
 data = np.average([s.data for s in stcs], axis=0)

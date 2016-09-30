@@ -43,6 +43,6 @@ evoked.plot_topomap()
 # topography are no longer visible and the "fanning" has disappeared.
 raw.filter(1, 40, l_trans_bandwidth=0.5, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
-                baseline=(None, 0)).average()
+                baseline=None).average()
 evoked.plot()
 evoked.plot_topomap()

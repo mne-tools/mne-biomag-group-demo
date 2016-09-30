@@ -5,7 +5,7 @@ Analysis for subject 1
 
 Run the analysis.
 """
-from pyface.qt import QtCore, QtGui
+
 import os
 import os.path as op
 import numpy as np

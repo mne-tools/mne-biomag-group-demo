@@ -319,7 +319,7 @@ Source space
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="blabla ">
+    <div class="sphx-glr-thumbcontainer" tooltip="Make web report">
 
 .. only:: html
 

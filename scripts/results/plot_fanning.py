@@ -39,9 +39,10 @@ evoked.plot()
 evoked.plot_topomap()
 
 ###############################################################################
-# Next, we highpass filter but don't baseline. Now, the late effects in the
-# topography are no longer visible and the "fanning" has disappeared.
-raw.filter(1, 40, l_trans_bandwidth=0.5, **filter_params)
+# Next, we highpass filter (but now lowpass filter as we have already done it)
+# but don't baseline. Now, the late effects in the topography are no longer
+# visible and the "fanning" has disappeared.
+raw.filter(1, None, l_trans_bandwidth=0.5, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
                 baseline=None).average()
 evoked.plot()

@@ -139,6 +139,26 @@ Demos
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Baselining vs highpass filtering. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_fanning_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_fanning.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_fanning
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Plot filters. ">
 
 .. only:: html

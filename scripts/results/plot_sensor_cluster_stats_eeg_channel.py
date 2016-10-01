@@ -85,7 +85,7 @@ plt.legend()
 plt.subplot(212)
 for i_c, c in enumerate(clusters):
     c = c[0]
-    if cluster_p_values[i_c] <= 0.05:
+    if cluster_p_values[i_c] <= p_accept:
         h1 = plt.axvspan(times[c.start], times[c.stop - 1],
                          color='r', alpha=0.3)
     else:

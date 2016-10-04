@@ -17,7 +17,12 @@ Authors
 - `Alexandre Gramfort <http://alexandre.gramfort.net/>`_, Telecom ParisTech
 - `Mainak Jas <http://perso.telecom-paristech.fr/~mjas/>`_, Telecom ParisTech
 - `Jaakko Leppäkangas <https://github.com/jaeilepp>`_, Telecom ParisTech
-- `Denis Engemann <http://www.denis-engemann.de/>`_, INRIA, Parietal team
+- `Denis Engemann <http://www.denis-engemann.de/>`_, Neurospin, CEA/INSERM, UNICOG Team
+
+Slides of presentation at Biomag 2016 Conf.
+-------------------------------------------
+
+`Link to presented slides <http://www.slideshare.net/agramfort/mne-group-analysis-presentation-biomag-2016-conf>`_
 
 Content
 -------

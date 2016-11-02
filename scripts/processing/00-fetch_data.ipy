@@ -8,6 +8,8 @@ from library.config import study_path
 
 pwd = os.getcwd()
 
+if not os.path.exists(os.path.join(study_path, 'ds117')):
+    os.mkdir(os.path.join(study_path, 'ds117'))
 os.chdir(os.path.join(study_path, 'ds117'))
 
 archive_dir = os.path.join(os.getcwd(), 'archive')

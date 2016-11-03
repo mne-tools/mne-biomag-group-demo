@@ -51,7 +51,7 @@ def process_subject_anat(subject_id):
 
 # 19 excluded due to pb with flash images
 parallel, run_func, _ = parallel_func(process_subject_anat, n_jobs=N_JOBS)
-parallel(run_func(subject_id) for subject_id in range(4, 5))
+parallel(run_func(subject_id) for subject_id in range(1, 19))
 
 # run this for subject 19
 # for i in *nii.gz; do mri_convert $i ${i/nii.gz/mgz}; done

@@ -20,7 +20,8 @@ def run_evoked(subject_id):
     print("processing subject: %s" % subject)
 
     data_path = op.join(meg_dir, subject)
-    epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject))
+    epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject),
+                             preload=False)
 
     evoked_famous = epochs['face/famous'].average()
     evoked_scrambled = epochs['scrambled'].average()

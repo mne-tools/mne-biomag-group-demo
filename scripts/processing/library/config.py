@@ -20,8 +20,8 @@ elif user == 'mjas':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
     N_JOBS = 4
 elif user == 'jleppakangas':
-    study_path = '/tsi/doctorants/jleppakangas/dgw_faces'
-    N_JOBS = 2
+    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
+    N_JOBS = 8
 elif user == 'alex':
     study_path = '/Users/alex/work/data/mne-biomag-group-demo/'
     N_JOBS = 1

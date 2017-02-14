@@ -39,3 +39,12 @@ stc = mne.read_source_estimate(fname, subject='fsaverage')
 brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
                  subjects_dir=subjects_dir, initial_time=0.17, time_unit='s',
                  clim={'lims': [99.75, 99.88, 99.98]})
+
+###############################################################################
+# LCMV beamformer
+fname = op.join(meg_dir, 'contrast-average-lcmv')
+stc = mne.read_source_estimate(fname, subject='fsaverage')
+
+brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
+                 subjects_dir=subjects_dir, initial_time=0.17, time_unit='s',
+                 clim={'lims': [99.75, 99.88, 99.98]})

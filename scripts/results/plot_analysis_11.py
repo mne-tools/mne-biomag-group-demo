@@ -135,5 +135,12 @@ brain = plot_stc('faces')
 brain = plot_stc('contrast')
 
 ###############################################################################
+# LCMV Faces - scrambled
+fname = op.join(meg_dir, subject, 'mne_LCMV_inverse-contrast')
+stc = mne.read_source_estimate(fname, subject)
+stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
+         hemi='both', initial_time=0.17, time_unit='s')
+
+###############################################################################
 # BEM
 mne.viz.plot_bem(subject, subjects_dir)

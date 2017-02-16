@@ -44,7 +44,7 @@ baseline = None
 ###############################################################################
 # Now we define a function to extract epochs for one subject
 
-def run_epochs(subject_id):
+def run_epochs(subject_id, tsss=False):
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
 
@@ -66,7 +66,10 @@ def run_epochs(subject_id):
 
     for run in range(1, 7):
         print " - Run %s" % run
-        run_fname = op.join(data_path, 'run_%02d_filt_sss_raw.fif' % run)
+        if tsss:
+            run_fname = op.join(data_path, 'run_%02d_filt_tsss_raw.fif' % run)
+        else:
+            run_fname = op.join(data_path, 'run_%02d_filt_sss_raw.fif' % run)
         if not os.path.exists(run_fname):
             continue
 
@@ -118,7 +121,10 @@ def run_epochs(subject_id):
         all_epochs.append(epochs)
 
     epochs = mne.epochs.concatenate_epochs(all_epochs)
-    epochs.save(op.join(data_path, '%s-epo.fif' % subject))
+    if tsss:
+        epochs.save(op.join(data_path, '%s-tsss-epo.fif' % subject))
+    else:
+        epochs.save(op.join(data_path, '%s-epo.fif' % subject))
 
 
 ###############################################################################
@@ -126,3 +132,4 @@ def run_epochs(subject_id):
 
 parallel, run_func, _ = parallel_func(run_epochs, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
+run_epochs(1, True)  # run on maxwell filtered data

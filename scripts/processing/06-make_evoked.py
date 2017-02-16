@@ -15,13 +15,18 @@ from mne.parallel import parallel_func
 from library.config import meg_dir, N_JOBS
 
 
-def run_evoked(subject_id):
+def run_evoked(subject_id, tsss=False):
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
 
     data_path = op.join(meg_dir, subject)
-    epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject),
-                             preload=False)
+    if tsss:
+        epochs = mne.read_epochs(op.join(data_path,
+                                         '%s-tsss-epo.fif' % subject),
+                                 preload=False)
+    else:
+        epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject),
+                                 preload=False)
 
     evoked_famous = epochs['face/famous'].average()
     evoked_scrambled = epochs['scrambled'].average()
@@ -38,14 +43,25 @@ def run_evoked(subject_id):
     faces = mne.combine_evoked([evoked_famous, evoked_unfamiliar], 'nave')
     faces.comment = 'faces'
 
-    mne.evoked.write_evokeds(op.join(data_path, '%s-ave.fif' % subject),
-                             [evoked_famous, evoked_scrambled,
-                              evoked_unfamiliar, contrast, faces])
+    if tsss:
+        mne.evoked.write_evokeds(op.join(data_path,
+                                         '%s-tsss-ave.fif' % subject),
+                                 [evoked_famous, evoked_scrambled,
+                                  evoked_unfamiliar, contrast, faces])
+
+    else:
+        mne.evoked.write_evokeds(op.join(data_path, '%s-ave.fif' % subject),
+                                 [evoked_famous, evoked_scrambled,
+                                  evoked_unfamiliar, contrast, faces])
 
     # take care of noise cov
     cov = mne.compute_covariance(epochs, tmax=0, method='shrunk')
-    cov.save(op.join(data_path, '%s-cov.fif' % subject))
+    if tsss:
+        cov.save(op.join(data_path, '%s-tsss-cov.fif' % subject))
+    else:
+        cov.save(op.join(data_path, '%s-cov.fif' % subject))
 
 
 parallel, run_func, _ = parallel_func(run_evoked, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
+run_evoked(1, True)  # run on maxwell filtered data

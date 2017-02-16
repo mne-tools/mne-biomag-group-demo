@@ -17,10 +17,8 @@ from warnings import warn
 import mne
 from mne.parallel import parallel_func
 
-from library.config import study_path, meg_dir, N_JOBS, cal, ctc
+from library.config import study_path, meg_dir, N_JOBS
 
-# Whether to run mne tSSS, if False, use files with sss already applied.
-run_tsss = False
 
 if not op.exists(meg_dir):
     os.mkdir(meg_dir)
@@ -30,12 +28,8 @@ def run_filter(subject_id):
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     raw_fname_out = op.join(meg_dir, subject, 'run_%02d_filt_sss_raw.fif')
-    if run_tsss:
-        raw_fname_in = op.join(study_path, 'ds117', subject, 'MEG',
-                               'run_%02d_raw.fif')
-    else:
-        raw_fname_in = op.join(study_path, 'ds117', subject, 'MEG',
-                               'run_%02d_sss.fif')
+    raw_fname_in = op.join(study_path, 'ds117', subject, 'MEG',
+                           'run_%02d_sss.fif')
     for run in range(1, 7):
         raw_in = raw_fname_in % run
         try:
@@ -45,19 +39,6 @@ def run_filter(subject_id):
             warn('Could not read file %s. '
                  'Skipping run %s from subject %s.' % (raw_in, run, subject))
             continue
-        if run_tsss:
-            # Hackish way of reading bad channels.
-            with open(op.join(study_path, 'ds117', subject, 'MEG',
-                              'run_%02d_sss_log.txt' % run)) as fid:
-                for line in fid:
-                    if line.startswith('Static bad channels'):
-                        chs = line.split(':')[-1].split()
-                        bads = ['MEG%04d' % int(ch) for ch in chs]
-                        break
-            raw.info['bads'] += bads
-            raw = mne.preprocessing.maxwell_filter(raw, calibration=cal,
-                                                   cross_talk=ctc,
-                                                   st_duration=10.)
 
         raw_out = raw_fname_out % run
         if not op.exists(op.join(meg_dir, subject)):

@@ -44,5 +44,4 @@ def run_ica(subject_id, tsss=False):
 
 parallel, run_func, _ = parallel_func(run_ica, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-
-run_func(1, True)
+run_ica(1, True)

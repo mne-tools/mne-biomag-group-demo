@@ -33,7 +33,8 @@ def run_ica(subject_id, tsss=False):
                  'Skipping run %s for subject %s.' % (run_fname, run, subject))
             continue
         raw = mne.io.read_raw_fif(run_fname, add_eeg_ref=False)
-
+        if tsss:
+            raw.apply_proj()
         ica = ICA(method='fastica', random_state=42, n_components=0.98)
         picks = mne.pick_types(raw.info, meg=True, eeg=False, eog=False,
                                stim=False, exclude='bads')

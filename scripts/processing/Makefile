@@ -1,6 +1,7 @@
 PYTHON = python
 
 preproc:
+	$(PYTHON) 02-maxwell_filtering.py
 	$(PYTHON) 02-python_filtering.py
 	$(PYTHON) 03-run_extract_events.py
 	$(PYTHON) 04-run_ica.py

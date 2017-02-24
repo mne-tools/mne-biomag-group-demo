@@ -29,7 +29,7 @@ def run_forward(subject_id):
                                  n_jobs=1, add_dist=False)
 
     src_fname = op.join(subjects_dir, subject, '%s-src.fif' % spacing)
-    mne.write_source_spaces(src_fname, src)
+    mne.write_source_spaces(src_fname, src, overwrite=True)
 
     bem_model = mne.make_bem_model(subject, ico=4, subjects_dir=subjects_dir,
                                    conductivity=(0.3,))

@@ -65,7 +65,7 @@ def run_filter(subject_id):
         print(raw.info['bads'])
         raw = mne.preprocessing.maxwell_filter(raw, calibration=cal,
                                                cross_talk=ctc,
-                                               st_duration=10., st_only=True,
+                                               st_duration=10.,
                                                origin=(0., 0., 0.04),
                                                destination=destination)
 

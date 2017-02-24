@@ -92,6 +92,26 @@ Sensor space
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="The data are bandpass filtered (1 - 40 Hz) using linear-phase fir filter with delay compensatio...">
+
+.. only:: html
+
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_02-maxwell_filtering_thumb.png
+
+        :ref:`sphx_glr_auto_scripts_02-maxwell_filtering.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/02-maxwell_filtering
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="The events are extracted from stimulus channel 'STI101'. The events are saved to the subject's ...">
 
 .. only:: html

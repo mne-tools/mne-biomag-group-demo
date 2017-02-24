@@ -179,6 +179,26 @@ Demos
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Analysis for subject 1 with maxwell filtered data with tSSS">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_tsss_analysis_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_tsss_analysis.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_tsss_analysis
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Demonstrates removal of ECG for one run (sub005, run01)">
 
 .. only:: html

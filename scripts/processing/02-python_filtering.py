@@ -33,7 +33,7 @@ def run_filter(subject_id):
     for run in range(1, 7):
         raw_in = raw_fname_in % run
         try:
-            raw = mne.io.read_raw_fif(raw_in, preload=True, add_eeg_ref=False)
+            raw = mne.io.read_raw_fif(raw_in, preload=True)
         except AttributeError:
             # Some files on openfmri are corrupted and cannot be read.
             warn('Could not read file %s. '
@@ -46,7 +46,7 @@ def run_filter(subject_id):
 
         raw.filter(1, 40, l_trans_bandwidth='auto', h_trans_bandwidth='auto',
                    filter_length='auto', phase='zero', fir_window='hann',
-                   filter_design='firwin')
+                   fir_design='firwin')
         raw.save(raw_out, overwrite=True)
 
 

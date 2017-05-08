@@ -65,7 +65,7 @@ def run_epochs(subject_id, tsss=False):
         all_bads += [bad for bad in bads if bad not in all_bads]
 
     for run in range(1, 7):
-        print " - Run %s" % run
+        print(" - Run %s" % run)
         if tsss:
             run_fname = op.join(data_path, 'run_%02d_filt_tsss_raw.fif' % run)
         else:
@@ -73,7 +73,7 @@ def run_epochs(subject_id, tsss=False):
         if not os.path.exists(run_fname):
             continue
 
-        raw = mne.io.Raw(run_fname, preload=True, add_eeg_ref=False)
+        raw = mne.io.Raw(run_fname, preload=True)
 
         raw.set_channel_types({'EEG061': 'eog',
                                'EEG062': 'eog',
@@ -106,7 +106,7 @@ def run_epochs(subject_id, tsss=False):
         # Read epochs
         epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
                             picks=picks, baseline=baseline, preload=True,
-                            decim=2, reject=reject, add_eeg_ref=False)
+                            decim=2, reject=reject)
 
         # ICA
         if tsss:

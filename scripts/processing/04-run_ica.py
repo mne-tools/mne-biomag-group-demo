@@ -32,7 +32,7 @@ def run_ica(subject_id, tsss=False):
             warn('Could not find file %s. '
                  'Skipping run %s for subject %s.' % (run_fname, run, subject))
             continue
-        raw = mne.io.read_raw_fif(run_fname, add_eeg_ref=False)
+        raw = mne.io.read_raw_fif(run_fname)
         if tsss:
             raw.apply_proj()
         ica = ICA(method='fastica', random_state=42, n_components=0.98)

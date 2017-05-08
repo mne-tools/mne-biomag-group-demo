@@ -18,7 +18,8 @@ event_ids = [5, 6, 7]  # Famous faces
 subject = "sub003"
 bads = ['MEG1031', 'MEG1111', 'MEG2113']
 filter_params = dict(fir_window='hann', l_trans_bandwidth=0.5, phase='zero',
-                     h_trans_bandwidth='auto', filter_length='auto')
+                     h_trans_bandwidth='auto', filter_length='auto',
+                     fir_design='firwin')
 
 raw_fname_in = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
 sss_fname_in = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_sss.fif')

@@ -25,7 +25,7 @@ sss_fname_in = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_sss.fif')
 
 ###############################################################################
 # First the filtered raw data.
-raw = mne.io.read_raw_fif(raw_fname_in, preload=True, add_eeg_ref=False)
+raw = mne.io.read_raw_fif(raw_fname_in, preload=True)
 
 raw.info['bads'] = bads
 picks = mne.pick_types(raw.info, meg=True, exclude='bads')
@@ -38,8 +38,8 @@ evoked_before = Epochs(raw, events, event_id=event_ids, picks=picks).average()
 
 ###############################################################################
 # Then Maxfiltered and SSS'd data.
-raw = mne.io.read_raw_fif(raw_fname_in, preload=True, add_eeg_ref=False)
-raw_sss = mne.io.read_raw_fif(sss_fname_in, preload=True, add_eeg_ref=False)
+raw = mne.io.read_raw_fif(raw_fname_in, preload=True)
+raw_sss = mne.io.read_raw_fif(sss_fname_in, preload=True)
 raw.info['bads'] = bads
 raw_sss.info['bads'] = bads
 

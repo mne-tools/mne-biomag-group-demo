@@ -21,7 +21,7 @@ filter_params = dict(fir_window='hann', phase='zero',
 ###############################################################################
 # Read in raw data and prepare for epoching
 raw_fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_sss.fif')
-raw = mne.io.read_raw_fif(raw_fname, preload=True, add_eeg_ref=False)
+raw = mne.io.read_raw_fif(raw_fname, preload=True)
 
 picks = mne.pick_types(raw.info, meg=True, exclude='bads')
 events = mne.find_events(raw, stim_channel='STI101', consecutive='increasing',

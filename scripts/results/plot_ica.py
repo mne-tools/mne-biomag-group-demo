@@ -36,7 +36,7 @@ if os.path.exists(bad_name):
 # We read the data.
 
 run_fname = op.join(data_path, 'run_%02d_filt_sss_raw.fif' % run)
-raw = mne.io.read_raw_fif(run_fname, preload=True, add_eeg_ref=False)
+raw = mne.io.read_raw_fif(run_fname, preload=True)
 
 ###############################################################################
 # We change the channel type for ECG and EOG.

@@ -5,9 +5,12 @@ Select filters
 Here we look at the choice of filters both for low and high
 pass.
 """
+
 import numpy as np
-from scipy import signal
+from scipy.signal import firwin2, freqz
 import matplotlib.pyplot as plt
+
+from mne.filter import create_filter
 
 sfreq = 1100.
 
@@ -23,7 +26,7 @@ def get_filter_defaults(version, filter_type):
     if version == '0.12':
         f_w = 0.5  # Transition bandwidth (Hz)
         filter_dur = 10.  # seconds
-    elif version == '0.13':
+    elif version in ['0.13', '0.16']:
         if filter_type == 'highpass':
             f_w = min(max(0.25 * f_p, 2.), f_p)  # Hz
         else:
@@ -35,21 +38,29 @@ def get_filter_defaults(version, filter_type):
 
 ###############################################################################
 # Then, we define a function to design the filters using
-# :func:`scipy.signal.firwin2`.
-def design_filter(filter_type, f_p, f_w, filter_dur, window):
-    if filter_type == 'highpass':
-        f_s = f_p - f_w
-        freq = [0., f_s, f_p, sfreq / 2.]
-        gain = [0., 0., 1., 1.]
+# :func:`scipy.signal.firwin` or :func:`scipy.signal.firwin2`.
+def design_filter(filter_type, f_p, f_w, filter_dur, window, fir_design):
+    if fir_design == 'firwin':
+        if filter_type == 'highpass':
+            h = create_filter(np.ones(10000), sfreq, f_p, None,
+                              fir_design=fir_design)
+        else:
+            h = create_filter(np.ones(10000), sfreq, None, f_p,
+                              fir_design=fir_design)
     else:
-        f_s = f_p + f_w
-        freq = [0., f_p, f_s, sfreq / 2.]
-        gain = [1., 1., 0., 0.]
+        if filter_type == 'highpass':
+            f_s = f_p - f_w
+            freq = [0., f_s, f_p, sfreq / 2.]
+            gain = [0., 0., 1., 1.]
+        else:
+            f_s = f_p + f_w
+            freq = [0., f_p, f_s, sfreq / 2.]
+            gain = [1., 1., 0., 0.]
 
-    n = int(sfreq * filter_dur)
-    n += ~(n % 2)  # Type II filter can't have 0 attenuation at nyq
+        n = int(sfreq * filter_dur)
+        n += ~(n % 2)  # Type II filter can't have 0 attenuation at nyq
 
-    h = signal.firwin2(n, freq, gain, nyq=sfreq / 2., window=window)
+        h = firwin2(n, freq, gain, nyq=sfreq / 2., window=window)
     return h
 
 
@@ -57,7 +68,7 @@ def design_filter(filter_type, f_p, f_w, filter_dur, window):
 # To choose our filters, we plot the frequency response of the filter (in dB).
 # Higher attenuation is good for reducing noise.
 def plot_filter_response(ax, h, xlim, label):
-    f, H = signal.freqz(h)
+    f, H = freqz(h)
     f *= sfreq / (2 * np.pi)
     ax.plot(f, 20 * np.log10(np.abs(H)),
             linewidth=2, zorder=4, label=label)
@@ -106,15 +117,22 @@ for ax, f_p, filter_type in zip(axes.T, f_ps, filter_types):
 
     # MNE old defaults
     window, f_w, filter_dur = get_filter_defaults('0.12', filter_type)
-    h = design_filter(filter_type, f_p, f_w, filter_dur, window)
-    lbl = 'MNE (0.12)' + ('' if filter_type == 'lowpass' else ' (Used)')
+    h = design_filter(filter_type, f_p, f_w, filter_dur, window, 'firwin2')
+    lbl = 'MNE (0.12)'
     plot_filter_response(ax[0], h, xlim[filter_type], label=lbl)
     plot_impulse_response(ax[1], h, lbl)
 
     # MNE new defaults
     window, f_w, filter_dur = get_filter_defaults('0.13', filter_type)
-    h = design_filter(filter_type, f_p, f_w, filter_dur, window)
-    lbl = 'MNE (0.13)' + ('' if filter_type == 'highpass' else ' (Used)')
+    h = design_filter(filter_type, f_p, f_w, filter_dur, window, 'firwin2')
+    lbl = 'MNE (0.13)'
+    plot_filter_response(ax[0], h, xlim[filter_type], label=lbl)
+    plot_impulse_response(ax[1], h, label=lbl)
+
+    #
+    window, f_w, filter_dur = get_filter_defaults('0.16', filter_type)
+    h = design_filter(filter_type, f_p, f_w, filter_dur, window, 'firwin')
+    lbl = 'MNE (0.16) (Used)'
     plot_filter_response(ax[0], h, xlim[filter_type], label=lbl)
     plot_impulse_response(ax[1], h, label=lbl)
 

@@ -16,7 +16,8 @@ from library.config import study_path
 subject = "sub003"
 event_ids = [5, 6, 7]  # Famous faces
 filter_params = dict(fir_window='hann', phase='zero',
-                     h_trans_bandwidth='auto', filter_length='auto')
+                     h_trans_bandwidth='auto', filter_length='auto',
+                     fir_design='firwin')
 
 ###############################################################################
 # Read in raw data and prepare for epoching
@@ -35,7 +36,7 @@ events = mne.find_events(raw, stim_channel='STI101', consecutive='increasing',
 raw.filter(None, 40, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
                 baseline=(None, 0)).average()
-evoked.plot()
+evoked.plot(spatial_colors=True)
 evoked.plot_topomap()
 
 ###############################################################################
@@ -45,5 +46,5 @@ evoked.plot_topomap()
 raw.filter(1, None, l_trans_bandwidth=0.5, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
                 baseline=None).average()
-evoked.plot()
+evoked.plot(spatial_colors=True)
 evoked.plot_topomap()

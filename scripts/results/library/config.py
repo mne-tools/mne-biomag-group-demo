@@ -69,3 +69,13 @@ params = {'axes.labelsize': fontsize + 2,
           'ytick.labelsize': fontsize,
           'axes.titlesize': fontsize + 2,
           'legend.fontsize': fontsize - 2}
+
+
+def set_matplotlib_defaults(plt, fontsize=17):
+    params = {'axes.labelsize': fontsize + 2,
+              'text.fontsize': fontsize,
+              'legend.fontsize': fontsize,
+              'xtick.labelsize': fontsize,
+              'ytick.labelsize': fontsize,
+              'axes.titlesize': fontsize + 2}
+    plt.rcParams.update(params)

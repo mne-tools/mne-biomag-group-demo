@@ -11,7 +11,7 @@ import mne
 from mne import Epochs
 from mne.preprocessing import maxwell_filter
 
-from library.config import study_path, cal, ctc
+from library.config import study_path, cal, ctc, set_matplotlib_defaults
 
 event_ids = [5, 6, 7]  # Famous faces
 
@@ -54,13 +54,22 @@ evoked_sss = Epochs(raw_sss, events, event_id=event_ids, picks=picks).average()
 
 ###############################################################################
 # Plotting
-ylim = dict(grad=(-100, 100), mag=(-400, 400))
-evoked_before.plot(spatial_colors=True, ylim=ylim,
-                   titles={'grad': 'Gradiometers before SSS',
-                           'mag': 'Magnetometers before SSS'})
-evoked_after.plot(spatial_colors=True, ylim=ylim,
-                  titles={'grad': 'SSS gradiometers',
-                          'mag': 'SSS magnetometers'})
-evoked_sss.plot(spatial_colors=True, ylim=ylim,
-                titles={'grad': 'Maxfilter (TM) gradiometers',
-                        'mag': 'Maxfilter (TM) magnetometers'})
+import matplotlib.pyplot as plt  # noqa
+set_matplotlib_defaults(plt)
+
+ylim = dict(mag=(-400, 400))
+
+fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+plt.tight_layout()
+evoked_before.pick_types(meg='mag').plot(axes=axes[0], spatial_colors=True,
+                                         ylim=ylim,
+                                         titles={'mag': 'Before SSS'})
+axes[0].set_title('A')
+evoked_after.pick_types(meg='mag').plot(axes=axes[1], spatial_colors=True,
+                                        ylim=ylim, titles={'mag': 'After SSS'})
+axes[1].set_title('B')
+evoked_sss.pick_types(meg='mag').plot(axes=axes[2], spatial_colors=True,
+                                      ylim=ylim,
+                                      titles={'mag': 'After Maxfilter (TM)'})
+axes[2].set_title('C')
+fig.savefig('Maxfilter.pdf', bbox_to_inches='tight')

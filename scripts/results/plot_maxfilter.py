@@ -15,7 +15,7 @@ from library.config import study_path, cal, ctc
 
 event_ids = [5, 6, 7]  # Famous faces
 
-subject = "sub003"
+subject = "sub001"
 bads = ['MEG1031', 'MEG1111', 'MEG2113']
 filter_params = dict(fir_window='hann', l_trans_bandwidth=0.5, phase='zero',
                      h_trans_bandwidth='auto', filter_length='auto',
@@ -30,7 +30,7 @@ raw = mne.io.read_raw_fif(raw_fname_in, preload=True)
 
 raw.info['bads'] = bads
 picks = mne.pick_types(raw.info, meg=True, exclude='bads')
-raw.filter(1, 40, **filter_params)
+raw.filter(None, 40, **filter_params)
 
 events = mne.find_events(raw, stim_channel='STI101', consecutive='increasing',
                          mask=4352, mask_type='not_and', min_duration=0.003,
@@ -44,10 +44,10 @@ raw_sss = mne.io.read_raw_fif(sss_fname_in, preload=True)
 raw.info['bads'] = bads
 raw_sss.info['bads'] = bads
 
-raw = maxwell_filter(raw, calibration=cal, cross_talk=ctc)
+raw = maxwell_filter(raw, calibration=cal, cross_talk=ctc, st_duration=10.)
 
-raw.filter(1, 40, **filter_params)
-raw_sss.filter(1, 40, **filter_params)
+raw.filter(None, 40, **filter_params)
+raw_sss.filter(None, 40, **filter_params)
 
 evoked_after = Epochs(raw, events, event_id=event_ids, picks=picks).average()
 evoked_sss = Epochs(raw_sss, events, event_id=event_ids, picks=picks).average()

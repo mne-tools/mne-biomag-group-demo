@@ -23,14 +23,16 @@ subject = "sub%03d" % int(1)
 
 fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
 raw = mne.io.read_raw_fif(fname)
-
 fname = op.join(meg_dir, subject, 'run_01_filt_sss_raw.fif')
 raw_filt = mne.io.read_raw_fif(fname)
 
 ###############################################################################
 # Filtering :ref:`sphx_glr_auto_scripts_02-python_filtering.py`.
-raw.plot_psd()
-raw_filt.plot_psd()
+picks = mne.pick_types(raw.info, meg='mag')
+fig = raw.plot_psd(average=False, picks=picks, show=False)
+fig.set_size_inches([5, 2])
+fig.tight_layout()
+raw_filt.plot_psd(average=False, picks=picks)
 
 ###############################################################################
 # Events :ref:`sphx_glr_auto_scripts_03-run_extract_events.py`.

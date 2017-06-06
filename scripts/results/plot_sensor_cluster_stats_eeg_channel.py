@@ -50,7 +50,7 @@ data = np.array([c.data[idx] for c in contrasts])
 n_permutations = 1000  # number of permutations to run
 
 # set family-wise p-value
-p_accept = 0.01
+p_accept = 0.001
 
 connectivity = None
 tail = 0.  # for two sided test
@@ -73,6 +73,9 @@ T_obs, clusters, cluster_p_values, _ = cluster_stats
 ##############################################################################
 # Visualize results
 
+from library.config import set_matplotlib_defaults
+set_matplotlib_defaults(plt)
+
 times = 1e3 * contrast.times
 
 plt.close('all')
@@ -80,7 +83,7 @@ plt.subplot(211)
 plt.title('Channel : ' + channel)
 plt.plot(times, 1e6 * data.mean(axis=0), label="ERP Contrast")
 plt.ylabel("EEG (uV)")
-plt.ylim([-2.5, 2.5])
+plt.ylim([-3, 2.5])
 plt.legend()
 plt.subplot(212)
 for i_c, c in enumerate(clusters):
@@ -94,8 +97,12 @@ for i_c, c in enumerate(clusters):
 hf = plt.plot(times, T_obs, 'g')
 plt.legend((h0, h1),
            ('cluster p-value > %s' % p_accept,
-            'cluster p-value < %s' % p_accept))
+            'cluster p-value < %s' % p_accept),
+           loc='best', ncol=1, fontsize=14)
 plt.xlabel("time (ms)")
 plt.ylabel("T-values")
 plt.ylim([-10., 10.])
+plt.xlim([-200, 800])
+plt.tight_layout()
 plt.show()
+plt.savefig('sensorstat.pdf', bbox_to_inches='tight')

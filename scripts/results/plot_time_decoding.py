@@ -48,19 +48,24 @@ for a_vs_b in a_vs_bs:
 
 ###############################################################################
 # Let's plot the mean AUC score across subjects
-for a_vs_b in a_vs_bs:
-    plt.figure()
-    plt.plot(times, mean_scores[a_vs_b], 'b')
+from library.config import set_matplotlib_defaults
+set_matplotlib_defaults(plt)
+colors = ['b', 'g']
+for c, a_vs_b in zip(colors, a_vs_bs):
+    plt.plot(times, mean_scores[a_vs_b], c, label=a_vs_b.replace('_', ' '))
     plt.xlabel('Time (s)')
     plt.ylabel('Area under curve (AUC)')
     plt.fill_between(times, mean_scores[a_vs_b] - sem_scores[a_vs_b],
                      mean_scores[a_vs_b] + sem_scores[a_vs_b],
                      color='b', alpha=0.2)
-    plt.axhline(0.5, color='k', linestyle='--', label='Chance level')
-    plt.axvline(0.0, linestyle='--')
-    plt.legend()
-    plt.title('Time decoding (%s)' % a_vs_b)
+plt.axhline(0.5, color='k', linestyle='--', label='Chance level')
+plt.axvline(0.0, color='k', linestyle='--')
+plt.legend()
+plt.tight_layout()
+plt.show()
+plt.savefig('time_decoding.pdf', bbox_to_inches='tight')
 
+sdf
 ###############################################################################
 # It seems that `'famous'` vs `'unfamiliar'` gives much noisier time course of
 # decoding scores than `'faces'` vs `'scrambled'`. To verify that this is not

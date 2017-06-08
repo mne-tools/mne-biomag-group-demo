@@ -12,7 +12,7 @@ import numpy as np
 
 import mne
 
-from library.config import study_path, meg_dir, ylim
+from library.config import study_path, meg_dir, ylim, l_freq
 
 ###############################################################################
 # Configuration
@@ -24,7 +24,9 @@ subject = "sub%03d" % int(14)
 fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
 raw = mne.io.read_raw_fif(fname)
 
-fname = op.join(meg_dir, subject, 'run_01_filt_sss_raw.fif')
+fname = op.join(meg_dir, subject,
+                'run_01_filt_sss_highpass-%sHz_raw.fif' % l_freq)
+ica_fname = op.join(meg_dir, subject, 'run_01_highpass-%sHz-ica.fif' % l_freq)
 raw_filt = mne.io.read_raw_fif(fname)
 
 ###############################################################################
@@ -80,6 +82,11 @@ famous_evo.plot_topomap(times=times, title='Famous %s' % subject)
 scrambled_evo.plot_topomap(times=times, title='Scrambled %s' % subject)
 unfamiliar_evo.plot_topomap(times=times, title='Unfamiliar %s' % subject)
 contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject)
+
+###############################################################################
+# ICA
+ica = mne.preprocessing.read_ica(ica_fname)
+ica.plot_sources(raw_filt)
 
 ###############################################################################
 # TFR :ref:`sphx_glr_auto_scripts_07-time_frequency.py`.

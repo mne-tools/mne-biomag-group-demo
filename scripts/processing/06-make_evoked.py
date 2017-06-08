@@ -12,7 +12,7 @@ import os.path as op
 import mne
 from mne.parallel import parallel_func
 
-from library.config import meg_dir, N_JOBS
+from library.config import meg_dir, N_JOBS, l_freq
 
 
 def run_evoked(subject_id, tsss=False):
@@ -25,7 +25,8 @@ def run_evoked(subject_id, tsss=False):
                                          '%s-tsss-epo.fif' % subject),
                                  preload=False)
     else:
-        epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject),
+        epochs = mne.read_epochs(op.join(data_path, '%s_highpass-%sHz'
+                                 '-epo.fif' % (subject, l_freq)),
                                  preload=False)
 
     evoked_famous = epochs['face/famous'].average()
@@ -50,7 +51,8 @@ def run_evoked(subject_id, tsss=False):
                                   evoked_unfamiliar, contrast, faces])
 
     else:
-        mne.evoked.write_evokeds(op.join(data_path, '%s-ave.fif' % subject),
+        mne.evoked.write_evokeds(op.join(data_path, '%s_highpass-%sHz'
+                                 '_ave.fif' % (subject, l_freq)),
                                  [evoked_famous, evoked_scrambled,
                                   evoked_unfamiliar, contrast, faces])
 
@@ -59,7 +61,8 @@ def run_evoked(subject_id, tsss=False):
     if tsss:
         cov.save(op.join(data_path, '%s-tsss-cov.fif' % subject))
     else:
-        cov.save(op.join(data_path, '%s-cov.fif' % subject))
+        cov.save(op.join(data_path, '%s_highpass-%sHz-cov.fif'
+                 % (subject, l_freq)))
 
 
 parallel, run_func, _ = parallel_func(run_evoked, n_jobs=N_JOBS)

@@ -13,7 +13,7 @@ import mne
 from mne.preprocessing import ICA
 from mne.parallel import parallel_func
 
-from library.config import meg_dir, N_JOBS
+from library.config import meg_dir, N_JOBS, l_freq
 
 
 def run_ica(subject_id, tsss=False):
@@ -26,8 +26,10 @@ def run_ica(subject_id, tsss=False):
             run_fname = op.join(data_path, 'run_%02d_filt_tsss_raw.fif' % run)
             ica_name = op.join(meg_dir, subject, 'run_%02d-tsss-ica.fif' % run)
         else:
-            run_fname = op.join(data_path, 'run_%02d_filt_sss_raw.fif' % run)
-            ica_name = op.join(meg_dir, subject, 'run_%02d-ica.fif' % run)
+            run_fname = op.join(data_path, 'run_%02d_filt_sss_highpass-%sHz'
+                                '_raw.fif' % (run, l_freq))
+            ica_name = op.join(meg_dir, subject, 'run_%02d_'
+                               'highpass-%sHz-ica.fif' % (run, l_freq))
         if not os.path.exists(run_fname):
             warn('Could not find file %s. '
                  'Skipping run %s for subject %s.' % (run_fname, run, subject))

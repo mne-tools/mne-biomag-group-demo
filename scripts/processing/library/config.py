@@ -65,3 +65,5 @@ cal = os.path.join(os.path.dirname(__file__), '..', '..', 'results', 'library',
                    'sss_cal.dat')
 
 ylim = {'eeg': [-10, 10], 'mag': [-300, 300], 'grad': [-80, 80]}
+
+l_freq = None

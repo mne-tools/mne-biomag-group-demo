@@ -1,5 +1,11 @@
 PYTHON = python
 
+nohighpass:
+	$(PYTHON) 02-python_filtering.py
+	$(PYTHON) 04-run_ica.py
+	$(PYTHON) 05-make_epochs.py
+	$(PYTHON) 06-make_evoked.py
+
 preproc:
 	$(PYTHON) 02-maxwell_filtering.py
 	$(PYTHON) 02-python_filtering.py

@@ -17,7 +17,7 @@ from warnings import warn
 import mne
 from mne.parallel import parallel_func
 
-from library.config import study_path, meg_dir, N_JOBS
+from library.config import study_path, meg_dir, N_JOBS, l_freq
 
 
 if not op.exists(meg_dir):
@@ -27,7 +27,8 @@ if not op.exists(meg_dir):
 def run_filter(subject_id):
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
-    raw_fname_out = op.join(meg_dir, subject, 'run_%02d_filt_sss_raw.fif')
+    raw_fname_out = op.join(meg_dir, subject,
+                            'run_%02d_filt_sss_highpass-%sHz_raw.fif')
     raw_fname_in = op.join(study_path, 'ds117', subject, 'MEG',
                            'run_%02d_sss.fif')
     for run in range(1, 7):
@@ -40,13 +41,22 @@ def run_filter(subject_id):
                  'Skipping run %s from subject %s.' % (raw_in, run, subject))
             continue
 
-        raw_out = raw_fname_out % run
+        raw.set_channel_types({'EEG061': 'eog',
+                               'EEG062': 'eog',
+                               'EEG063': 'ecg',
+                               'EEG064': 'misc'})  # EEG064 free floating el.
+        raw.rename_channels({'EEG061': 'EOG061',
+                             'EEG062': 'EOG062',
+                             'EEG063': 'ECG063'})
+
         if not op.exists(op.join(meg_dir, subject)):
             os.mkdir(op.join(meg_dir, subject))
 
-        raw.filter(1, 40, l_trans_bandwidth='auto', h_trans_bandwidth='auto',
-                   filter_length='auto', phase='zero', fir_window='hann',
+        raw.filter(l_freq, 40, l_trans_bandwidth='auto',
+                   h_trans_bandwidth='auto', filter_length='auto',
+                   phase='zero', fir_window='hann',
                    fir_design='firwin')
+        raw_out = raw_fname_out % (run, l_freq)
         raw.save(raw_out, overwrite=True)
 
 

@@ -19,7 +19,7 @@ import mne
 from mne.parallel import parallel_func
 from mne.preprocessing import create_ecg_epochs, read_ica
 
-from library.config import meg_dir, N_JOBS, map_subjects
+from library.config import meg_dir, N_JOBS, map_subjects, l_freq
 
 ###############################################################################
 # We define the events and the onset and offset of the epochs
@@ -69,19 +69,12 @@ def run_epochs(subject_id, tsss=False):
         if tsss:
             run_fname = op.join(data_path, 'run_%02d_filt_tsss_raw.fif' % run)
         else:
-            run_fname = op.join(data_path, 'run_%02d_filt_sss_raw.fif' % run)
+            run_fname = op.join(data_path, 'run_%02d_filt_sss_'
+                                'highpass-%sHz_raw.fif' % (run, l_freq))
         if not os.path.exists(run_fname):
             continue
 
         raw = mne.io.Raw(run_fname, preload=True)
-
-        raw.set_channel_types({'EEG061': 'eog',
-                               'EEG062': 'eog',
-                               'EEG063': 'ecg',
-                               'EEG064': 'misc'})  # EEG064 free floating el.
-        raw.rename_channels({'EEG061': 'EOG061',
-                             'EEG062': 'EOG062',
-                             'EEG063': 'ECG063'})
 
         eog_events = mne.preprocessing.find_eog_events(raw)
         eog_events[:, 0] -= int(0.25 * raw.info['sfreq'])
@@ -112,7 +105,8 @@ def run_epochs(subject_id, tsss=False):
         if tsss:
             ica_name = op.join(meg_dir, subject, 'run_%02d-tsss-ica.fif' % run)
         else:
-            ica_name = op.join(meg_dir, subject, 'run_%02d-ica.fif' % run)
+            ica_name = op.join(meg_dir, subject, 'run_%02d_highpass-%sHz'
+                               '-ica.fif' % (run, l_freq))
         ica = read_ica(ica_name)
         n_max_ecg = 3  # use max 3 components
         ecg_epochs = create_ecg_epochs(raw, tmin=-.5, tmax=.5)
@@ -127,7 +121,8 @@ def run_epochs(subject_id, tsss=False):
     if tsss:
         epochs.save(op.join(data_path, '%s-tsss-epo.fif' % subject))
     else:
-        epochs.save(op.join(data_path, '%s-epo.fif' % subject))
+        epochs.save(op.join(data_path, '%s_highpass-%sHz-epo.fif'
+                    % (subject, l_freq))
 
 
 ###############################################################################

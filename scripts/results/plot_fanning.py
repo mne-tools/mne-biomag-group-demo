@@ -30,7 +30,7 @@ events = mne.find_events(raw, stim_channel='STI101', consecutive='increasing',
                          verbose=True)
 
 ###############################################################################
-# Just some config
+# Just some config for plotting
 
 import matplotlib.pyplot as plt  # noqa
 from library.config import set_matplotlib_defaults  # noqa
@@ -49,16 +49,18 @@ evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
                 baseline=(None, 0)).average()
 evoked.plot(axes=axes[0], ylim=ylim, spatial_colors=True)
 axes[0].set_title('A')
-# evoked.plot_topomap()
+evoked.plot_topomap()
 
-###############################################################################
-# Next, we highpass filter (but no lowpass filter as we have already done it)
-# but don't baseline. Now, the late effects in the topography are no longer
-# visible and the "fanning" has disappeared.
 raw.filter(1, None, l_trans_bandwidth=0.5, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
                 baseline=None).average()
 evoked.plot(axes=axes[1], ylim=ylim, spatial_colors=True)
 axes[1].set_title('B')
-# evoked.plot_topomap()
+
+###############################################################################
+# Next, we highpass filter (but no lowpass filter as we have already done it)
+# but don't baseline. Now, the late effects in the topography are no longer
+# visible (see above) and the "fanning" has disappeared.
+
+evoked.plot_topomap()
 fig.savefig('Fanning.pdf', bbox_to_inches='tight')

@@ -48,7 +48,7 @@ for a_vs_b in a_vs_bs:
 
 ###############################################################################
 # Let's plot the mean AUC score across subjects
-from library.config import set_matplotlib_defaults
+from library.config import set_matplotlib_defaults  # noqa
 set_matplotlib_defaults(plt)
 colors = ['b', 'g']
 for c, a_vs_b in zip(colors, a_vs_bs):
@@ -65,7 +65,6 @@ plt.tight_layout()
 plt.show()
 plt.savefig('time_decoding.pdf', bbox_to_inches='tight')
 
-sdf
 ###############################################################################
 # It seems that `'famous'` vs `'unfamiliar'` gives much noisier time course of
 # decoding scores than `'faces'` vs `'scrambled'`. To verify that this is not

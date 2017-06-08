@@ -50,7 +50,6 @@ ax.set_xticklabels(labels)
 plt.tight_layout()
 plt.savefig('grand_average.pdf')
 
-sdfdf
 ###############################################################################
 # Source-space. See :ref:`sphx_glr_auto_scripts_14-group_average_source.py`
 fname = op.join(meg_dir, 'contrast-average')

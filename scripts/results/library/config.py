@@ -61,15 +61,6 @@ cal = os.path.join(os.path.dirname(__file__), 'sss_cal.dat')
 
 ylim = {'eeg': [-10, 10], 'mag': [-300, 300], 'grad': [-80, 80]}
 
-fontsize = 17
-params = {'axes.labelsize': fontsize + 2,
-          'text.fontsize': fontsize,
-          'legend.fontsize': fontsize,
-          'xtick.labelsize': fontsize,
-          'ytick.labelsize': fontsize,
-          'axes.titlesize': fontsize + 2,
-          'legend.fontsize': fontsize - 2}
-
 
 def set_matplotlib_defaults(plt, fontsize=17):
     params = {'axes.labelsize': fontsize + 2,

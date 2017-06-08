@@ -12,10 +12,9 @@ import matplotlib.pyplot as plt
 
 from mne.filter import create_filter
 
-from library.config import params
+from library.config import set_matplotlib_defaults
 
-
-plt.rcParams.update(params)
+set_matplotlib_defaults(plt)
 sfreq = 1100.
 
 
@@ -106,7 +105,7 @@ f_ps = [1., 40.]  # corner frequencies (Hz)
 filter_types = ['highpass', 'lowpass']
 xlims = [(-1.5, 1.5), (-0.5, 0.5)]
 ylims = [(-0.002, 0.004), (-0.02, 0.08)]
-fig_num = {0:'a', 1:'b', 2:'c', 3:'d'}
+fig_num = {0: 'a', 1: 'b', 2: 'c', 3: 'd'}
 idx = 0
 
 for ax, f_p, filter_type, xlim, ylim in zip(axes.T, f_ps, filter_types, xlims,
@@ -117,13 +116,11 @@ for ax, f_p, filter_type, xlim, ylim in zip(axes.T, f_ps, filter_types, xlims,
     plot_filter_response(ax[0], h, filterlims[filter_type], label=lbl)
     plot_impulse_response(ax[1], h, lbl, xlim, ylim)
 
-
     # MNE new defaults
     h = design_filter(filter_type, f_p, 'firwin')
     lbl = 'MNE (0.16)'
     plot_filter_response(ax[0], h, filterlims[filter_type], label=lbl)
     plot_impulse_response(ax[1], h, lbl, xlim, ylim)
-
 
     # Ideal gain
     freq = [0, f_p, f_p, sfreq / 2.]

@@ -28,8 +28,7 @@ def run_ica(subject_id, tsss=False):
         else:
             run_fname = op.join(data_path, 'run_%02d_filt_sss_highpass-%sHz'
                                 '_raw.fif' % (run, l_freq))
-            ica_name = op.join(meg_dir, subject, 'run_%02d_'
-                               'highpass-%sHz-ica.fif' % (run, l_freq))
+            ica_name = op.join(meg_dir, subject, 'run_%02d-ica.fif' % run)
         if not os.path.exists(run_fname):
             warn('Could not find file %s. '
                  'Skipping run %s for subject %s.' % (run_fname, run, subject))

@@ -105,8 +105,7 @@ def run_epochs(subject_id, tsss=False):
         if tsss:
             ica_name = op.join(meg_dir, subject, 'run_%02d-tsss-ica.fif' % run)
         else:
-            ica_name = op.join(meg_dir, subject, 'run_%02d_highpass-%sHz'
-                               '-ica.fif' % (run, l_freq))
+            ica_name = op.join(meg_dir, subject, 'run_%02d-ica.fif' % run)
         ica = read_ica(ica_name)
         n_max_ecg = 3  # use max 3 components
         ecg_epochs = create_ecg_epochs(raw, tmin=-.5, tmax=.5)

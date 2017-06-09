@@ -122,7 +122,7 @@ def run_epochs(subject_id, tsss=False):
         epochs.save(op.join(data_path, '%s-tsss-epo.fif' % subject))
     else:
         epochs.save(op.join(data_path, '%s_highpass-%sHz-epo.fif'
-                    % (subject, l_freq))
+                    % (subject, l_freq)))
 
 
 ###############################################################################

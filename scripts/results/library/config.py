@@ -70,3 +70,6 @@ def set_matplotlib_defaults(plt, fontsize=17):
               'ytick.labelsize': fontsize,
               'axes.titlesize': fontsize + 2}
     plt.rcParams.update(params)
+
+
+l_freq = 1

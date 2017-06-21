@@ -16,7 +16,7 @@ preproc:
 	$(PYTHON) 07-time_frequency.py
 	$(PYTHON) 08-run_time_decoding.py
 	$(PYTHON) 09-group_average_sensors.py
-	$(PYTHON) 11-make_watershed.py
+	$(PYTHON) 11-make_flash.py
 	$(PYTHON) 12-make_forward.py
 	$(PYTHON) 13-make_inverse.py
 	$(PYTHON) 14-group_average_source.py

@@ -57,7 +57,7 @@ for c, a_vs_b in zip(colors, a_vs_bs):
     plt.ylabel('Area under curve (AUC)')
     plt.fill_between(times, mean_scores[a_vs_b] - sem_scores[a_vs_b],
                      mean_scores[a_vs_b] + sem_scores[a_vs_b],
-                     color='b', alpha=0.2)
+                     color=c, alpha=0.2)
 plt.axhline(0.5, color='k', linestyle='--', label='Chance level')
 plt.axvline(0.0, color='k', linestyle='--')
 plt.legend()

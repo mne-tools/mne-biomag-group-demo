@@ -18,7 +18,7 @@ import mne
 from mne.stats import permutation_cluster_1samp_test
 from mne.viz import plot_topomap
 
-from library.config import meg_dir
+from library.config import meg_dir, l_freq
 
 ##############################################################################
 # Read all the data
@@ -33,7 +33,8 @@ for subject_id in range(1, 20):
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
-    contrast = mne.read_evokeds(op.join(data_path, '%s-ave.fif' % subject),
+    contrast = mne.read_evokeds(op.join(data_path, '%s_highpass-%sHz_ave.fif'
+                                        % (subject, l_freq)),
                                 condition='contrast')
     contrast.pick_types(meg=False, eeg=True)
     contrast.apply_baseline((-0.2, 0.0))
@@ -155,3 +156,4 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     mne.viz.tight_layout(fig=fig)
     fig.subplots_adjust(bottom=.05)
     plt.show()
+    plt.savefig('spatiotemporal_stats_cluster-%02d.pdf' % i_clu)

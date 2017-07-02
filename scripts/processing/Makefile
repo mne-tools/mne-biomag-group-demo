@@ -1,10 +1,14 @@
 PYTHON = python
 
 nohighpass:
+	# remember to change l_freq in config
 	$(PYTHON) 02-python_filtering.py
-	$(PYTHON) 04-run_ica.py
 	$(PYTHON) 05-make_epochs.py
 	$(PYTHON) 06-make_evoked.py
+	$(PYTHON) 09-group_average_sensors.py
+
+nohighpass-log:
+	$(MAKE) nohighpass 2>&1 | tee log_nohighpass.txt
 
 preproc:
 	$(PYTHON) 02-maxwell_filtering.py
@@ -20,6 +24,9 @@ preproc:
 	$(PYTHON) 12-make_forward.py
 	$(PYTHON) 13-make_inverse.py
 	$(PYTHON) 14-group_average_source.py
+
+preproc-log:
+	$(MAKE) preproc-log 2>&1 | tee log_preproc.txt
 
 profile:
 	mprof run 02-python_filtering.py

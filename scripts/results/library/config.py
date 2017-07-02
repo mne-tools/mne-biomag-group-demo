@@ -72,4 +72,4 @@ def set_matplotlib_defaults(plt, fontsize=17):
     plt.rcParams.update(params)
 
 
-l_freq = 1
+l_freq = None

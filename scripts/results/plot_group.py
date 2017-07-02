@@ -5,14 +5,17 @@ Group analysis
 
 Run the group analysis.
 """
+# from pyface.qt import QtGui, QtCore
 import os.path as op
 
 import matplotlib.pyplot as plt
 import mne
 
-from library.config import meg_dir, subjects_dir, set_matplotlib_defaults
+from library.config import (meg_dir, subjects_dir, set_matplotlib_defaults,
+                            l_freq)
 
-evokeds = mne.read_evokeds(op.join(meg_dir, 'grand_average-ave.fif'))[:3]
+evokeds = mne.read_evokeds(op.join(meg_dir,
+                           'grand_average_highpass-%sHz-ave.fif' % l_freq))[:3]
 
 ###############################################################################
 # Sensor-space. See :ref:`sphx_glr_auto_scripts_09-group_average_sensors.py`
@@ -43,12 +46,12 @@ ax = plt.gca()
 plt.xlabel('Time (in ms after stimulus onset)')
 plt.ylabel(r'Potential difference ($\mu$V)')
 plt.legend()
-plt.show()
 labels = [item.get_text() for item in ax.get_xticklabels()]
 labels[0] = u''
 ax.set_xticklabels(labels)
 plt.tight_layout()
-plt.savefig('grand_average.pdf')
+plt.show()
+plt.savefig('grand_average_highpass-%sHz.pdf' % l_freq)
 
 ###############################################################################
 # Source-space. See :ref:`sphx_glr_auto_scripts_14-group_average_source.py`

@@ -37,7 +37,7 @@ events_id = {
 }
 
 tmin, tmax = -0.2, 0.8
-reject = dict(grad=4000e-13, mag=4e-12, eog=180e-6)
+reject = dict(grad=4000e-13, mag=4e-12)
 baseline = None
 
 
@@ -98,7 +98,7 @@ def run_epochs(subject_id, tsss=False):
 
         # Read epochs
         epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
-                            picks=picks, baseline=baseline, preload=True,
+                            picks=picks, baseline=baseline, preload=False,
                             decim=2, reject=reject)
 
         # ICA
@@ -106,14 +106,17 @@ def run_epochs(subject_id, tsss=False):
             ica_name = op.join(meg_dir, subject, 'run_%02d-tsss-ica.fif' % run)
         else:
             ica_name = op.join(meg_dir, subject, 'run_%02d-ica.fif' % run)
-        ica = read_ica(ica_name)
-        n_max_ecg = 3  # use max 3 components
-        ecg_epochs = create_ecg_epochs(raw, tmin=-.5, tmax=.5)
-        ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
-                                                 threshold=0.8)
-        ica.exclude += ecg_inds[:n_max_ecg]
-        ica.save(ica_name)
-        ica.apply(epochs)
+        if l_freq is not None:
+            epochs.load_data()
+            ica = read_ica(ica_name)
+            n_max_ecg = 3  # use max 3 components
+            ecg_epochs = create_ecg_epochs(raw, tmin=-.5, tmax=.5)
+            ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
+                                                     threshold=0.8)
+            ica.exclude += ecg_inds[:n_max_ecg]
+            ica.save(ica_name)
+            ica.apply(epochs)
+        del raw
         all_epochs.append(epochs)
 
     epochs = mne.epochs.concatenate_epochs(all_epochs)
@@ -127,6 +130,6 @@ def run_epochs(subject_id, tsss=False):
 ###############################################################################
 # Let us make the script parallel across subjects
 
-parallel, run_func, _ = parallel_func(run_epochs, n_jobs=N_JOBS)
+parallel, run_func, _ = parallel_func(run_epochs, n_jobs=1)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
 run_epochs(1, True)  # run on maxwell filtered data

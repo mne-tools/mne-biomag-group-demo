@@ -83,7 +83,7 @@ plt.subplot(211)
 plt.title('Channel : ' + channel)
 plt.plot(times, 1e6 * data.mean(axis=0), label="ERP Contrast")
 plt.ylabel("EEG (uV)")
-plt.ylim([-3, 2.5])
+plt.ylim([-5, 2.5])
 plt.legend()
 plt.subplot(212)
 for i_c, c in enumerate(clusters):

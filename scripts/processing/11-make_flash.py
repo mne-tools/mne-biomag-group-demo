@@ -11,7 +11,7 @@ from library.config import subjects_dir
 
 exclude = [1, 5, 16]  # Excluded subjects
 
-for subject_id in range(1, 19):
+for subject_id in range(1, 20):
 
     if subject_id in exclude:
         continue

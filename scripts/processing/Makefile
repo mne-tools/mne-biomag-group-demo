@@ -1,4 +1,5 @@
 PYTHON = python
+IPYTHON = ipython
 
 nohighpass:
 	# remember to change l_freq in config
@@ -12,6 +13,10 @@ nohighpass-log:
 
 demos:
 	$(PYTHON) 02-maxwell_filtering.py
+
+fetch-recon:
+	$(IPYTHON) 00-fetch_data.ipy
+	$(IPYTHON) 01-run_anatomy.ipy
 
 preproc:
 	$(PYTHON) 02-python_filtering.py
@@ -56,4 +61,4 @@ profile:
 	mprof run 14-group_average_source.py
 	mprof plot -o group_average_source
 
-all: demos preproc
+all: fetch-recon demos preproc

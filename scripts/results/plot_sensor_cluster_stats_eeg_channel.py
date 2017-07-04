@@ -38,7 +38,7 @@ for subject_id in range(1, 20):
 
 contrast = mne.combine_evoked(contrasts, 'equal')
 
-channel = 'EEG070'
+channel = 'EEG065'
 idx = contrast.ch_names.index(channel)
 mne.viz.plot_compare_evokeds(contrast, [idx])
 

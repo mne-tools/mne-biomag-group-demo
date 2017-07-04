@@ -14,7 +14,12 @@ from library.config import (study_path, meg_dir, subjects_dir, spacing, N_JOBS,
                             mindist)
 
 
+exclude = [1, 5, 16]  # Excluded subjects
+
+
 def run_forward(subject_id):
+    if subject_id in exclude:
+        return
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)

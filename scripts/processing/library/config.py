@@ -37,7 +37,7 @@ meg_dir = os.path.join(study_path, 'MEG')
 
 os.environ["SUBJECTS_DIR"] = subjects_dir
 
-spacing = 'oct5'
+spacing = 'oct6'
 mindist = 5
 
 ###############################################################################

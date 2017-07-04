@@ -10,8 +10,10 @@ nohighpass:
 nohighpass-log:
 	$(MAKE) nohighpass 2>&1 | tee log_nohighpass.txt
 
-preproc:
+demos:
 	$(PYTHON) 02-maxwell_filtering.py
+
+preproc:
 	$(PYTHON) 02-python_filtering.py
 	$(PYTHON) 03-run_extract_events.py
 	$(PYTHON) 04-run_ica.py
@@ -53,3 +55,5 @@ profile:
 	mprof plot -o make_inverse
 	mprof run 14-group_average_source.py
 	mprof plot -o group_average_source
+
+all: demos preproc

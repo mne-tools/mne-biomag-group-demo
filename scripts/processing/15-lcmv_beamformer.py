@@ -30,7 +30,7 @@ def run_inverse(subject_id):
     noise_cov = mne.read_cov(fname_cov)
     forward = mne.read_forward_solution(fname_fwd, surf_ori=True)
 
-    stc = lcmv(evoked, forward, noise_cov, data_cov)
+    stc = lcmv(evoked, forward, noise_cov, data_cov, reg=0.)
     stc.save(op.join(data_path, 'mne_LCMV_inverse-contrast'))
 
 

@@ -24,10 +24,11 @@ def run_time_frequency(subject_id):
     print("processing subject: %s" % subject_id)
     subject = "sub%03d" % subject_id
     data_path = op.join(meg_dir, subject)
-    epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject))
+    epochs = mne.read_epochs(op.join(data_path, '%s_highpass-1Hz-epo.fif'
+                                     % subject))
 
     faces = epochs['face']
-    idx = [faces.ch_names.index('EEG070')]
+    idx = [faces.ch_names.index('EEG065')]
     power_faces, itc_faces = mne.time_frequency.tfr_morlet(
         faces, freqs=freqs, return_itc=True, n_cycles=n_cycles, picks=idx)
     power_scrambled, itc_scrambled = mne.time_frequency.tfr_morlet(

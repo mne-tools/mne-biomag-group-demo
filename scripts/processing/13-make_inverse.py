@@ -20,7 +20,7 @@ def run_inverse(subject_id):
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 
-    fname_ave = op.join(data_path, '%s-ave.fif' % subject)
+    fname_ave = op.join(data_path, '%s_highpass-1.0Hz_ave.fif' % subject)
     fname_cov = op.join(data_path, '%s-cov.fif' % subject)
     fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
     fname_inv = op.join(data_path, '%s-meg-%s-inv.fif' % (subject, spacing))

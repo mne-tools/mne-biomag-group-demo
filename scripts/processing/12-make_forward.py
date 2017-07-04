@@ -19,7 +19,7 @@ def run_forward(subject_id):
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 
-    fname_ave = op.join(data_path, '%s-ave.fif' % subject)
+    fname_ave = op.join(data_path, '%s_highpass-1Hz_ave.fif' % subject)
     fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
     fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
                           '%s-trans.fif' % subject)

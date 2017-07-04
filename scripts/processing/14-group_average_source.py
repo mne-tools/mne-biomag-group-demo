@@ -25,7 +25,7 @@ for run in range(1, 20):
     data_path = op.join(meg_dir, subject)
 
     evokeds = mne.read_evokeds(op.join(meg_dir, subject,
-                                       '%s_highpass-1.0Hz_ave.fif' % subject))
+                                       '%s_highpass-1Hz_ave.fif' % subject))
 
     contrast = evokeds[3]
     fname_inv = op.join(data_path, '%s-meg-%s-inv.fif' % (subject, spacing))

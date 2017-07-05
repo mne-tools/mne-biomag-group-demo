@@ -17,8 +17,8 @@ if user == 'gramfort':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
     N_JOBS = 8
 elif user == 'mjas':
-    study_path = '/tsi/doctorants/data_gramfort/dgw_faces_reproduce'
-    N_JOBS = 1
+    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
+    N_JOBS = 4
 elif user == 'jleppakangas':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
     N_JOBS = 8

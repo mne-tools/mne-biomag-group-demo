@@ -98,7 +98,7 @@ spower = mne.time_frequency.read_tfrs(
     op.join(meg_dir, subject, '%s-scrambled-tfr.h5' % subject))[0]
 sitc = mne.time_frequency.read_tfrs(
     op.join(meg_dir, subject, '%s-itc_scrambled-tfr.h5' % subject))[0]
-channel = 'EEG070'
+channel = 'EEG065'
 idx = [fpower.ch_names.index(channel)]
 fpower.plot(idx, title='Faces power %s' % channel, baseline=(-0.1, 0.0),
             mode='logratio')

@@ -30,8 +30,8 @@ set_matplotlib_defaults(plt)
 
 for evoked in evokeds:
     evoked.apply_baseline(baseline=(-100, 0))
-# mne.viz.plot_compare_evokeds(mapping, [idx],
-#                              title='EEG065 (Baseline from -200ms to 0ms)',)
+mne.viz.plot_compare_evokeds(mapping, [idx],
+                             title='EEG065 (Baseline from -200ms to 0ms)',)
 scale = 1e6
 plt.figure(figsize=(7, 5))
 plt.plot(evoked.times * 1000, mapping['Scrambled'].data[idx] * scale,

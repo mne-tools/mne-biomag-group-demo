@@ -82,9 +82,8 @@ for l, c in zip(lines, colors):
         l.set_zorder(-1)
 
 ax = axes[1]
-raw.plot_psd(ax=ax, average=False, line_alpha=0.6,
-             fmin=0, fmax=350, xscale='linear',
-             spatial_colors=False)
+raw.plot_psd(ax=ax, average=False, line_alpha=0.6, n_fft=2048, n_overlap=1024,
+             fmin=0, fmax=350, xscale='linear', spatial_colors=False)
 ax.set_xlabel('Frequency (Hz)')
 ax.set_ylabel('')
 ax.set_title('B')

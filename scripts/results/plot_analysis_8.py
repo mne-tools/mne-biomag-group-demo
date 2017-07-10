@@ -31,7 +31,7 @@ raw_filt = mne.io.read_raw_fif(fname)
 
 ###############################################################################
 # Filtering :ref:`sphx_glr_auto_scripts_02-python_filtering.py`.
-raw.plot_psd()
+raw.plot_psd(n_fft=2048, n_overlap=1024)
 raw_filt.plot_psd()
 
 ###############################################################################

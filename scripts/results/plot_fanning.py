@@ -37,8 +37,6 @@ from library.config import set_matplotlib_defaults  # noqa
 set_matplotlib_defaults(plt)
 
 ylim = dict(mag=(-400, 400))
-fig, axes = plt.subplots(1, 2, figsize=(14, 5))
-plt.tight_layout()
 
 ###############################################################################
 # First, we don't highpass filter and only baseline. Note how it creates a
@@ -47,20 +45,21 @@ plt.tight_layout()
 raw.filter(None, 40, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
                 baseline=(None, 0)).average()
-evoked.plot(axes=axes[0], ylim=ylim, spatial_colors=True)
-axes[0].set_title('A')
-evoked.plot_topomap()
-
-raw.filter(1, None, l_trans_bandwidth=0.5, **filter_params)
-evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
-                baseline=None).average()
-evoked.plot(axes=axes[1], ylim=ylim, spatial_colors=True)
-axes[1].set_title('B')
+fig = evoked.plot_joint(times="auto", title=None,
+                        ts_args=dict(ylim=ylim, spatial_colors=True),
+                        topomap_args=dict(vmin=-300, vmax=300))
+fig.set_size_inches(12, 6, forward=True)
+fig.savefig('FanningA.pdf', bbox_to_inches='tight')
 
 ###############################################################################
 # Next, we highpass filter (but no lowpass filter as we have already done it)
 # but don't baseline. Now, the late effects in the topography are no longer
 # visible (see above) and the "fanning" has disappeared.
-
-evoked.plot_topomap()
-fig.savefig('Fanning.pdf', bbox_to_inches='tight')
+raw.filter(1, None, l_trans_bandwidth=0.5, **filter_params)
+evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
+                baseline=None).average()
+fig = evoked.plot_joint(times="auto", title=None,
+                        ts_args=dict(ylim=ylim, spatial_colors=True),
+                        topomap_args=dict(vmin=-300, vmax=300))
+fig.set_size_inches(12, 6, forward=True)
+fig.savefig('FanningB.pdf', bbox_to_inches='tight')

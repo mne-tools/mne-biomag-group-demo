@@ -7,7 +7,7 @@ pass.
 """
 
 import numpy as np
-from scipy.signal import firwin2, freqz
+from scipy.signal import freqz
 import matplotlib.pyplot as plt
 
 from mne.filter import create_filter
@@ -127,3 +127,4 @@ for ax, label in zip(axes.ravel(), ['A', 'B', 'C', 'D']):
 
 plt.tight_layout()
 plt.show()
+plt.savefig('filters.pdf', bbox_to_inches='tight')

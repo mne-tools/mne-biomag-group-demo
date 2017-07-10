@@ -12,7 +12,7 @@ import os.path as op
 import mne
 from mne.parallel import parallel_func
 
-from library.config import meg_dir, N_JOBS
+from library.config import meg_dir, N_JOBS, l_freq
 
 
 def run_events(subject_id):
@@ -20,7 +20,9 @@ def run_events(subject_id):
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
     for run in range(1, 7):
-        run_fname = op.join(data_path, 'run_%02d_filt_sss_raw.fif' % run)
+        run_fname = op.join(
+            data_path, 'run_%02d_filt_sss_highpass-%sHz_raw.fif' % (run,
+                                                                    l_freq))
         if not os.path.exists(run_fname):
             continue
 

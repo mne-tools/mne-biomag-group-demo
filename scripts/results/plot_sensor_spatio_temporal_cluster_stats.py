@@ -128,7 +128,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
 
     # add axes for colorbar
     ax_colorbar = divider.append_axes('right', size='5%', pad=0.05)
-    plt.colorbar(image, cax=ax_colorbar)
+    plt.colorbar(image, cax=ax_colorbar, format='%0.1f')
     ax_topo.set_xlabel('Averaged T-map ({:0.1f} - {:0.1f} ms)'.format(
         *sig_times[[0, -1]]
     ))

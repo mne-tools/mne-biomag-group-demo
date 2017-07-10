@@ -10,7 +10,6 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
-
 import os
 from datetime import date
 import sphinx_gallery  # noqa
@@ -305,6 +304,7 @@ sphinx_gallery_conf = {
     'examples_dirs': ['../results', '../processing'],
     'gallery_dirs': ['auto_examples', 'auto_scripts'],
     'find_mayavi_figures': find_mayavi_figures,
+    'backreferences_dir': 'gen_modules/backreferences',
     'default_thumb_file': os.path.join('_static', 'mne_helmet.png'),
 }
 

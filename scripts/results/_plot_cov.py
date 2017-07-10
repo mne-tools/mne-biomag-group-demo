@@ -1,8 +1,20 @@
+"""
+========
+Plot cov
+========
+
+Make sphinx gallery happy.
+"""
+
 import matplotlib.pyplot as plt
 import os.path as op
 
 import mne
 from library.config import meg_dir, set_matplotlib_defaults
+
+
+###############################################################################
+# Make sphinx gallery happy
 
 subject = 'sub004'
 

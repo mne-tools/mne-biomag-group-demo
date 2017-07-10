@@ -28,17 +28,17 @@ sfreq = 1100.
 # Here we define a function to design the filters using
 # :func:`scipy.signal.firwin` (0.16) or :func:`scipy.signal.firwin2` (0.12).
 def design_filter(filter_type, f_p, fir_design, trans_bandwidth,
-                  filter_length):
+                  filter_length, fir_window):
     if filter_type == 'highpass':
         h = create_filter(np.ones(100000), sfreq, f_p, None,
                           l_trans_bandwidth=trans_bandwidth,
                           filter_length=filter_length,
-                          fir_design=fir_design)
+                          fir_design=fir_design, fir_window=fir_window)
     else:
         h = create_filter(np.ones(100000), sfreq, None, f_p,
                           h_trans_bandwidth=trans_bandwidth,
                           filter_length=filter_length,
-                          fir_design=fir_design)
+                          fir_design=fir_design, fir_window=fir_window)
     return h
 
 
@@ -99,13 +99,13 @@ idx = 0
 for ax, f_p, filter_type, xlim, ylim in zip(axes.T, f_ps, filter_types, xlims,
                                             ylims):
     # MNE old defaults
-    h = design_filter(filter_type, f_p, 'firwin2', 0.5, '10s')
+    h = design_filter(filter_type, f_p, 'firwin2', 0.5, '10s', 'hamming')
     lbl = 'MNE (0.12)'
     plot_filter_response(ax[0], h, filterlims[filter_type], label=lbl)
     plot_impulse_response(ax[1], h, lbl, xlim, ylim)
 
     # MNE new defaults
-    h = design_filter(filter_type, f_p, 'firwin', 'auto', 'auto')
+    h = design_filter(filter_type, f_p, 'firwin', 'auto', 'auto', 'hann')
     lbl = 'MNE (0.16)'
     plot_filter_response(ax[0], h, filterlims[filter_type], label=lbl)
     plot_impulse_response(ax[1], h, lbl, xlim, ylim)

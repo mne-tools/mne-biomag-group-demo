@@ -295,7 +295,7 @@ except Exception:  # can raise all sorts of errors
 sphinx_gallery_conf = {
     'doc_module': ('sphinx_gallery', 'numpy'),
     'reference_url': {
-        'mne': 'http://martinos.org/mne/stable',
+        'mne': 'http://mne-tools.github.io/stable/',
         'sphinx_gallery': None,
         'matplotlib': 'http://matplotlib.org',
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',

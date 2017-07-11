@@ -7,7 +7,7 @@ The PSD plot shows different information for linear vs. log scale.
 We will demonstrate here how the PSD plot can be used to conveniently
 spot bad sensors.
 """
-
+import sys
 import os
 import os.path as op
 
@@ -30,7 +30,7 @@ raw = mne.io.read_raw_fif(fname, preload=True)
 # Get bad channels
 mapping = map_subjects[subject_id]
 bads = list()
-bad_name = op.join(op.dirname(__file__), '..', 'processing',
+bad_name = op.join(op.dirname(sys.argv[0]), '..', 'processing',
                    'bads', mapping, 'run_%02d_raw_tr.fif_bad' % run)
 if os.path.exists(bad_name):
     with open(bad_name) as f:

@@ -5,7 +5,6 @@ Group analysis
 
 Run the group analysis.
 """
-# from pyface.qt import QtGui, QtCore
 import os.path as op
 
 import matplotlib.pyplot as plt
@@ -30,8 +29,8 @@ set_matplotlib_defaults(plt)
 
 for evoked in evokeds:
     evoked.apply_baseline(baseline=(-100, 0))
-mne.viz.plot_compare_evokeds(mapping, [idx],
-                             title='EEG065 (Baseline from -200ms to 0ms)',)
+# mne.viz.plot_compare_evokeds(mapping, [idx],
+#                              title='EEG065 (Baseline from -200ms to 0ms)',)
 scale = 1e6
 plt.figure(figsize=(7, 5))
 plt.plot(evoked.times * 1000, mapping['Scrambled'].data[idx] * scale,
@@ -46,9 +45,6 @@ ax = plt.gca()
 plt.xlabel('Time (in ms after stimulus onset)')
 plt.ylabel(r'Potential difference ($\mu$V)')
 plt.legend()
-labels = [item.get_text() for item in ax.get_xticklabels()]
-labels[0] = u''
-ax.set_xticklabels(labels)
 plt.tight_layout()
 plt.show()
 plt.savefig('grand_average_highpass-%sHz.pdf' % l_freq)

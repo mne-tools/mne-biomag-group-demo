@@ -199,6 +199,26 @@ Demos
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="PSD (linear vs log scale)">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_ica_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_psd.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_psd
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Demonstrates removal of ECG for one run (sub005, run01)">
 
 .. only:: html

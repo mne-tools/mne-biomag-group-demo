@@ -59,7 +59,7 @@ for b in bads:
 # colors[raw.info['ch_names'].index('EEG024')] = 'g'
 
 ###############################################################################
-# Filtering :ref:`sphx_glr_auto_scripts_02-python_filtering.py`.
+# First we show the log scale to spot bad sensors.
 
 import matplotlib.pyplot as plt  # noqa
 from library.config import set_matplotlib_defaults  # noqa
@@ -81,6 +81,9 @@ for l, c in zip(lines, colors):
         l.set_linewidth(2.)
         l.set_zorder(-1)
 
+###############################################################################
+# Next, the linear scale to check power line frequency
+
 ax = axes[1]
 raw.plot_psd(ax=ax, average=False, line_alpha=0.6, n_fft=2048, n_overlap=1024,
              fmin=0, fmax=350, xscale='linear', spatial_colors=False)
@@ -94,5 +97,5 @@ axes[1].axvline(50., linestyle='--', alpha=0.25, linewidth=2)
 for freq in [293., 307., 314., 321., 328.]:
     ax.axvline(freq, linestyle='--', alpha=0.25, linewidth=2)
 
-plt.tight_layout()
+fig.tight_layout()
 fig.savefig('psd.pdf', bbox_to_inches='tight')

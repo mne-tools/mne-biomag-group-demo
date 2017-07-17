@@ -2,12 +2,14 @@
 Run Freesurfer/MNE anatomical pipeline
 ======================================
 
-This runs Freesurfer recon-all on all subjects
-and computes the BEM surfaces later used for forward
-modeling. BEM extraction is done using flash MRI
-data.
-"""
+This runs Freesurfer recon-all on all subjects and computes the BEM surfaces
+later used for forward modeling. BEM extraction is done using flash MRI data.
 
+Make sure that Freesurfer is properly configured before running this script.
+See the `Setup & Configuration`_ section of the Freesurfer manual.
+
+.. _Setup & Configuration: https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall#Setup.26Configuration
+"""
 import os
 import glob
 import shutil
@@ -29,18 +31,18 @@ def process_subject_anat(subject_id):
 
     t1_fname = "%s/ds117/%s/anatomy/highres001.nii.gz" % (study_path, subject)
     log_fname = "%s/ds117/%s/my-recon-all.txt" % (study_path, subject)
-    !recon-all -all -s $subject -i $t1_fname > $log_fname
+    !recon-all -all -s $subject -sd $subjects_dir -i $t1_fname | tee $log_fname
 
     # Move flash data
     fnames = glob.glob("%s/ds117/%s/anatomy/FLASH/meflash*" % (study_path, subject))
     dst_flash = "%s/%s/mri/flash" % (subjects_dir, subject)
     if not os.path.isdir(dst_flash):
-        os.mkdir(dst_flash)
+        os.makedirs(dst_flash)
 
     for f_src in fnames:
         f_dst = os.path.basename(f_src).replace("meflash_", "mef")
         f_dst = os.path.join(dst_flash, f_dst)
-	shutil.copy(f_src, f_dst)
+        shutil.copy(f_src, f_dst)
 
     # Make flash BEM
     convert_flash_mris(subject, flash30=True, convert=False, unwarp=False,

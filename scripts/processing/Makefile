@@ -27,7 +27,6 @@ preproc:
 	$(PYTHON) 07-time_frequency.py
 	$(PYTHON) 08-run_time_decoding.py
 	$(PYTHON) 09-group_average_sensors.py
-	$(PYTHON) 11-make_flash.py
 	$(PYTHON) 12-make_forward.py
 	$(PYTHON) 13-make_inverse.py
 	$(PYTHON) 14-group_average_source.py
@@ -52,8 +51,6 @@ profile:
 	mprof plot -o run_time_decoding
 	mprof run 09-group_average_sensors.py
 	mprof plot -o group_average_sensors
-	mprof run 11-make_watershed.py
-	mprof plot -o make_watershed
 	mprof run 12-make_forward.py
 	mprof plot -o make_forward
 	mprof run 13-make_inverse.py

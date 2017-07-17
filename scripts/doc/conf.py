@@ -10,7 +10,6 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
-
 import os
 from datetime import date
 import sphinx_gallery  # noqa
@@ -288,7 +287,7 @@ try:
     find_mayavi_figures = True
     # Do not pop up any mayavi windows while running the
     # examples. These are very annoying since they steal the focus.
-    mlab.options.offscreen = True
+    mlab.options.offscreen = False
 except Exception:  # can raise all sorts of errors
     find_mayavi_figures = False
 
@@ -296,7 +295,7 @@ except Exception:  # can raise all sorts of errors
 sphinx_gallery_conf = {
     'doc_module': ('sphinx_gallery', 'numpy'),
     'reference_url': {
-        'mne': 'http://martinos.org/mne/stable',
+        'mne': 'http://mne-tools.github.io/stable/',
         'sphinx_gallery': None,
         'matplotlib': 'http://matplotlib.org',
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
@@ -305,6 +304,7 @@ sphinx_gallery_conf = {
     'examples_dirs': ['../results', '../processing'],
     'gallery_dirs': ['auto_examples', 'auto_scripts'],
     'find_mayavi_figures': find_mayavi_figures,
+    'backreferences_dir': 'gen_modules/backreferences',
     'default_thumb_file': os.path.join('_static', 'mne_helmet.png'),
 }
 

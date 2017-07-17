@@ -259,26 +259,6 @@ Source space
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Create BEM surfaces using watershed algorithm. ">
-
-.. only:: html
-
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_11-make_watershed_thumb.png
-
-        :ref:`sphx_glr_auto_scripts_11-make_watershed.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_scripts/11-make_watershed
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Calculate forward solution for MEG channels. ">
 
 .. only:: html

@@ -29,8 +29,7 @@ def process_subject_anat(subject_id):
 
     t1_fname = "%s/ds117/%s/anatomy/highres001.nii.gz" % (study_path, subject)
     log_fname = "%s/ds117/%s/my-recon-all.txt" % (study_path, subject)
-    %env SUBJECTS $subjects_dir
-    !recon-all -all -s $subject -i $t1_fname > $log_fname
+    !recon-all -all -s $subject -sd $subjects_dir -i $t1_fname > $log_fname
 
     # Move flash data
     fnames = glob.glob("%s/ds117/%s/anatomy/FLASH/meflash*" % (study_path, subject))

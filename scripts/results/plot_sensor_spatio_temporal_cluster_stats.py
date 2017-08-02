@@ -97,6 +97,7 @@ T_obs_min = -T_obs_max
 
 # loop over significant clusters
 for i_clu, clu_idx in enumerate(good_cluster_inds):
+
     # unpack cluster information, get unique indices
     time_inds, space_inds = np.squeeze(clusters[clu_idx])
     ch_inds = np.unique(space_inds)
@@ -138,7 +139,8 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     ax_signals = divider.append_axes('right', size='300%', pad=1.2)
     for signal, name, col, ls in zip(signals, ['Contrast'], colors,
                                      linestyles):
-        ax_signals.plot(times, signal, color=col, linestyle=ls, label=name)
+        ax_signals.plot(times, signal * 1e6, color=col,
+                        linestyle=ls, label=name)
 
     # add information
     ax_signals.axvline(0, color='k', linestyle=':', label='stimulus onset')

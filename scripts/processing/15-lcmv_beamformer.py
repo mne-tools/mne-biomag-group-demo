@@ -11,7 +11,7 @@ import mne
 from mne.parallel import parallel_func
 from mne.beamformer import lcmv
 
-from library.config import meg_dir, spacing, N_JOBS
+from library.config import meg_dir, spacing, N_JOBS, l_freq
 
 
 def run_inverse(subject_id):
@@ -20,7 +20,8 @@ def run_inverse(subject_id):
     data_path = op.join(meg_dir, subject)
 
     fname_ave = op.join(data_path, '%s-ave.fif' % subject)
-    fname_cov = op.join(data_path, '%s-cov.fif' % subject)
+    fname_cov = op.join(data_path, '%s_highpass-%sHz-cov.fif' % (subject,
+                                                                 l_freq))
     fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
 
     epochs = mne.read_epochs(op.join(data_path, '%s-epo.fif' % subject),

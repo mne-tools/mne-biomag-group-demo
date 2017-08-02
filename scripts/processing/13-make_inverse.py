@@ -12,7 +12,7 @@ from mne.parallel import parallel_func
 from mne.minimum_norm import (make_inverse_operator, apply_inverse,
                               write_inverse_operator)
 
-from library.config import meg_dir, spacing, N_JOBS
+from library.config import meg_dir, spacing, N_JOBS, l_freq
 
 
 exclude = [1, 5, 16]  # Excluded subjects
@@ -26,7 +26,8 @@ def run_inverse(subject_id):
     data_path = op.join(meg_dir, subject)
 
     fname_ave = op.join(data_path, '%s_highpass-1Hz_ave.fif' % subject)
-    fname_cov = op.join(data_path, '%s-cov.fif' % subject)
+    fname_cov = op.join(data_path, '%s_highpass-%sHz-cov.fif' % (subject,
+                                                                 l_freq))
     fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
     fname_inv = op.join(data_path, '%s-meg-%s-inv.fif' % (subject, spacing))
 

@@ -75,7 +75,7 @@ html_abort_on_example_error:
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 html: generate_examples
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	export DISPLAY=:99.0 & xvfb-run -s ':99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset' $(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 	make html-noplot

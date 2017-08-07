@@ -13,7 +13,6 @@ from scipy import stats
 from scipy import spatial
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from matplotlib.ticker import ScalarFormatter
 
 import mne
 from mne.stats import permutation_cluster_1samp_test
@@ -51,7 +50,7 @@ data = np.array([c.data for c in contrasts])
 n_permutations = 1  # number of permutations to run
 
 # set family-wise p-value
-p_accept = 0.51
+p_accept = 0.01
 
 connectivity = None
 tail = 0.  # for two sided test
@@ -147,8 +146,6 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     ax_signals.set_xlim([times[0], times[-1]])
     ax_signals.set_xlabel('time [ms]')
     ax_signals.set_ylabel('evoked [uV]')
-    y_formatter = ScalarFormatter(useOffset=True)
-    ax_signals.yaxis.set_major_formatter(y_formatter)
 
     # plot significant time range
     ymin, ymax = ax_signals.get_ylim()

@@ -113,7 +113,7 @@ def run_epochs(subject_id, tsss=False):
             ecg_epochs = create_ecg_epochs(raw, tmin=-.5, tmax=.5)
             ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
                                                      threshold=0.8)
-            ica.exclude += ecg_inds[:n_max_ecg]
+            ica.exclude = ecg_inds[:n_max_ecg]
             ica.save(ica_name)
             ica.apply(epochs)
         del raw

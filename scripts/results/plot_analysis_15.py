@@ -25,7 +25,8 @@ raw = mne.io.read_raw_fif(fname)
 
 fname = op.join(meg_dir, subject,
                 'run_01_filt_sss_highpass-%sHz_raw.fif' % l_freq)
-ica_fname = op.join(meg_dir, subject, 'run_01_highpass-%sHz-ica.fif' % l_freq)
+# XXX: use same ICA regardless of l_freq because it fails when l_freq is None
+ica_fname = op.join(meg_dir, subject, 'run_01-ica.fif')
 raw_filt = mne.io.read_raw_fif(fname)
 
 ###############################################################################

@@ -12,6 +12,7 @@ a factor of 2.
 """
 
 import os
+import tempfile
 import os.path as op
 import numpy as np
 
@@ -40,10 +41,11 @@ tmin, tmax = -0.2, 0.8
 reject = dict(grad=4000e-13, mag=4e-12)
 baseline = None
 
+tempdir = tempfile.mkdtemp()
+
 
 ###############################################################################
 # Now we define a function to extract epochs for one subject
-
 def run_epochs(subject_id, tsss=False):
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
@@ -98,8 +100,14 @@ def run_epochs(subject_id, tsss=False):
 
         # Read epochs
         epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
-                            picks=picks, baseline=baseline, preload=False,
+                            picks=picks, baseline=baseline, preload=True,
                             decim=2, reject=reject)
+        # XXX: workaround for memory leak in MNE where a reference to
+        # raw object is kept in epochs. The downside is that it will
+        # lead to some loss in precision but we can live with it.
+        temp_fname = op.join(tempdir, 'run_%d.fif' % run)
+        epochs.save(temp_fname)
+        epochs = mne.read_epochs(temp_fname)
 
         # ICA
         if tsss:
@@ -107,7 +115,6 @@ def run_epochs(subject_id, tsss=False):
         else:
             ica_name = op.join(meg_dir, subject, 'run_%02d-ica.fif' % run)
         if l_freq is not None:
-            epochs.load_data()
             ica = read_ica(ica_name)
             n_max_ecg = 3  # use max 3 components
             ecg_epochs = create_ecg_epochs(raw, tmin=-.5, tmax=.5)

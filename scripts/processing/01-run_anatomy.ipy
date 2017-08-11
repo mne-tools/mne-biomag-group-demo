@@ -53,7 +53,19 @@ def process_subject_anat(subject_id):
 
 # 19 excluded due to pb with flash images
 parallel, run_func, _ = parallel_func(process_subject_anat, n_jobs=N_JOBS)
-parallel(run_func(subject_id) for subject_id in range(1, 19))
+parallel(run_func(subject_id) for subject_id in range(1, 20))
+
+import nibabel as nib
+
+for idx in range(7):
+    fname = 'mef05_%s.mgz' % idx
+    base_path = os.path.join(subjects_dir, 'sub%03d', 'mri', 'flash')
+    dest_img = nib.load(os.path.join(base_path, fname) % 19)
+
+    src_img = nib.load(os.path.join(base_path, fname) % 1)
+    hdr = src_img.get_header()
+    fixed = nib.MGHImage(dest_img.get_data(), dest_img.get_affine(), hdr)
+    nib.save(fixed, fname)
 
 # run this for subject 19
 # for i in *nii.gz; do mri_convert $i ${i/nii.gz/mgz}; done

@@ -23,7 +23,7 @@ for run in range(1, 20):
     data_path = op.join(meg_dir, subject)
 
     evokeds = mne.read_evokeds(op.join(meg_dir, subject,
-                                       '%s_highpass-%sHz_ave.fif'
+                                       '%s_highpass-%sHz-ave.fif'
                                        % (subject, l_freq)))
     for idx, evoked in enumerate(evokeds):
         all_evokeds[idx].append(evoked)  # Insert to the container

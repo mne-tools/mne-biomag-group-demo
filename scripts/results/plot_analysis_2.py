@@ -5,7 +5,6 @@ Analysis for subject 2
 
 Run the analysis.
 """
-import os
 import os.path as op
 import numpy as np
 
@@ -16,18 +15,18 @@ from library.config import study_path, meg_dir, ylim, l_freq
 ###############################################################################
 # Configuration
 
-subjects_dir = os.path.join(study_path, 'subjects')
+subjects_dir = op.join(study_path, 'subjects')
 
 subject = "sub%03d" % int(2)
+subject_dir = op.join(meg_dir, subject)
 
-fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
-raw = mne.io.read_raw_fif(fname)
-
-fname = op.join(meg_dir, subject,
-                'run_01_filt_sss_highpass-%sHz_raw.fif' % l_freq)
-# XXX: use same ICA regardless of l_freq because it fails when l_freq is None
-ica_fname = op.join(meg_dir, subject, 'run_01-ica.fif')
-raw_filt = mne.io.read_raw_fif(fname)
+###############################################################################
+# Continuous data
+raw_fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
+raw_filt_fname = op.join(subject_dir,
+                         'run_01_filt_sss_highpass-%sHz_raw.fif' % l_freq)
+raw = mne.io.read_raw_fif(raw_fname)
+raw_filt = mne.io.read_raw_fif(raw_filt_fname)
 
 ###############################################################################
 # Filtering :ref:`sphx_glr_auto_scripts_02-python_filtering.py`.
@@ -37,19 +36,22 @@ raw_filt.plot_psd()
 ###############################################################################
 # Events :ref:`sphx_glr_auto_scripts_03-run_extract_events.py`.
 # Epochs :ref:`sphx_glr_auto_scripts_05-make_epochs.py`.
-events = mne.read_events(op.join(meg_dir, subject, 'run_01_filt_sss-eve.fif'))
+eve_fname = op.join(subject_dir, 'run_01_filt_sss-eve.fif')
+epo_fname = op.join(subject_dir,
+                    '%s_highpass-%sHz-epo.fif' % (subject, l_freq))
+
+events = mne.read_events(eve_fname)
 fig = mne.viz.plot_events(events, show=False)
 fig.suptitle('Events from run 01')
 
-data_path = op.join(meg_dir, subject)
-epochs = mne.read_epochs(op.join(data_path, '%s_highpass-%sHz-epo.fif'
-                         % (subject, l_freq)))
+epochs = mne.read_epochs(epo_fname)
 epochs.plot_drop_log()
 
 ###############################################################################
 # Evoked responses :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
-evo_fname = op.join(data_path, '%s_highpass-%sHz_ave.fif' % (subject, l_freq))
-evoked = mne.read_evokeds(evo_fname)
+ave_fname = op.join(subject_dir,
+                    '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
+evoked = mne.read_evokeds(ave_fname)
 
 ###############################################################################
 # Faces
@@ -87,19 +89,20 @@ contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject)
 
 ###############################################################################
 # ICA
+ica_fname = op.join(subject_dir, 'run_01-ica.fif')
 ica = mne.preprocessing.read_ica(ica_fname)
 ica.plot_sources(raw_filt)
 
 ###############################################################################
 # TFR :ref:`sphx_glr_auto_scripts_07-time_frequency.py`.
 fpower = mne.time_frequency.read_tfrs(
-    op.join(meg_dir, subject, '%s-faces-tfr.h5' % subject))[0]
+    op.join(subject_dir, '%s-faces-tfr.h5' % subject))[0]
 fitc = mne.time_frequency.read_tfrs(
-    op.join(meg_dir, subject, '%s-itc_faces-tfr.h5' % subject))[0]
+    op.join(subject_dir, '%s-itc_faces-tfr.h5' % subject))[0]
 spower = mne.time_frequency.read_tfrs(
-    op.join(meg_dir, subject, '%s-scrambled-tfr.h5' % subject))[0]
+    op.join(subject_dir, '%s-scrambled-tfr.h5' % subject))[0]
 sitc = mne.time_frequency.read_tfrs(
-    op.join(meg_dir, subject, '%s-itc_scrambled-tfr.h5' % subject))[0]
+    op.join(subject_dir, '%s-itc_scrambled-tfr.h5' % subject))[0]
 channel = 'EEG065'
 idx = [fpower.ch_names.index(channel)]
 fpower.plot(idx, title='Faces power %s' % channel, baseline=(-0.1, 0.0),
@@ -114,7 +117,9 @@ sitc.plot(idx, title='Scrambled ITC %s' % channel, baseline=(-0.1, 0.0),
 
 ###############################################################################
 # Covariance :ref:`sphx_glr_auto_scripts_06-make_evoked.py`.
-cov = mne.read_cov(op.join(meg_dir, subject, '%s-cov.fif' % subject))
+cov_fname = op.join(subject_dir,
+                    '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
+cov = mne.read_cov(cov_fname)
 mne.viz.plot_cov(cov, faces_evo.info)
 faces_evo.plot_white(cov)
 
@@ -131,7 +136,7 @@ mne.viz.plot_trans(famous_evo.info, fname_trans, subject=subject,
 
 
 def plot_stc(cond):
-    fname = op.join(meg_dir, subject, 'mne_dSPM_inverse-%s' % cond)
+    fname = op.join(subject_dir, 'mne_dSPM_inverse-%s' % cond)
     stc = mne.read_source_estimate(fname, subject)
     brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
                      hemi='both', initial_time=0.17, time_unit='s')
@@ -145,7 +150,7 @@ brain = plot_stc('contrast')
 
 ###############################################################################
 # LCMV Faces - scrambled
-fname = op.join(meg_dir, subject, 'mne_LCMV_inverse-contrast')
+fname = op.join(subject_dir, 'mne_LCMV_inverse-contrast')
 stc = mne.read_source_estimate(fname, subject)
 stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
          hemi='both', initial_time=0.17, time_unit='s')

@@ -24,7 +24,7 @@ subject = "sub%03d" % int(1)
 fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
 raw = mne.io.read_raw_fif(fname)
 
-fname = op.join(meg_dir, subject, 'run_01_filt_sss_raw.fif')
+fname = op.join(meg_dir, subject, 'run_01_filt_tsss_raw.fif')
 raw_filt = mne.io.read_raw_fif(fname)
 
 ###############################################################################
@@ -39,12 +39,12 @@ events = mne.read_events(op.join(meg_dir, subject, 'run_01_filt_sss-eve.fif'))
 fig = mne.viz.plot_events(events, show=False)
 fig.suptitle('Events from run 01')
 
-epochs = mne.read_epochs(op.join(meg_dir, subject, subject + '-epo.fif'))
+epochs = mne.read_epochs(op.join(meg_dir, subject, subject + '-tsss-epo.fif'))
 epochs.plot_drop_log()
 
 ###############################################################################
 # Evoked responses :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
-evo_fname = op.join(meg_dir, subject, '%s-ave.fif' % subject)
+evo_fname = op.join(meg_dir, subject, '%s-tsss-ave.fif' % subject)
 evoked = mne.read_evokeds(evo_fname)
 
 ###############################################################################
@@ -83,6 +83,6 @@ contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject)
 
 ###############################################################################
 # Covariance :ref:`sphx_glr_auto_scripts_06-make_evoked.py`.
-cov = mne.read_cov(op.join(meg_dir, subject, '%s-cov.fif' % subject))
+cov = mne.read_cov(op.join(meg_dir, subject, '%s-tsss-cov.fif' % subject))
 mne.viz.plot_cov(cov, faces_evo.info)
 faces_evo.plot_white(cov)

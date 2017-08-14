@@ -13,7 +13,7 @@ import mne
 from mne.parallel import parallel_func
 from mne.minimum_norm import apply_inverse, read_inverse_operator
 
-from library.config import meg_dir, subjects_dir, spacing, N_JOBS
+from library.config import meg_dir, subjects_dir, spacing, l_freq, N_JOBS
 
 stcs = list()
 exclude = [1, 5, 16]  # Excluded subjects
@@ -24,8 +24,8 @@ def morph_stc(subject_id):
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 
-    evokeds = mne.read_evokeds(op.join(meg_dir, subject,
-                                       '%s_highpass-1Hz_ave.fif' % subject))
+    evokeds = mne.read_evokeds(op.join(
+        meg_dir, subject, '%s_highpass-%sHz-ave.fif' % (subject, l_freq)))
 
     contrast = evokeds[3]
     fname_inv = op.join(data_path, '%s-meg-%s-inv.fif' % (subject, spacing))

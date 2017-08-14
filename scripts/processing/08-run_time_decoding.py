@@ -27,6 +27,8 @@ from library.config import meg_dir, N_JOBS
 
 
 def run_time_decoding(subject_id, condition1, condition2):
+    print("processing subject: %s" % subject_id)
+
     subject = "sub%03d" % subject_id
     data_path = os.path.join(meg_dir, subject)
     epochs = mne.read_epochs(os.path.join(data_path,

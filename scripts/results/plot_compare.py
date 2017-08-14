@@ -10,12 +10,13 @@ import os.path as op
 import numpy as np
 
 import mne
-from library.config import meg_dir, ylim
+from library.config import meg_dir, ylim, l_freq
 
 evokeds = list()
 for subject_id in range(1, 20):
     subject = "sub%03d" % subject_id
-    fname_in = op.join(meg_dir, subject, '%s-ave.fif' % subject)
+    fname_in = op.join(meg_dir, subject,
+                       '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
     evokeds.append(mne.read_evokeds(fname_in))
 times = np.arange(0.1, 0.26, 0.025)
 

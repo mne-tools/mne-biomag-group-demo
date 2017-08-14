@@ -18,7 +18,6 @@ from warnings import warn
 import numpy as np
 
 import mne
-from mne.parallel import parallel_func
 
 from library.config import study_path, meg_dir, N_JOBS, cal, ctc
 
@@ -85,7 +84,8 @@ def run_filter(subject_id):
 
         raw.filter(None, 40, l_trans_bandwidth='auto',
                    h_trans_bandwidth='auto', filter_length='auto',
-                   phase='zero', fir_window='hann', fir_design='firwin')
+                   phase='zero', fir_window='hann', fir_design='firwin',
+                   n_jobs=N_JOBS)
         raw.save(raw_out, overwrite=True)
 
 

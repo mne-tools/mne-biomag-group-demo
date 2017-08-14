@@ -25,9 +25,10 @@ def run_inverse(subject_id):
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 
-    fname_ave = op.join(data_path, '%s_highpass-1Hz_ave.fif' % subject)
-    fname_cov = op.join(data_path, '%s_highpass-%sHz-cov.fif' % (subject,
-                                                                 l_freq))
+    fname_ave = op.join(data_path,
+                        '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
+    fname_cov = op.join(data_path,
+                        '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
     fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
     fname_inv = op.join(data_path, '%s-meg-%s-inv.fif' % (subject, spacing))
 

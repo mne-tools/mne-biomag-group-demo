@@ -52,7 +52,7 @@ def run_evoked(subject_id, tsss=False):
 
     else:
         mne.evoked.write_evokeds(op.join(data_path, '%s_highpass-%sHz'
-                                 '_ave.fif' % (subject, l_freq)),
+                                 '-ave.fif' % (subject, l_freq)),
                                  [evoked_famous, evoked_scrambled,
                                   evoked_unfamiliar, contrast, faces])
 

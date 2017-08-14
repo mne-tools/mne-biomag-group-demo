@@ -11,7 +11,7 @@ import mne
 from mne.parallel import parallel_func
 
 from library.config import (study_path, meg_dir, subjects_dir, spacing, N_JOBS,
-                            mindist)
+                            mindist, l_freq)
 
 
 exclude = [1, 5, 16]  # Excluded subjects
@@ -24,7 +24,7 @@ def run_forward(subject_id):
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 
-    fname_ave = op.join(data_path, '%s_highpass-1Hz_ave.fif' % subject)
+    fname_ave = op.join(data_path, '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
     fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
     fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
                           '%s-trans.fif' % subject)

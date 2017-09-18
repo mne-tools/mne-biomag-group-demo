@@ -30,7 +30,7 @@ raw = mne.io.read_raw_fif(raw_fname_in, preload=True)
 
 raw.info['bads'] = bads
 picks = mne.pick_types(raw.info, meg=True, exclude='bads')
-raw.filter(None, 40, **filter_params)
+raw.filter(1., 40, **filter_params)
 
 events = mne.find_events(raw, stim_channel='STI101', consecutive='increasing',
                          mask=4352, mask_type='not_and', min_duration=0.003,
@@ -44,10 +44,10 @@ raw_sss = mne.io.read_raw_fif(sss_fname_in, preload=True)
 raw.info['bads'] = bads
 raw_sss.info['bads'] = bads
 
-raw = maxwell_filter(raw, calibration=cal, cross_talk=ctc, st_duration=10.)
+raw = maxwell_filter(raw, calibration=cal, cross_talk=ctc, st_duration=None)
 
-raw.filter(None, 40, **filter_params)
-raw_sss.filter(None, 40, **filter_params)
+raw.filter(1., 40, **filter_params)
+raw_sss.filter(1., 40, **filter_params)
 
 evoked_after = Epochs(raw, events, event_id=event_ids, picks=picks).average()
 evoked_sss = Epochs(raw_sss, events, event_id=event_ids, picks=picks).average()

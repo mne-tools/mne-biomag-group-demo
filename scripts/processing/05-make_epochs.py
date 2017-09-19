@@ -14,11 +14,12 @@ a factor of 2.
 import os
 import tempfile
 import os.path as op
-import numpy as np
 
 import mne
 from mne.parallel import parallel_func
 from mne.preprocessing import create_ecg_epochs, read_ica
+
+from autoreject import get_rejection_threshold
 
 from library.config import meg_dir, N_JOBS, map_subjects, l_freq
 
@@ -38,7 +39,6 @@ events_id = {
 }
 
 tmin, tmax = -0.2, 0.8
-reject = dict(grad=4000e-13, mag=4e-12)
 baseline = None
 
 tempdir = tempfile.mkdtemp()
@@ -78,13 +78,6 @@ def run_epochs(subject_id, tsss=False):
 
         raw = mne.io.Raw(run_fname, preload=True)
 
-        eog_events = mne.preprocessing.find_eog_events(raw)
-        eog_events[:, 0] -= int(0.25 * raw.info['sfreq'])
-        annotations = mne.Annotations(eog_events[:, 0] / raw.info['sfreq'],
-                                      np.repeat(0.5, len(eog_events)),
-                                      'BAD_blink', raw.info['meas_date'])
-        raw.annotations = annotations  # Remove epochs with blinks
-
         delay = int(0.0345 * raw.info['sfreq'])
         events = mne.read_events(op.join(data_path,
                                          'run_%02d_filt_sss-eve.fif' % run))
@@ -101,7 +94,9 @@ def run_epochs(subject_id, tsss=False):
         # Read epochs
         epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
                             picks=picks, baseline=baseline, preload=True,
-                            decim=2, reject=reject)
+                            decim=2, reject=None)
+        reject = get_rejection_threshold(epochs)
+        epochs.drop_bad(reject=reject)
         # XXX: workaround for memory leak in MNE where a reference to
         # raw object is kept in epochs. The downside is that it will
         # lead to some loss in precision but we can live with it.

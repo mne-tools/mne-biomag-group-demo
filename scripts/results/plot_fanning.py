@@ -11,7 +11,7 @@ import os.path as op
 import mne
 from mne import Epochs
 
-from library.config import study_path
+from library.config import study_path, cal, ctc
 
 subject = "sub003"
 event_ids = [5, 6, 7]  # Famous faces
@@ -63,3 +63,23 @@ fig = evoked.plot_joint(times="auto", title=None,
                         topomap_args=dict(vmin=-300, vmax=300))
 fig.set_size_inches(12, 6, forward=True)
 fig.savefig('FanningB.pdf', bbox_to_inches='tight')
+
+###############################################################################
+# Finally, we can also use the tSSS data which is equivalent to doing a
+# highpass filter and the "fanning" will not be visible also in this case.
+from mne.preprocessing import maxwell_filter # noqa
+
+raw_fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
+raw = mne.io.read_raw_fif(raw_fname, preload=True)
+
+raw = maxwell_filter(raw, calibration=cal, cross_talk=ctc, st_duration=1.0,
+                     st_correlation=0.95)
+
+raw.filter(None, 40, **filter_params)
+evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
+                baseline=(None, 0)).average()
+fig = evoked.plot_joint(times="auto", title=None,
+                        ts_args=dict(ylim=ylim, spatial_colors=True),
+                        topomap_args=dict(vmin=-300, vmax=300))
+fig.set_size_inches(12, 6, forward=True)
+fig.savefig('FanningC.pdf', bbox_to_inches='tight')

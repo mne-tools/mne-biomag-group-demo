@@ -15,6 +15,7 @@ import os.path as op
 from warnings import warn
 
 import mne
+from mne import pick_types
 from mne.parallel import parallel_func
 
 from library.config import study_path, meg_dir, N_JOBS, l_freq
@@ -55,6 +56,11 @@ def run_filter(subject_id):
         raw.filter(l_freq, 40, l_trans_bandwidth='auto',
                    h_trans_bandwidth='auto', filter_length='auto',
                    phase='zero', fir_window='hann',
+                   fir_design='firwin')
+        # high-pass eog channel to get reasonable thresholds in autoreject
+        picks_eog = pick_types(raw.info, meg=False, eog=True)
+        raw.filter(l_freq, None, picks=picks_eog, l_trans_bandwidth='auto',
+                   filter_length='auto', phase='zero', fir_window='hann',
                    fir_design='firwin')
         raw_out = raw_fname_out % (run, l_freq)
         raw.save(raw_out, overwrite=True)

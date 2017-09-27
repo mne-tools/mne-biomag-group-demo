@@ -10,17 +10,17 @@ import os.path as op
 import numpy as np
 
 import mne
+from mne.parallel import parallel_func
 from mne.minimum_norm import apply_inverse, read_inverse_operator
 
-from library.config import meg_dir, subjects_dir, spacing
+from library.config import meg_dir, subjects_dir, spacing, N_JOBS
 
 stcs = list()
 exclude = [1, 5, 16]  # Excluded subjects
 
-for run in range(1, 20):
-    if run in exclude:
-        continue
-    subject = "sub%03d" % run
+
+def morph_stc(subject_id):
+    subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 
@@ -38,8 +38,12 @@ for run in range(1, 20):
     morphed = stc.morph(subject_from=subject, subject_to='fsaverage',
                         subjects_dir=subjects_dir, grade=4)
     morphed.save(op.join(data_path, 'contrast-morphed'))
-    stcs.append(morphed)
+    return morphed
 
+
+parallel, run_func, _ = parallel_func(morph_stc, n_jobs=N_JOBS)
+stcs = parallel(run_func(subject_id) for subject_id in range(1, 20)
+                if subject_id not in exclude)
 
 data = np.average([s.data for s in stcs], axis=0)
 stc = mne.SourceEstimate(data, stcs[0].vertices, stcs[0].tmin, stcs[0].tstep)

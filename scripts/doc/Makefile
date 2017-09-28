@@ -230,6 +230,19 @@ install:
 	git commit -a -m 'Make install' && \
 	git push
 
+install-pr:
+	rm -rf _build/doctrees _build/mne-biomag-group-demo.github.io
+	git clone -b gh-pages --single-branch --no-checkout --depth 1 https://github.com/jasmainak/mne-biomag-group-demo _build/mne-biomag-group-demo.github.io
+	touch _build/mne-biomag-group-demo.github.io/.nojekyll
+	make html
+	cd _build/ && \
+	cp -r html/* mne-biomag-group-demo.github.io && \
+	cd mne-biomag-group-demo.github.io && \
+	git add * && \
+	git add .nojekyll && \
+	git commit -a -m 'Make install' && \
+	git push
+
 install-noplot:
 	rm -rf _build/doctrees _build/mne-biomag-group-demo.github.io
 	# first clone the mne-tools/mne-biomag-group-demo.github.io repo because it may ask

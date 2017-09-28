@@ -41,12 +41,14 @@ events = mne.read_events(op.join(meg_dir, subject, 'run_01_filt_sss-eve.fif'))
 fig = mne.viz.plot_events(events, show=False)
 fig.suptitle('Events from run 01')
 
-epochs = mne.read_epochs(op.join(meg_dir, subject, subject + '-epo.fif'))
+data_path = op.join(meg_dir, subject)
+epochs = mne.read_epochs(op.join(data_path, '%s_highpass-%sHz-epo.fif'
+                         % (subject, l_freq)))
 epochs.plot_drop_log()
 
 ###############################################################################
 # Evoked responses :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
-evo_fname = op.join(meg_dir, subject, '%s-ave.fif' % subject)
+evo_fname = op.join(data_path, '%s_highpass-%sHz_ave.fif' % (subject, l_freq))
 evoked = mne.read_evokeds(evo_fname)
 
 ###############################################################################

@@ -65,8 +65,8 @@ fig.set_size_inches(12, 6, forward=True)
 fig.savefig('FanningB.pdf', bbox_to_inches='tight')
 
 ###############################################################################
-# Finally, we can also use the tSSS data which is equivalent to doing a
-# highpass filter and the "fanning" will not be visible also in this case.
+# Finally, we can also use the tSSS data which has a highpass
+# filtering effect and the "fanning" will not be visible also in this case.
 from mne.preprocessing import maxwell_filter # noqa
 
 raw_fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')

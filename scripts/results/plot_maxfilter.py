@@ -72,4 +72,4 @@ evoked_sss.pick_types(meg='mag').plot(axes=axes[2], spatial_colors=True,
                                       ylim=ylim,
                                       titles={'mag': 'After Maxfilter (TM)'})
 axes[2].set_title('C')
-fig.savefig('Maxfilter.pdf', bbox_to_inches='tight')
+fig.savefig('figures/Maxfilter.pdf', bbox_to_inches='tight')

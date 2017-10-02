@@ -127,4 +127,4 @@ for ax, label in zip(axes.ravel(), ['A', 'B', 'C', 'D']):
 
 plt.tight_layout()
 plt.show()
-plt.savefig('filters.pdf', bbox_to_inches='tight')
+plt.savefig('figures/filters.pdf', bbox_to_inches='tight')

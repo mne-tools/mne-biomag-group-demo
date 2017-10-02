@@ -63,7 +63,7 @@ plt.axvline(0.0, color='k', linestyle='--')
 plt.legend()
 plt.tight_layout()
 plt.show()
-plt.savefig('time_decoding.pdf', bbox_to_inches='tight')
+plt.savefig('figures/time_decoding.pdf', bbox_to_inches='tight')
 
 ###############################################################################
 # It seems that `'famous'` vs `'unfamiliar'` gives much noisier time course of

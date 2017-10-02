@@ -61,7 +61,7 @@ plt.ylabel(r'Potential difference ($\mu$V)')
 plt.legend()
 plt.tight_layout()
 plt.show()
-plt.savefig('grand_average_highpass-%sHz.pdf' % l_freq)
+plt.savefig('figures/grand_average_highpass-%sHz.pdf' % l_freq)
 
 ###############################################################################
 # Source-space. See :ref:`sphx_glr_auto_scripts_14-group_average_source.py`

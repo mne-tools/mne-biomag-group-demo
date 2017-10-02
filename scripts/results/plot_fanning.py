@@ -49,7 +49,7 @@ fig = evoked.plot_joint(times="auto", title=None,
                         ts_args=dict(ylim=ylim, spatial_colors=True),
                         topomap_args=dict(vmin=-300, vmax=300))
 fig.set_size_inches(12, 6, forward=True)
-fig.savefig('FanningA.pdf', bbox_to_inches='tight')
+fig.savefig('figures/FanningA.pdf', bbox_to_inches='tight')
 
 ###############################################################################
 # Next, we highpass filter (but no lowpass filter as we have already done it)
@@ -62,7 +62,7 @@ fig = evoked.plot_joint(times="auto", title=None,
                         ts_args=dict(ylim=ylim, spatial_colors=True),
                         topomap_args=dict(vmin=-300, vmax=300))
 fig.set_size_inches(12, 6, forward=True)
-fig.savefig('FanningB.pdf', bbox_to_inches='tight')
+fig.savefig('figures/FanningB.pdf', bbox_to_inches='tight')
 
 ###############################################################################
 # Finally, we can also use the tSSS data which has a highpass
@@ -82,4 +82,4 @@ fig = evoked.plot_joint(times="auto", title=None,
                         ts_args=dict(ylim=ylim, spatial_colors=True),
                         topomap_args=dict(vmin=-300, vmax=300))
 fig.set_size_inches(12, 6, forward=True)
-fig.savefig('FanningC.pdf', bbox_to_inches='tight')
+fig.savefig('figures/FanningC.pdf', bbox_to_inches='tight')

@@ -158,4 +158,4 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     mne.viz.tight_layout(fig=fig)
     fig.subplots_adjust(bottom=.05)
     plt.show()
-    plt.savefig('spatiotemporal_stats_cluster-%02d.pdf' % i_clu)
+    plt.savefig('figures/spatiotemporal_stats_cluster-%02d.pdf' % i_clu)

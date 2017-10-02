@@ -90,7 +90,7 @@ for l, c in zip(lines, colors):
 
 fig.tight_layout()
 plt.show()
-fig.savefig('psdA.pdf', bbox_to_inches='tight')
+fig.savefig('figures/psdA.pdf', bbox_to_inches='tight')
 
 ###############################################################################
 # Next, the linear scale to check power line frequency
@@ -107,4 +107,4 @@ for freq in [293., 307., 314., 321., 328.]:
     plt.axvline(freq, linestyle='--', alpha=0.25, linewidth=2)
 
 plt.tight_layout()
-fig.savefig('psdB.pdf', bbox_to_inches='tight')
+fig.savefig('figures/psdB.pdf', bbox_to_inches='tight')

@@ -37,6 +37,7 @@ from library.config import set_matplotlib_defaults  # noqa
 set_matplotlib_defaults(plt)
 
 ylim = dict(mag=(-400, 400))
+times = [0, 0.12, 0.4]
 
 ###############################################################################
 # First, we don't highpass filter and only baseline. Note how it creates a
@@ -45,7 +46,7 @@ ylim = dict(mag=(-400, 400))
 raw.filter(None, 40, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
                 baseline=(None, 0)).average()
-fig = evoked.plot_joint(times="auto", title=None,
+fig = evoked.plot_joint(times=times, title=None,
                         ts_args=dict(ylim=ylim, spatial_colors=True),
                         topomap_args=dict(vmin=-300, vmax=300))
 fig.set_size_inches(12, 6, forward=True)
@@ -58,7 +59,7 @@ fig.savefig('figures/FanningA.pdf', bbox_to_inches='tight')
 raw.filter(1, None, l_trans_bandwidth=0.5, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
                 baseline=None).average()
-fig = evoked.plot_joint(times="auto", title=None,
+fig = evoked.plot_joint(times=times, title=None,
                         ts_args=dict(ylim=ylim, spatial_colors=True),
                         topomap_args=dict(vmin=-300, vmax=300))
 fig.set_size_inches(12, 6, forward=True)
@@ -78,7 +79,7 @@ raw = maxwell_filter(raw, calibration=cal, cross_talk=ctc, st_duration=1.0,
 raw.filter(None, 40, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
                 baseline=(None, 0)).average()
-fig = evoked.plot_joint(times="auto", title=None,
+fig = evoked.plot_joint(times=times, title=None,
                         ts_args=dict(ylim=ylim, spatial_colors=True),
                         topomap_args=dict(vmin=-300, vmax=300))
 fig.set_size_inches(12, 6, forward=True)

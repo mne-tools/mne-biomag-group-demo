@@ -84,7 +84,7 @@ def run_filter(subject_id):
 
         raw.filter(None, 40, l_trans_bandwidth='auto',
                    h_trans_bandwidth='auto', filter_length='auto',
-                   phase='zero', fir_window='hann', fir_design='firwin',
+                   phase='zero', fir_window='hamming', fir_design='firwin',
                    n_jobs=N_JOBS)
         raw.save(raw_out, overwrite=True)
 

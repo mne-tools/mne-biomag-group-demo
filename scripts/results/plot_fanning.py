@@ -15,7 +15,7 @@ from library.config import study_path, cal, ctc
 
 subject = "sub003"
 event_ids = [5, 6, 7]  # Famous faces
-filter_params = dict(fir_window='hann', phase='zero',
+filter_params = dict(fir_window='hamming', phase='zero',
                      h_trans_bandwidth='auto', filter_length='auto',
                      fir_design='firwin')
 

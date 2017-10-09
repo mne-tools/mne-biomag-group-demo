@@ -105,7 +105,7 @@ for ax, f_p, filter_type, xlim, ylim in zip(axes.T, f_ps, filter_types, xlims,
     plot_impulse_response(ax[1], h, lbl, xlim, ylim)
 
     # MNE new defaults
-    h = design_filter(filter_type, f_p, 'firwin', 'auto', 'auto', 'hann')
+    h = design_filter(filter_type, f_p, 'firwin', 'auto', 'auto', 'hamming')
     lbl = 'MNE (0.16)'
     plot_filter_response(ax[0], h, filterlims[filter_type], label=lbl)
     plot_impulse_response(ax[1], h, lbl, xlim, ylim)

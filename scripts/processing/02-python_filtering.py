@@ -55,7 +55,7 @@ def run_filter(subject_id):
 
         raw.filter(l_freq, 40, l_trans_bandwidth='auto',
                    h_trans_bandwidth='auto', filter_length='auto',
-                   phase='zero', fir_window='hann',
+                   phase='zero', fir_window='hamming',
                    fir_design='firwin')
         # high-pass eog channel to get reasonable thresholds in autoreject
         picks_eog = pick_types(raw.info, meg=False, eog=True)

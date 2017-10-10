@@ -45,5 +45,4 @@ def run_ica(subject_id, tsss=None):
 
 parallel, run_func, _ = parallel_func(run_ica, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-run_ica(2, 10.)  # Maxwell filtered data
-run_ica(2, 1.)  # Maxwell filtered data
+parallel(run_func(2, tsss) for tsss in (10, 1))  # Maxwell filtered data

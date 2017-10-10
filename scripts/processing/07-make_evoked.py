@@ -21,9 +21,9 @@ def run_evoked(subject_id, tsss=False):
 
     data_path = op.join(meg_dir, subject)
     if tsss:
-        fname_epo = op.join(data_path, '%s-tsss-epo.fif' % subject)
-        fname_evo = op.join(data_path, '%s-tsss-ave.fif' % subject)
-        fname_cov = op.join(data_path, '%s-tsss-cov.fif' % subject)
+        fname_epo = op.join(data_path, '%s-tsss_%d-epo.fif' % (subject, tsss))
+        fname_evo = op.join(data_path, '%s-tsss_%d-ave.fif' % (subject, tsss))
+        fname_cov = op.join(data_path, '%s-tsss_%d-cov.fif' % (subject, tsss))
     else:
         fname_epo = op.join(data_path, '%s_highpass-%sHz-epo.fif'
                             % (subject, l_freq))
@@ -57,5 +57,4 @@ def run_evoked(subject_id, tsss=False):
 
 parallel, run_func, _ = parallel_func(run_evoked, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-run_evoked(2, 10.)  # Maxwell filtered data
-run_evoked(2, 1.)  # Maxwell filtered data
+parallel(run_func(2, tsss) for tsss in (10, 1))  # Maxwell filtered data

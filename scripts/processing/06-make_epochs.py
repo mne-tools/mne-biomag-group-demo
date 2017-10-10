@@ -69,7 +69,8 @@ def run_epochs(subject_id, tsss=False):
     for run in range(1, 7):
         print(" - Run %s" % run)
         if tsss:
-            run_fname = op.join(data_path, 'run_%02d_filt_tsss_raw.fif' % run)
+            run_fname = op.join(data_path, 'run_%02d_filt_tsss_%d_raw.fif'
+                                % (run, tsss))
         else:
             run_fname = op.join(data_path, 'run_%02d_filt_sss_'
                                 'highpass-%sHz_raw.fif' % (run, l_freq))
@@ -99,7 +100,8 @@ def run_epochs(subject_id, tsss=False):
 
     # ICA
     if tsss:
-        ica_name = op.join(meg_dir, subject, 'run_concat-tsss-ica.fif')
+        ica_name = op.join(meg_dir, subject, 'run_concat-tsss_%d-ica.fif'
+                           % (tsss,))
     else:
         ica_name = op.join(meg_dir, subject, 'run_concat-ica.fif')
     ica = read_ica(ica_name)
@@ -112,7 +114,7 @@ def run_epochs(subject_id, tsss=False):
     ica.apply(epochs)
 
     if tsss:
-        epochs.save(op.join(data_path, '%s-tsss-epo.fif' % subject))
+        epochs.save(op.join(data_path, '%s-tsss_%d-epo.fif' % (subject, tsss)))
     else:
         epochs.save(op.join(data_path, '%s_highpass-%sHz-epo.fif'
                     % (subject, l_freq)))
@@ -123,4 +125,4 @@ def run_epochs(subject_id, tsss=False):
 
 parallel, run_func, _ = parallel_func(run_epochs, n_jobs=1)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-#run_epochs(2, True)  # Maxwell filtered data
+parallel(run_func(2, tsss) for tsss in (10, 1))  # Maxwell filtered data

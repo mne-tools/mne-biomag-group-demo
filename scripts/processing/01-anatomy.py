@@ -45,7 +45,7 @@ def process_subject_anat(subject_id, force_recon_all=False):
     if op.isdir(subject_dir):
         print('  Skipping reconstruction (folder exists)')
     else:
-        print('  Running reconstruction (usually takes hours)...')
+        print('  Running reconstruction (usually takes hours)')
         t0 = time.time()
         tee_output(
             ['recon-all', '-all', '-s', subject, '-sd', subjects_dir,
@@ -111,7 +111,7 @@ def process_subject_anat(subject_id, force_recon_all=False):
     fname_src = op.join(subjects_dir, subject, 'bem', '%s-%s-src.fif'
                         % (subject, spacing))
     if not op.isfile(fname_src):
-        print('  Setting up source spcae')
+        print('  Setting up source space')
         src = mne.setup_source_space(subject, spacing,
                                      subjects_dir=subjects_dir)
         mne.write_source_spaces(fname_src, src)

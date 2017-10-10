@@ -8,6 +8,7 @@ Configuration parameters for the study. Place them in a folder called
 """
 
 import os
+import numpy as np
 
 ###############################################################################
 # Let's set the path where the data is downloaded and stored.
@@ -25,6 +26,9 @@ elif user == 'jleppakangas':
 elif user == 'alex':
     study_path = '/Users/alex/work/data/mne-biomag-group-demo/'
     N_JOBS = 1
+elif user == 'larsoner':
+    N_JOBS = 4
+    study_path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 else:
     study_path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
     N_JOBS = 1
@@ -52,6 +56,11 @@ map_subjects = {1: 'subject_01', 2: 'subject_02', 3: 'subject_03',
                 19: 'subject_25'}
 
 ###############################################################################
+# Subjects that are known to be bad from the publication
+
+exclude_subjects = [1, 5, 16]  # Excluded subjects
+
+###############################################################################
 # The `cross talk file <https://github.com/mne-tools/mne-biomag-group-demo/blob/master/scripts/results/library/ct_sparse.fif>`_
 # and `calibration file <https://github.com/mne-tools/mne-biomag-group-demo/blob/master/scripts/results/library/sss_cal.dat>`_
 # are placed in the same folder.
@@ -64,3 +73,6 @@ cal = os.path.join(os.path.dirname(__file__), '..', '..', 'results', 'library',
 ylim = {'eeg': [-10, 10], 'mag': [-300, 300], 'grad': [-80, 80]}
 
 l_freq = 1
+
+smooth = 10
+fsaverage_vertices = [np.arange(10242), np.arange(10242)]

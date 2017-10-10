@@ -11,13 +11,11 @@ import mne
 from mne.parallel import parallel_func
 from mne.beamformer import lcmv
 
-from library.config import meg_dir, spacing, N_JOBS, l_freq
+from library.config import meg_dir, spacing, N_JOBS, l_freq, exclude_subjects
 
-
-exclude = [1, 5, 16]  # Excluded subjects
 
 def run_inverse(subject_id):
-    if subject_id in exclude:
+    if subject_id in exclude_subjects:
         return
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
@@ -29,7 +27,8 @@ def run_inverse(subject_id):
                         '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
     fname_cov = op.join(data_path,
                         '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
-    fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
+    fname_fwd = op.join(data_path, '%s-meg-eeg-%s-fwd.fif'
+                        % (subject, spacing))
 
     epochs = mne.read_epochs(fname_epo, preload=False)
     data_cov = mne.compute_covariance(epochs, tmin=0.03, tmax=0.3)

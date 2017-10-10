@@ -8,7 +8,7 @@ automatically defined. See
 `Background information on filtering <http://mne-tools.github.io/dev/auto_tutorials/plot_background_filtering.html>`_
 for more. The filtered data are saved to separate files to the subject's'MEG'
 directory.
-"""
+"""  # noqa: E501
 
 import os
 import os.path as op
@@ -35,7 +35,7 @@ def run_filter(subject_id):
     for run in range(1, 7):
         raw_in = raw_fname_in % run
         try:
-            raw = mne.io.read_raw_fif(raw_in, preload=True)
+            raw = mne.io.read_raw_fif(raw_in, preload=True, verbose='error')
         except AttributeError:
             # Some files on openfmri are corrupted and cannot be read.
             warn('Could not read file %s. '
@@ -45,7 +45,7 @@ def run_filter(subject_id):
         raw.set_channel_types({'EEG061': 'eog',
                                'EEG062': 'eog',
                                'EEG063': 'ecg',
-                               'EEG064': 'misc'})  # EEG064 free floating el.
+                               'EEG064': 'misc'})  # EEG064 free-floating el.
         raw.rename_channels({'EEG061': 'EOG061',
                              'EEG062': 'EOG062',
                              'EEG063': 'ECG063'})
@@ -53,15 +53,17 @@ def run_filter(subject_id):
         if not op.exists(op.join(meg_dir, subject)):
             os.mkdir(op.join(meg_dir, subject))
 
-        raw.filter(l_freq, 40, l_trans_bandwidth='auto',
-                   h_trans_bandwidth='auto', filter_length='auto',
-                   phase='zero', fir_window='hamming',
-                   fir_design='firwin')
-        # high-pass eog channel to get reasonable thresholds in autoreject
+        # Band-pass the data channels (MEG and EEG)
+        raw.filter(
+            l_freq, 40, l_trans_bandwidth='auto', h_trans_bandwidth='auto',
+            filter_length='auto', phase='zero', fir_window='hamming',
+            fir_design='firwin')
+        # High-pass EOG to get reasonable thresholds in autoreject
         picks_eog = pick_types(raw.info, meg=False, eog=True)
-        raw.filter(l_freq, None, picks=picks_eog, l_trans_bandwidth='auto',
-                   filter_length='auto', phase='zero', fir_window='hann',
-                   fir_design='firwin')
+        raw.filter(
+            l_freq, None, picks=picks_eog, l_trans_bandwidth='auto',
+            filter_length='auto', phase='zero', fir_window='hann',
+            fir_design='firwin')
         raw_out = raw_fname_out % (run, l_freq)
         raw.save(raw_out, overwrite=True)
 

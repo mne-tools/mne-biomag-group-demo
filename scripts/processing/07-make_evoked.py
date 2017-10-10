@@ -21,13 +21,17 @@ def run_evoked(subject_id, tsss=False):
 
     data_path = op.join(meg_dir, subject)
     if tsss:
-        epochs = mne.read_epochs(op.join(data_path,
-                                         '%s-tsss-epo.fif' % subject),
-                                 preload=False)
+        fname_epo = op.join(data_path, '%s-tsss-epo.fif' % subject)
+        fname_evo = op.join(data_path, '%s-tsss-ave.fif' % subject)
+        fname_cov = op.join(data_path, '%s-tsss-cov.fif' % subject)
     else:
-        epochs = mne.read_epochs(op.join(data_path, '%s_highpass-%sHz'
-                                 '-epo.fif' % (subject, l_freq)),
-                                 preload=False)
+        fname_epo = op.join(data_path, '%s_highpass-%sHz-epo.fif'
+                            % (subject, l_freq))
+        fname_evo = op.join(data_path, '%s_highpass-%sHz-ave.fif'
+                            % (subject, l_freq))
+        fname_cov = op.join(data_path, '%s_highpass-%sHz-cov.fif'
+                            % (subject, l_freq))
+    epochs = mne.read_epochs(fname_epo)
 
     evoked_famous = epochs['face/famous'].average()
     evoked_scrambled = epochs['scrambled'].average()
@@ -44,27 +48,14 @@ def run_evoked(subject_id, tsss=False):
     faces = mne.combine_evoked([evoked_famous, evoked_unfamiliar], 'nave')
     faces.comment = 'faces'
 
-    if tsss:
-        mne.evoked.write_evokeds(op.join(data_path,
-                                         '%s-tsss-ave.fif' % subject),
-                                 [evoked_famous, evoked_scrambled,
-                                  evoked_unfamiliar, contrast, faces])
+    mne.evoked.write_evokeds(fname_evo, [evoked_famous, evoked_scrambled,
+                                         evoked_unfamiliar, contrast, faces])
 
-    else:
-        mne.evoked.write_evokeds(op.join(data_path, '%s_highpass-%sHz'
-                                 '-ave.fif' % (subject, l_freq)),
-                                 [evoked_famous, evoked_scrambled,
-                                  evoked_unfamiliar, contrast, faces])
-
-    # take care of noise cov
     cov = mne.compute_covariance(epochs, tmax=0, method='shrunk')
-    if tsss:
-        cov.save(op.join(data_path, '%s-tsss-cov.fif' % subject))
-    else:
-        cov.save(op.join(data_path, '%s_highpass-%sHz-cov.fif'
-                 % (subject, l_freq)))
+    cov.save(fname_cov)
 
 
 parallel, run_func, _ = parallel_func(run_evoked, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-run_evoked(1, True)  # run on maxwell filtered data
+run_evoked(2, 10.)  # Maxwell filtered data
+run_evoked(2, 1.)  # Maxwell filtered data

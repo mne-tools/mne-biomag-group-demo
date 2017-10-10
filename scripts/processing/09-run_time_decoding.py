@@ -16,9 +16,12 @@ Results script: :ref:`sphx_glr_auto_examples_plot_time_decoding.py`
 
 import os
 import numpy as np
+from scipy.io import savemat
 
 import mne
+from mne.decoding import TimeDecoding
 from mne.parallel import parallel_func
+from mne.selection import read_selection
 
 from library.config import meg_dir, N_JOBS
 
@@ -43,18 +46,12 @@ def run_time_decoding(subject_id, condition1, condition2):
     epochs.apply_baseline()
 
     # Let us restrict ourselves to the occipital channels
-    from mne.selection import read_selection
     ch_names = [ch_name.replace(' ', '') for ch_name
                 in read_selection('occipital')]
     epochs.pick_types(meg='mag').pick_channels(ch_names)
 
-    # Now we fit and plot the time decoder
-    from mne.decoding import TimeDecoding
-
-    times = dict(step=0.005)  # fit a classifier only every 5 ms
     # Use AUC because chance level is same regardless of the class balance
-    td = TimeDecoding(predict_mode='cross-validation',
-                      times=times, scorer='roc_auc')
+    td = TimeDecoding(predict_mode='cross-validation', scorer='roc_auc')
     td.fit(epochs, y)
 
     # let's save the scores now
@@ -62,7 +59,6 @@ def run_time_decoding(subject_id, condition1, condition2):
                            os.path.basename(condition2))
     fname_td = os.path.join(data_path, '%s-td-auc-%s.mat'
                             % (subject, a_vs_b))
-    from scipy.io import savemat
     savemat(fname_td, {'scores': td.score(epochs),
                        'times': td.times_['times']})
 

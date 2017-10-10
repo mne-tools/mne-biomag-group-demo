@@ -29,8 +29,10 @@ def run_inverse(subject_id):
                         '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
     fname_cov = op.join(data_path,
                         '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
-    fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
-    fname_inv = op.join(data_path, '%s-meg-%s-inv.fif' % (subject, spacing))
+    fname_fwd = op.join(data_path, '%s-meg-eeg-%s-fwd.fif'
+                        % (subject, spacing))
+    fname_inv = op.join(data_path, '%s-meg-eeg-%s-inv.fif'
+                        % (subject, spacing))
 
     evokeds = mne.read_evokeds(fname_ave, condition=[0, 1, 2, 3, 4])
     cov = mne.read_cov(fname_cov)

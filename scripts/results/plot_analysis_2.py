@@ -35,7 +35,7 @@ raw_filt.plot_psd()
 
 ###############################################################################
 # Events :ref:`sphx_glr_auto_scripts_03-run_extract_events.py`.
-# Epochs :ref:`sphx_glr_auto_scripts_05-make_epochs.py`.
+# Epochs :ref:`sphx_glr_auto_scripts_06-make_epochs.py`.
 eve_fname = op.join(subject_dir, 'run_01_filt_sss-eve.fif')
 epo_fname = op.join(subject_dir,
                     '%s_highpass-%sHz-epo.fif' % (subject, l_freq))
@@ -48,7 +48,7 @@ epochs = mne.read_epochs(epo_fname)
 epochs.plot_drop_log()
 
 ###############################################################################
-# Evoked responses :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
+# Evoked responses :ref:`sphx_glr_auto_scripts_07-make_evoked.py`
 ave_fname = op.join(subject_dir,
                     '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
 evoked = mne.read_evokeds(ave_fname)
@@ -135,25 +135,27 @@ mne.viz.plot_trans(famous_evo.info, fname_trans, subject=subject,
 # Faces :ref:`sphx_glr_auto_scripts_13-make_inverse.py`.
 
 
-def plot_stc(cond):
+def plot_stc(cond, figure=None):
     fname = op.join(subject_dir, 'mne_dSPM_inverse-%s' % cond)
     stc = mne.read_source_estimate(fname, subject)
     brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
-                     hemi='both', initial_time=0.17, time_unit='s')
+                     hemi='both', initial_time=0.17, time_unit='s',
+                     figure=figure)
     return brain
 
-brain = plot_stc('faces')
+
+brain_faces = plot_stc('faces', figure=1)
 
 ###############################################################################
 # Faces - scrambled
-brain = plot_stc('contrast')
+brain_contrast = plot_stc('contrast', figure=2)
 
 ###############################################################################
 # LCMV Faces - scrambled
 fname = op.join(subject_dir, 'mne_LCMV_inverse-contrast')
 stc = mne.read_source_estimate(fname, subject)
 stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
-         hemi='both', initial_time=0.17, time_unit='s')
+         hemi='both', initial_time=0.17, time_unit='s', figure=3)
 
 ###############################################################################
 # BEM

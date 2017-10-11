@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Select filters
 ==============
@@ -46,7 +47,7 @@ def design_filter(filter_type, f_p, fir_design, trans_bandwidth,
 # To choose our filters, we plot the frequency response of the filter (in dB).
 # Higher attenuation is good for reducing noise.
 def plot_filter_response(ax, h, xlim, label):
-    f, H = freqz(h, worN=8192)
+    f, H = freqz(h, worN=32768)
     f *= sfreq / (2 * np.pi)
     ax.plot(f, 20 * np.log10(np.abs(H)),
             linewidth=2, zorder=4, label=label)
@@ -106,7 +107,7 @@ for ax, f_p, filter_type, xlim, ylim in zip(axes.T, f_ps, filter_types, xlims,
 
     # MNE new defaults
     h = design_filter(filter_type, f_p, 'firwin', 'auto', 'auto', 'hamming')
-    lbl = 'MNE (0.16)'
+    lbl = u'MNE (≥ 0.16)'
     plot_filter_response(ax[0], h, filterlims[filter_type], label=lbl)
     plot_impulse_response(ax[1], h, lbl, xlim, ylim)
 

@@ -16,7 +16,8 @@ from library.config import meg_dir, N_JOBS, l_freq
 
 def run_ica(subject_id, tsss=None):
     subject = "sub%03d" % subject_id
-    print("Processing subject: %s" % subject)
+    print("Processing subject: %s%s"
+          % (subject, (' (tSSS=%d)' % tsss) if tsss else ''))
     data_path = op.join(meg_dir, subject)
     raws = list()
     print("  Loading runs")
@@ -30,19 +31,28 @@ def run_ica(subject_id, tsss=None):
         raws.append(mne.io.read_raw_fif(run_fname))
     raw = mne.concatenate_raws(raws)
     if tsss:
+        # SSS reduces the data rank and the noise levels, so let's include more
+        # ICA components here
+        n_components = 0.999
         ica_name = op.join(meg_dir, subject,
                            'run_concat-tsss_%d-ica.fif' % tsss)
     else:
+        n_components = 0.98
         ica_name = op.join(meg_dir, subject, 'run_concat-ica.fif')
+    # Here we only use MEG because we only eliminate ECG artifacts, which
+    # are not prevalent in EEG (blink artifats are, but we will remove trials
+    # with blinks at the epoching stage).
     print('  Fitting ICA')
-    ica = ICA(method='fastica', random_state=42, n_components=0.98)
-    picks = mne.pick_types(raw.info, meg=True, eeg=True, eog=False,
+    ica = ICA(method='fastica', random_state=42, n_components=n_components)
+    picks = mne.pick_types(raw.info, meg=True, eeg=False, eog=False,
                            stim=False, exclude='bads')
     ica.fit(raw, picks=picks, reject=dict(grad=4000e-13, mag=4e-12),
-            decim=8)
+            decim=11)
+    print('  Fit %d components (explaining at least %0.1f%% of the variance)'
+          % (ica.n_components_, 100 * n_components))
     ica.save(ica_name)
 
 
 parallel, run_func, _ = parallel_func(run_ica, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-parallel(run_func(2, tsss) for tsss in (10, 1))  # Maxwell filtered data
+parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

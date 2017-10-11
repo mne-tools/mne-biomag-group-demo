@@ -20,22 +20,22 @@ from scipy.io import savemat
 
 import mne
 from mne.decoding import TimeDecoding
-from mne.parallel import parallel_func
 from mne.selection import read_selection
 
-from library.config import meg_dir, N_JOBS
+from library.config import meg_dir, l_freq, N_JOBS
 
 ###############################################################################
 # Then we write a function to do time decoding on one subject
 
 
 def run_time_decoding(subject_id, condition1, condition2):
-    print("processing subject: %s" % subject_id)
+    print("processing subject: %s (%s vs %s)"
+          % (subject_id, condition1, condition2))
 
     subject = "sub%03d" % subject_id
     data_path = os.path.join(meg_dir, subject)
     epochs = mne.read_epochs(os.path.join(data_path,
-                             '%s_highpass-1Hz-epo.fif' % subject))
+                             '%s_highpass-%sHz-epo.fif' % (subject, l_freq)))
 
     # We define the epochs and the labels
     n_cond1 = len(epochs[condition1])
@@ -51,7 +51,8 @@ def run_time_decoding(subject_id, condition1, condition2):
     epochs.pick_types(meg='mag').pick_channels(ch_names)
 
     # Use AUC because chance level is same regardless of the class balance
-    td = TimeDecoding(predict_mode='cross-validation', scorer='roc_auc')
+    td = TimeDecoding(predict_mode='cross-validation', scorer='roc_auc',
+                      n_jobs=N_JOBS)
     td.fit(epochs, y)
 
     # let's save the scores now
@@ -63,15 +64,7 @@ def run_time_decoding(subject_id, condition1, condition2):
                        'times': td.times_['times']})
 
 
-###############################################################################
-# Finally we make this script parallel across subjects and write the results
-#
-# .. warning::
-#    This may take a large amount of memory because the epochs will be
-#    replicated for each parallel job
-
-parallel, run_func, _ = parallel_func(run_time_decoding, n_jobs=N_JOBS)
-parallel(run_func(subject_id, 'face', 'scrambled')
-         for subject_id in range(1, 20))
-parallel(run_func(subject_id, 'face/famous', 'face/unfamiliar')
-         for subject_id in range(1, 20))
+for subject_id in range(1, 20):
+    for conditions in (('face', 'scrambled'),
+                       ('face/famous', 'face/unfamiliar')):
+        run_time_decoding(subject_id, *conditions)

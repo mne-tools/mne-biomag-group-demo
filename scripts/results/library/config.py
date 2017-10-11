@@ -8,6 +8,7 @@ Configuration parameters for the study. Place them in a folder called
 """
 
 import os
+import numpy as np
 
 ###############################################################################
 # Let's set the path where the data is downloaded and stored.
@@ -73,3 +74,5 @@ def set_matplotlib_defaults(plt, fontsize=17):
 
 
 l_freq = 1
+
+fsaverage_vertices = [np.arange(10242), np.arange(10242)]

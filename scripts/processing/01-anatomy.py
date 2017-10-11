@@ -8,6 +8,10 @@ later used for forward modeling. BEM extraction is done using flash MRI data.
 Make sure that Freesurfer is properly configured before running this script.
 See the `Setup & Configuration`_ section of the Freesurfer manual.
 
+.. note:: Because of how long the reconstruction takes, this script is set
+          up to only regenerate data if necessary. If you want to re-run
+          specific steps, then you must delete the resulting files.
+
 .. _Setup & Configuration: https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall#Setup.26Configuration  # noqa: E501
 """
 import os
@@ -39,8 +43,9 @@ def process_subject_anat(subject_id, force_recon_all=False):
     subject = "sub%03d" % subject_id
     print("Processing %s" % subject)
 
-    t1_fname = "%s/ds117/%s/anatomy/highres001.nii.gz" % (study_path, subject)
-    log_fname = "%s/ds117/%s/my-recon-all.txt" % (study_path, subject)
+    t1_fname = op.join(study_path, 'ds117', subject, 'anatomy',
+                       'highres001.nii.gz')
+    log_fname = op.join(study_path, 'ds117', subject, 'my-recon-all.txt')
     subject_dir = op.join(subjects_dir, subject)
     if op.isdir(subject_dir):
         print('  Skipping reconstruction (folder exists)')
@@ -54,9 +59,9 @@ def process_subject_anat(subject_id, force_recon_all=False):
               % (subject_id, (time.time() - t0) / 60. / 60.))
 
     # Move flash data
-    fnames = glob.glob("%s/ds117/%s/anatomy/FLASH/meflash*"
-                       % (study_path, subject))
-    dst_flash = "%s/%s/mri/flash" % (subjects_dir, subject)
+    fnames = glob.glob(op.join(study_path, 'ds117', subject, 'anatomy',
+                               'FLASH', 'meflash*'))
+    dst_flash = op.join(subjects_dir, subject, 'mri', 'flash')
     if not op.isdir(dst_flash):
         print('  Copying FLASH files')
         os.makedirs(dst_flash)
@@ -82,7 +87,7 @@ def process_subject_anat(subject_id, force_recon_all=False):
                 fixed = nib.MGHImage(dest_img.get_data(), dest_img.affine, hdr)
                 nib.save(fixed, dest_fname)
 
-    # Make flash BEM
+    # Make BEMs
     if not op.isfile("%s/%s/mri/flash/parameter_maps/flash5.mgz"
                      % (subjects_dir, subject)):
         print('  Converting flash MRIs')
@@ -93,19 +98,29 @@ def process_subject_anat(subject_id, force_recon_all=False):
         print('  Making BEM')
         mne.bem.make_flash_bem(subject, subjects_dir=subjects_dir,
                                show=False, verbose=False)
-    fname_bem_surfaces = op.join(subjects_dir, subject, 'bem',
-                                 '%s-5120-5120-5120-bem.fif' % subject)
-    if not op.isfile(fname_bem_surfaces):
-        print('  Setting up BEM model')
-        bem_model = mne.make_bem_model(
-            subject, ico=4, subjects_dir=subjects_dir)
-        mne.write_bem_surfaces(fname_bem_surfaces, bem_model)
-    fname_bem = op.join(subjects_dir, subject, 'bem',
-                        '%s-5120-5120-5120-bem-sol.fif' % subject)
-    if not op.isfile(fname_bem):
-        print('  Computing BEM solution')
-        bem = mne.make_bem_solution(bem_model)
-        mne.write_bem_solution(fname_bem, bem)
+    for n_layers in (1, 3):
+        extra = '-'.join(['5120'] * n_layers)
+        fname_bem_surfaces = op.join(subjects_dir, subject, 'bem',
+                                     '%s-%s-bem.fif' % (subject, extra))
+        if not op.isfile(fname_bem_surfaces):
+            print('  Setting up %d-layer BEM' % (n_layers,))
+            conductivity = (0.3, 0.006, 0.3)[:n_layers]
+            try:
+                bem_surfaces = mne.make_bem_model(
+                    subject, ico=4, conductivity=conductivity,
+                    subjects_dir=subjects_dir)
+            except RuntimeError as exp:
+                print('  FAILED to create %d-layer BEM for %s: %s'
+                      % (n_layers, subject, exp.args[0]))
+                continue
+            mne.write_bem_surfaces(fname_bem_surfaces, bem_surfaces)
+        fname_bem = op.join(subjects_dir, subject, 'bem',
+                            '%s-%s-bem-sol.fif' % (subject, extra))
+        if not op.isfile(fname_bem):
+            print('  Computing  %d-layer BEM solution' % (n_layers,))
+            bem_model = mne.read_bem_surfaces(fname_bem_surfaces)
+            bem = mne.make_bem_solution(bem_model)
+            mne.write_bem_solution(fname_bem, bem)
 
     # Create the surface source space
     fname_src = op.join(subjects_dir, subject, 'bem', '%s-%s-src.fif'

@@ -16,6 +16,8 @@ Analysis script: :ref:`sphx_glr_auto_scripts_08-run_time_decoding.py`
 # Let us first import the necessary libraries
 
 import os
+import os.path as op
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import loadmat
@@ -51,24 +53,24 @@ for a_vs_b in a_vs_bs:
 from library.config import set_matplotlib_defaults  # noqa
 set_matplotlib_defaults(plt)
 colors = ['b', 'g']
+fig, ax = plt.subplots(1, figsize=(12, 8))
 for c, a_vs_b in zip(colors, a_vs_bs):
-    plt.plot(times, mean_scores[a_vs_b], c, label=a_vs_b.replace('_', ' '))
-    plt.xlabel('Time (s)')
-    plt.ylabel('Area under curve (AUC)')
-    plt.fill_between(times, mean_scores[a_vs_b] - sem_scores[a_vs_b],
-                     mean_scores[a_vs_b] + sem_scores[a_vs_b],
-                     color=c, alpha=0.2)
-plt.axhline(0.5, color='k', linestyle='--', label='Chance level')
-plt.axvline(0.0, color='k', linestyle='--')
-plt.legend()
-plt.tight_layout()
+    ax.plot(times, mean_scores[a_vs_b], c, label=a_vs_b.replace('_', ' '))
+    ax.set(xlabel='Time (s)', ylabel='Area under curve (AUC)')
+    ax.fill_between(times, mean_scores[a_vs_b] - sem_scores[a_vs_b],
+                    mean_scores[a_vs_b] + sem_scores[a_vs_b],
+                    color=c, alpha=0.2)
+ax.axhline(0.5, color='k', linestyle='--', label='Chance level')
+ax.axvline(0.0, color='k', linestyle='--')
+ax.legend()
+fig.tight_layout()
+fig.savefig(op.join('figures', 'time_decoding.pdf'), bbox_to_inches='tight')
 plt.show()
-plt.savefig('figures/time_decoding.pdf', bbox_to_inches='tight')
 
 ###############################################################################
 # It seems that `'famous'` vs `'unfamiliar'` gives much noisier time course of
 # decoding scores than `'faces'` vs `'scrambled'`. To verify that this is not
-# due to bad subjects
+# due to bad subjects:
 fig, axes = plt.subplots(4, 5, sharex=True, sharey=True, figsize=(12, 8))
 axes = axes.ravel()
 for idx in range(19):

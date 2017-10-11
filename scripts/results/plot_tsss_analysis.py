@@ -19,32 +19,35 @@ from library.config import study_path, meg_dir, ylim
 
 subjects_dir = os.path.join(study_path, 'subjects')
 
-subject = "sub%03d" % int(1)
+subject = "sub%03d" % 3
+st_duration = 10
 
 fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
 raw = mne.io.read_raw_fif(fname)
 
-fname = op.join(meg_dir, subject, 'run_01_filt_tsss_raw.fif')
+fname = op.join(meg_dir, subject, 'run_01_filt_tsss_%d_raw.fif' % st_duration)
 raw_filt = mne.io.read_raw_fif(fname)
 
 ###############################################################################
 # Filtering :ref:`sphx_glr_auto_scripts_02-python_filtering.py`.
-raw.plot_psd()
-raw_filt.plot_psd()
+raw.plot_psd(average=False, spatial_colors=True, fmax=40, show=False)
+raw_filt.plot_psd(average=False, spatial_colors=True, fmax=40)
 
 ###############################################################################
 # Events :ref:`sphx_glr_auto_scripts_03-run_extract_events.py`.
 # Epochs :ref:`sphx_glr_auto_scripts_05-make_epochs.py`.
-events = mne.read_events(op.join(meg_dir, subject, 'run_01_filt_sss-eve.fif'))
+events = mne.read_events(op.join(meg_dir, subject, 'run_01-eve.fif'))
 fig = mne.viz.plot_events(events, show=False)
 fig.suptitle('Events from run 01')
 
-epochs = mne.read_epochs(op.join(meg_dir, subject, subject + '-tsss-epo.fif'))
+epochs = mne.read_epochs(op.join(meg_dir, subject,
+                                 subject + '-tsss_%d-epo.fif' % st_duration))
 epochs.plot_drop_log()
 
 ###############################################################################
 # Evoked responses :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
-evo_fname = op.join(meg_dir, subject, '%s-tsss-ave.fif' % subject)
+evo_fname = op.join(meg_dir, subject, '%s-tsss_%d-ave.fif'
+                    % (subject, st_duration))
 evoked = mne.read_evokeds(evo_fname)
 
 ###############################################################################
@@ -76,13 +79,17 @@ contrast_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
 ###############################################################################
 # Topomaps
 times = np.arange(0.05, 0.3, 0.025)
-famous_evo.plot_topomap(times=times, title='Famous %s' % subject)
-scrambled_evo.plot_topomap(times=times, title='Scrambled %s' % subject)
-unfamiliar_evo.plot_topomap(times=times, title='Unfamiliar %s' % subject)
+famous_evo.plot_topomap(times=times, title='Famous %s' % subject,
+                        show=False)
+scrambled_evo.plot_topomap(times=times, title='Scrambled %s' % subject,
+                           show=False)
+unfamiliar_evo.plot_topomap(times=times, title='Unfamiliar %s' % subject,
+                            show=False)
 contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject)
 
 ###############################################################################
 # Covariance :ref:`sphx_glr_auto_scripts_06-make_evoked.py`.
-cov = mne.read_cov(op.join(meg_dir, subject, '%s-tsss-cov.fif' % subject))
+cov = mne.read_cov(op.join(meg_dir, subject, '%s-tsss_%d-cov.fif'
+                           % (subject, st_duration)))
 mne.viz.plot_cov(cov, faces_evo.info)
 faces_evo.plot_white(cov)

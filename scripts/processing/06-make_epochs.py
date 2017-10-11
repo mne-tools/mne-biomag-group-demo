@@ -15,13 +15,15 @@ import os
 import tempfile
 import os.path as op
 
+import numpy as np
+
 import mne
 from mne.parallel import parallel_func
 from mne.preprocessing import create_ecg_epochs, read_ica
 
 from autoreject import get_rejection_threshold
 
-from library.config import meg_dir, map_subjects, l_freq
+from library.config import meg_dir, map_subjects, l_freq, N_JOBS
 
 ###############################################################################
 # We define the events and the onset and offset of the epochs
@@ -48,7 +50,8 @@ tempdir = tempfile.mkdtemp()
 # Now we define a function to extract epochs for one subject
 def run_epochs(subject_id, tsss=False):
     subject = "sub%03d" % subject_id
-    print("processing subject: %s" % subject)
+    print("Processing subject: %s%s"
+          % (subject, (' (tSSS=%d)' % tsss) if tsss else ''))
 
     data_path = op.join(meg_dir, subject)
 
@@ -66,8 +69,8 @@ def run_epochs(subject_id, tsss=False):
 
     raw_list = list()
     events_list = list()
+    print("  Loading raw data")
     for run in range(1, 7):
-        print(" - Run %s" % run)
         if tsss:
             run_fname = op.join(data_path, 'run_%02d_filt_tsss_%d_raw.fif'
                                 % (run, tsss))
@@ -77,7 +80,7 @@ def run_epochs(subject_id, tsss=False):
 
         raw = mne.io.read_raw_fif(run_fname)
 
-        delay = int(round(0.0345 * raw_list[-1].info['sfreq']))
+        delay = int(round(0.0345 * raw.info['sfreq']))
         events = mne.read_events(op.join(data_path, 'run_%02d-eve.fif' % run))
         events[:, 0] = events[:, 0] + delay
         events_list.append(events)
@@ -85,18 +88,23 @@ def run_epochs(subject_id, tsss=False):
         raw.info['bads'] = all_bads
         raw_list.append(raw)
     raw, events = mne.concatenate_raws(raw_list, events_list=events_list)
-    raw.set_eeg_reference()
+    raw.set_eeg_reference(projection=True)
 
     picks = mne.pick_types(raw.info, meg=True, eeg=True, stim=True,
-                           eog=True)
+                           eog=True, exclude=())
 
     # Epoch the data
+    print('  Epoching')
     epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
                         picks=picks, baseline=baseline, preload=True,
                         decim=5, reject=None)
+    print('  Interpolating bad channels')
     epochs.interpolate_bads()
+    print('  Getting rejection thresholds')
     reject = get_rejection_threshold(epochs)
     epochs.drop_bad(reject=reject)
+    print('  Dropped %0.1f%% of epochs'
+          % (100 * np.mean([len(x) > 0 for x in epochs.drop_log])))
 
     # ICA
     if tsss:
@@ -104,15 +112,18 @@ def run_epochs(subject_id, tsss=False):
                            % (tsss,))
     else:
         ica_name = op.join(meg_dir, subject, 'run_concat-ica.fif')
+    print('  Using ICA')
     ica = read_ica(ica_name)
     n_max_ecg = 3  # use max 3 components
     ecg_epochs = create_ecg_epochs(raw, tmin=-.5, tmax=.5)
+    ecg_epochs.decimate(11, verbose='error')
     ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
                                              threshold=0.8)
     ica.exclude = ecg_inds[:n_max_ecg]
     ica.save(ica_name)
     ica.apply(epochs)
 
+    print('  Writing to disk')
     if tsss:
         epochs.save(op.join(data_path, '%s-tsss_%d-epo.fif' % (subject, tsss)))
     else:
@@ -123,6 +134,6 @@ def run_epochs(subject_id, tsss=False):
 ###############################################################################
 # Let us make the script parallel across subjects
 
-parallel, run_func, _ = parallel_func(run_epochs, n_jobs=1)
+parallel, run_func, _ = parallel_func(run_epochs, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-parallel(run_func(2, tsss) for tsss in (10, 1))  # Maxwell filtered data
+parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

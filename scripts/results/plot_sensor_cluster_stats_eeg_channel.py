@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import mne
 from mne.stats import permutation_cluster_1samp_test
 
-from library.config import meg_dir, N_JOBS
+from library.config import meg_dir, l_freq, N_JOBS, set_matplotlib_defaults
 
 exclude = [1, 5, 16]  # Excluded subjects
 
@@ -30,7 +30,8 @@ for subject_id in range(1, 20):
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
-    contrast = mne.read_evokeds(op.join(data_path, '%s-ave.fif' % subject),
+    contrast = mne.read_evokeds(op.join(data_path, '%s_highpass-%sHz-ave.fif'
+                                        % (subject, l_freq)),
                                 condition='contrast')
     contrast.pick_types(meg=False, eeg=True)
     contrast.apply_baseline((-0.2, 0.0))
@@ -73,7 +74,6 @@ T_obs, clusters, cluster_p_values, _ = cluster_stats
 ##############################################################################
 # Visualize results
 
-from library.config import set_matplotlib_defaults
 set_matplotlib_defaults(plt)
 
 times = 1e3 * contrast.times

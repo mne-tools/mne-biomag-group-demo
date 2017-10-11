@@ -30,10 +30,10 @@ def morph_stc(subject_id):
                         % (subject, spacing))
     inv = read_inverse_operator(fname_inv)
 
-    # Compute inverse solution
+    # Apply inverse
     snr = 3.0
     lambda2 = 1.0 / snr ** 2
-    stc = apply_inverse(contrast, inv, lambda2, "dSPM", pick_ori=None)
+    stc = apply_inverse(contrast, inv, lambda2, "dSPM", pick_ori='vector')
     morph_mat = mne.compute_morph_matrix(
         subject, 'fsaverage', stc.vertices, fsaverage_vertices, smooth,
         subjects_dir=subjects_dir, warn=False)
@@ -45,5 +45,6 @@ parallel, run_func, _ = parallel_func(morph_stc, n_jobs=N_JOBS)
 stcs = parallel(run_func(subject_id) for subject_id in range(1, 20)
                 if subject_id not in exclude_subjects)
 data = np.average([s.data for s in stcs], axis=0)
-stc = mne.SourceEstimate(data, stcs[0].vertices, stcs[0].tmin, stcs[0].tstep)
+stc = mne.VectorSourceEstimate(data, stcs[0].vertices,
+                               stcs[0].tmin, stcs[0].tstep, stcs[0].subject)
 stc.save(op.join(meg_dir, 'contrast-average'))

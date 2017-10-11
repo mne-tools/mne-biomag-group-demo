@@ -4,7 +4,7 @@ Evoked data and covariance
 
 The evoked data sets are created by averaging different categories of epochs.
 The evoked data is saved using categories 'famous', 'scrambled', 'unfamiliar',
-'contrast' and 'faces'. Covariance matrix is also computed and saved,
+'contrast' and 'faces'. Covariance matrix is also computed and saved.
 """
 
 import os.path as op
@@ -17,7 +17,8 @@ from library.config import meg_dir, N_JOBS, l_freq
 
 def run_evoked(subject_id, tsss=False):
     subject = "sub%03d" % subject_id
-    print("processing subject: %s" % subject)
+    print("Processing subject: %s%s"
+          % (subject, (' (tSSS=%d)' % tsss) if tsss else ''))
 
     data_path = op.join(meg_dir, subject)
     if tsss:
@@ -31,7 +32,8 @@ def run_evoked(subject_id, tsss=False):
                             % (subject, l_freq))
         fname_cov = op.join(data_path, '%s_highpass-%sHz-cov.fif'
                             % (subject, l_freq))
-    epochs = mne.read_epochs(fname_epo)
+    print('  Creating evoked datasets')
+    epochs = mne.read_epochs(fname_epo, preload=True)
 
     evoked_famous = epochs['face/famous'].average()
     evoked_scrambled = epochs['scrambled'].average()
@@ -51,10 +53,11 @@ def run_evoked(subject_id, tsss=False):
     mne.evoked.write_evokeds(fname_evo, [evoked_famous, evoked_scrambled,
                                          evoked_unfamiliar, contrast, faces])
 
+    print('  Computing regularized covariance')
     cov = mne.compute_covariance(epochs, tmax=0, method='shrunk')
     cov.save(fname_cov)
 
 
 parallel, run_func, _ = parallel_func(run_evoked, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-parallel(run_func(2, tsss) for tsss in (10, 1))  # Maxwell filtered data
+parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

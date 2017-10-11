@@ -10,7 +10,6 @@ on the contrast faces vs. scrambled.
 import os.path as op
 import numpy as np
 from scipy import stats
-from scipy import spatial
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -33,7 +32,7 @@ for subject_id in range(1, 20):
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
-    contrast = mne.read_evokeds(op.join(data_path, '%s_highpass-%sHz_ave.fif'
+    contrast = mne.read_evokeds(op.join(data_path, '%s_highpass-%sHz-ave.fif'
                                         % (subject, l_freq)),
                                 condition='contrast')
     contrast.pick_types(meg=False, eeg=True)
@@ -65,10 +64,7 @@ if np.sign(tail) < 0:
 
 # Make a triangulation between EEG channels locations to
 # use as connectivity for cluster level stat
-# XXX : make a mne.channels.make_eeg_connectivity function
-lay = mne.channels.make_eeg_layout(contrast.info)
-neigh = spatial.Delaunay(lay.pos[:, :2]).vertices
-connectivity = mne.surface.mesh_edges(neigh)
+connectivity = mne.channels.find_ch_connectivity(contrast.info, 'eeg')[0]
 
 data = np.transpose(data, (0, 2, 1))  # transpose for clustering
 
@@ -130,7 +126,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     # add axes for colorbar
     ax_colorbar = divider.append_axes('right', size='5%', pad=0.05)
     plt.colorbar(image, cax=ax_colorbar, format='%0.1f')
-    ax_topo.set_xlabel('Averaged T-map ({:0.1f} - {:0.1f} ms)'.format(
+    ax_topo.set_xlabel('Averaged t-map ({:0.1f} - {:0.1f} ms)'.format(
         *sig_times[[0, -1]]
     ))
 
@@ -144,8 +140,8 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     # add information
     ax_signals.axvline(0, color='k', linestyle=':', label='stimulus onset')
     ax_signals.set_xlim([times[0], times[-1]])
-    ax_signals.set_xlabel('time [ms]')
-    ax_signals.set_ylabel('evoked [uV]')
+    ax_signals.set_xlabel('Time [ms]')
+    ax_signals.set_ylabel('Amplitude [uV]')
 
     # plot significant time range
     ymin, ymax = ax_signals.get_ylim()
@@ -157,5 +153,6 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     # clean up viz
     mne.viz.tight_layout(fig=fig)
     fig.subplots_adjust(bottom=.05)
+    plt.savefig(op.join('figures',
+                        'spatiotemporal_stats_cluster-%02d.pdf' % i_clu))
     plt.show()
-    plt.savefig('figures/spatiotemporal_stats_cluster-%02d.pdf' % i_clu)

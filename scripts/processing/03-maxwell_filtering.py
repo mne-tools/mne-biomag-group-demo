@@ -134,4 +134,4 @@ def run_maxwell_filter(subject_id):
             raw_sss.save(raw_out, overwrite=True)
 
 
-run_maxwell_filter(subject_id=2)  # Only for sub002
+run_maxwell_filter(subject_id=3)  # Only for sub003

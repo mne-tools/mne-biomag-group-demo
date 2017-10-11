@@ -11,9 +11,11 @@ import sys
 import os
 import os.path as op
 
+import matplotlib.pyplot as plt
+
 import mne
 
-from library.config import study_path, map_subjects
+from library.config import study_path, map_subjects, set_matplotlib_defaults
 
 ###############################################################################
 # First some basic configuration as in all scripts
@@ -72,39 +74,37 @@ for b in bads:
 ###############################################################################
 # First we show the log scale to spot bad sensors.
 
-import matplotlib.pyplot as plt  # noqa
-from library.config import set_matplotlib_defaults  # noqa
-
+fig, axes = plt.subplots(1, 2, figsize=(12, 6))
 set_matplotlib_defaults(plt)
-fig = raw.plot_psd(average=False, line_alpha=0.6,
-                   fmin=0, fmax=350, xscale='log',
-                   spatial_colors=False, show=False)
-plt.xlabel('Frequency (Hz)')
+ax = axes[0]
+raw.plot_psd(
+    average=False, line_alpha=0.6, fmin=0, fmax=350, xscale='log',
+    spatial_colors=False, show=False, ax=[ax])
+ax.set(xlabel='Frequency (Hz)')
 
-lines = plt.gca().get_lines()
-for l, c in zip(lines, colors):
+for l, c in zip(ax.get_lines(), colors):
     if c == 'r':
         l.set_color(c)
         l.set_linewidth(2.)
-        l.set_zorder(-1)
-
-fig.tight_layout()
-plt.show()
-fig.savefig('figures/psdA.pdf', bbox_to_inches='tight')
+        l.set_zorder(3)
+    else:
+        l.set_zorder(4)
 
 ###############################################################################
 # Next, the linear scale to check power line frequency
 
-fig = raw.plot_psd(average=False, line_alpha=0.6, n_fft=2048, n_overlap=1024,
-                   fmin=0, fmax=350, xscale='linear', spatial_colors=False)
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('')
+ax = axes[1]
+raw.plot_psd(
+    average=False, line_alpha=0.6, n_fft=2048, n_overlap=1024, fmin=0,
+    fmax=350, xscale='linear', spatial_colors=False, show=False, ax=[ax])
+ax.set(xlabel='Frequency (Hz)', ylabel='')
+ax.axvline(50., linestyle='--', alpha=0.25, linewidth=2)
+ax.axvline(50., linestyle='--', alpha=0.25, linewidth=2)
 
-plt.axvline(50., linestyle='--', alpha=0.25, linewidth=2)
-plt.axvline(50., linestyle='--', alpha=0.25, linewidth=2)
 # HPI coils
 for freq in [293., 307., 314., 321., 328.]:
-    plt.axvline(freq, linestyle='--', alpha=0.25, linewidth=2)
+    ax.axvline(freq, linestyle='--', alpha=0.25, linewidth=2, zorder=2)
 
-plt.tight_layout()
-fig.savefig('figures/psdB.pdf', bbox_to_inches='tight')
+fig.tight_layout()
+fig.savefig(op.join('figures', 'psd.pdf'), bbox_to_inches='tight')
+plt.show()

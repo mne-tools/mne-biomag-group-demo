@@ -135,25 +135,27 @@ mne.viz.plot_trans(famous_evo.info, fname_trans, subject=subject,
 # Faces :ref:`sphx_glr_auto_scripts_13-make_inverse.py`.
 
 
-def plot_stc(cond):
+def plot_stc(cond, figure=None):
     fname = op.join(subject_dir, 'mne_dSPM_inverse-%s' % cond)
     stc = mne.read_source_estimate(fname, subject)
     brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
-                     hemi='both', initial_time=0.17, time_unit='s')
+                     hemi='both', initial_time=0.17, time_unit='s',
+                     figure=figure)
     return brain
 
-brain = plot_stc('faces')
+
+brain_faces = plot_stc('faces', figure=1)
 
 ###############################################################################
 # Faces - scrambled
-brain = plot_stc('contrast')
+brain_contrast = plot_stc('contrast', figure=2)
 
 ###############################################################################
 # LCMV Faces - scrambled
 fname = op.join(subject_dir, 'mne_LCMV_inverse-contrast')
 stc = mne.read_source_estimate(fname, subject)
 stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
-         hemi='both', initial_time=0.17, time_unit='s')
+         hemi='both', initial_time=0.17, time_unit='s', figure=3)
 
 ###############################################################################
 # BEM

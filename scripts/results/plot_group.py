@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 ==============
 Group analysis
@@ -45,32 +46,30 @@ for evoked in evokeds:
 
 set_matplotlib_defaults(plt)
 
+fig, ax = plt.subplots(1, figsize=(7, 5))
 scale = 1e6
-plt.figure(figsize=(7, 5))
-plt.plot(evoked.times * 1000, mapping['Scrambled'].data[idx] * scale,
-         'r', linewidth=2, label='Scrambled')
-plt.plot(evoked.times * 1000, mapping['Unfamiliar'].data[idx] * scale,
-         'g', linewidth=2, label='Unfamiliar')
-plt.plot(evoked.times * 1000, mapping['Famous'].data[idx] * scale, 'b',
-         linewidth=2, label='Famous')
-plt.grid(True)
-plt.xlim([-100, 800])
-ax = plt.gca()
-plt.xlabel('Time (in ms after stimulus onset)')
-plt.ylabel(r'Potential difference ($\mu$V)')
-plt.legend()
-plt.tight_layout()
+ax.plot(evoked.times * 1000, mapping['Scrambled'].data[idx] * scale,
+        'r', linewidth=2, label='Scrambled')
+ax.plot(evoked.times * 1000, mapping['Unfamiliar'].data[idx] * scale,
+        'g', linewidth=2, label='Unfamiliar')
+ax.plot(evoked.times * 1000, mapping['Famous'].data[idx] * scale, 'b',
+        linewidth=2, label='Famous')
+ax.grid(True)
+ax.set(xlim=[-100, 800], xlabel='Time (in ms after stimulus onset)',
+       ylabel=u'Potential difference (μV)')
+ax.legend()
+fig.tight_layout()
+fig.savefig('figures/grand_average_highpass-%sHz.pdf' % l_freq)
 plt.show()
-plt.savefig('figures/grand_average_highpass-%sHz.pdf' % l_freq)
 
 ###############################################################################
 # Source-space. See :ref:`sphx_glr_auto_scripts_14-group_average_source.py`
 fname = op.join(meg_dir, 'contrast-average')
-stc = mne.read_source_estimate(fname, subject='fsaverage')
+stc = mne.read_source_estimate(fname, subject='fsaverage').magnitude()
 
 brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
                  subjects_dir=subjects_dir, initial_time=0.17, time_unit='s',
-                 clim={'lims': [99.75, 99.88, 99.98]})
+                 figure=1, clim=dict(kind='value', lims=(0.5, 1.5, 2.5)))
 
 ###############################################################################
 # LCMV beamformer
@@ -79,4 +78,4 @@ stc = mne.read_source_estimate(fname, subject='fsaverage')
 
 brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
                  subjects_dir=subjects_dir, initial_time=0.17, time_unit='s',
-                 clim={'lims': [99.75, 99.88, 99.98]})
+                 figure=2, clim=dict(kind='value', lims=(0.02, 0.03, 0.04)))

@@ -19,8 +19,13 @@ import numpy as np
 from scipy.io import savemat
 
 import mne
-from mne.decoding import TimeDecoding
+from mne.decoding import SlidingEstimator, cross_val_multiscore
 from mne.selection import read_selection
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import StratifiedKFold
+from sklearn.pipeline import make_pipeline
+from sklearn.linear_model import LogisticRegression
 
 from library.config import meg_dir, l_freq, N_JOBS
 
@@ -40,10 +45,9 @@ def run_time_decoding(subject_id, condition1, condition2):
     # We define the epochs and the labels
     n_cond1 = len(epochs[condition1])
     n_cond2 = len(epochs[condition2])
-    y = np.r_[np.ones((n_cond1, )), np.zeros((n_cond2, ))]
+    y = np.r_[np.ones(n_cond1), np.zeros(n_cond2)]
     epochs = mne.concatenate_epochs([epochs[condition1],
                                     epochs[condition2]])
-    epochs.apply_baseline()
 
     # Let us restrict ourselves to the occipital channels
     ch_names = [ch_name.replace(' ', '') for ch_name
@@ -51,18 +55,21 @@ def run_time_decoding(subject_id, condition1, condition2):
     epochs.pick_types(meg='mag').pick_channels(ch_names)
 
     # Use AUC because chance level is same regardless of the class balance
-    td = TimeDecoding(predict_mode='cross-validation', scorer='roc_auc',
-                      n_jobs=N_JOBS)
-    td.fit(epochs, y)
+    scores = cross_val_multiscore(
+        SlidingEstimator(make_pipeline(StandardScaler(), LogisticRegression()),
+                         scoring='roc_auc', n_jobs=N_JOBS),
+        X=epochs.get_data(), y=y, cv=StratifiedKFold(n_splits=10))
 
     # let's save the scores now
     a_vs_b = '%s_vs_%s' % (os.path.basename(condition1),
                            os.path.basename(condition2))
     fname_td = os.path.join(data_path, '%s-td-auc-%s.mat'
                             % (subject, a_vs_b))
-    savemat(fname_td, {'scores': td.score(epochs),
-                       'times': td.times_['times']})
+    savemat(fname_td, {'scores': scores, 'times': epochs.times})
 
+
+# Here we go parallel inside the :class:`mne.decoding.SlidingEstimator`
+# so we don't dispatch manually to multiple jobs.
 
 for subject_id in range(1, 20):
     for conditions in (('face', 'scrambled'),

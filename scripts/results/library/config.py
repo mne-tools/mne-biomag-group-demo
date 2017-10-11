@@ -23,6 +23,9 @@ elif user == 'jleppakangas' or user == 'mjas':
 elif user == 'alex':
     study_path = '/Users/alex/work/data/mne-biomag-group-demo/'
     N_JOBS = 1
+elif user == 'larsoner':
+    study_path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
+    N_JOBS = 4
 else:
     study_path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
     N_JOBS = 1
@@ -69,10 +72,13 @@ def set_matplotlib_defaults(plt, fontsize=17):
               'legend.fontsize': fontsize,
               'xtick.labelsize': fontsize,
               'ytick.labelsize': fontsize,
-              'axes.titlesize': fontsize + 2}
+              'axes.titlesize': fontsize + 2,
+              'figure.max_open_warning': 200}
     plt.rcParams.update(params)
 
 
 l_freq = 1
 
 fsaverage_vertices = [np.arange(10242), np.arange(10242)]
+
+exclude_subjects = [1, 5, 16]  # Excluded subjects

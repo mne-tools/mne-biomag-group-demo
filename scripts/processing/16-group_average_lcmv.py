@@ -15,10 +15,10 @@ from library.config import (subjects_dir, meg_dir, exclude_subjects, smooth,
                             fsaverage_vertices)
 stcs = list()
 
-for run in range(1, 20):
-    if run in exclude_subjects:
+for subject_id in range(1, 20):
+    if subject_id in exclude_subjects:
         continue
-    subject = "sub%03d" % run
+    subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 

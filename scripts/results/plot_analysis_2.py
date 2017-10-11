@@ -35,7 +35,7 @@ raw_filt.plot_psd()
 
 ###############################################################################
 # Events :ref:`sphx_glr_auto_scripts_03-run_extract_events.py`.
-# Epochs :ref:`sphx_glr_auto_scripts_06-make_epochs.py`.
+# Epochs :ref:`sphx_glr_auto_scripts_05-make_epochs.py`.
 eve_fname = op.join(subject_dir, 'run_01_filt_sss-eve.fif')
 epo_fname = op.join(subject_dir,
                     '%s_highpass-%sHz-epo.fif' % (subject, l_freq))
@@ -48,7 +48,7 @@ epochs = mne.read_epochs(epo_fname)
 epochs.plot_drop_log()
 
 ###############################################################################
-# Evoked responses :ref:`sphx_glr_auto_scripts_07-make_evoked.py`
+# Evoked responses :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
 ave_fname = op.join(subject_dir,
                     '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
 evoked = mne.read_evokeds(ave_fname)

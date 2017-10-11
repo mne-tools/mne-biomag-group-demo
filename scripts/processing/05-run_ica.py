@@ -31,8 +31,9 @@ def run_ica(subject_id, tsss=None):
         raws.append(mne.io.read_raw_fif(run_fname))
     raw = mne.concatenate_raws(raws)
     if tsss:
-        # SSS reduces the data rank and the noise levels, so let's include more
-        # ICA components here
+        # SSS reduces the data rank and the noise levels, so let's include
+        # components based on a higher proportion of variance explained (0.999)
+        # than we do for the non-Maxwell-filtered raw data (0.98)
         n_components = 0.999
         ica_name = op.join(meg_dir, subject,
                            'run_concat-tsss_%d-ica.fif' % tsss)

@@ -1,10 +1,10 @@
 """
-Evoked data and covariance
-==========================
+Evoked data
+===========
 
 The evoked data sets are created by averaging different categories of epochs.
 The evoked data is saved using categories 'famous', 'scrambled', 'unfamiliar',
-'contrast' and 'faces'. Covariance matrix is also computed and saved.
+'contrast' and 'faces'.
 """
 
 import os.path as op
@@ -24,13 +24,10 @@ def run_evoked(subject_id, tsss=False):
     if tsss:
         fname_epo = op.join(data_path, '%s-tsss_%d-epo.fif' % (subject, tsss))
         fname_evo = op.join(data_path, '%s-tsss_%d-ave.fif' % (subject, tsss))
-        fname_cov = op.join(data_path, '%s-tsss_%d-cov.fif' % (subject, tsss))
     else:
         fname_epo = op.join(data_path, '%s_highpass-%sHz-epo.fif'
                             % (subject, l_freq))
         fname_evo = op.join(data_path, '%s_highpass-%sHz-ave.fif'
-                            % (subject, l_freq))
-        fname_cov = op.join(data_path, '%s_highpass-%sHz-cov.fif'
                             % (subject, l_freq))
     print('  Creating evoked datasets')
     epochs = mne.read_epochs(fname_epo, preload=True)
@@ -50,14 +47,19 @@ def run_evoked(subject_id, tsss=False):
     faces = mne.combine_evoked([evoked_famous, evoked_unfamiliar], 'nave')
     faces.comment = 'faces'
 
+    # let's make trial-count-normalized ones for group statistics
+    epochs_eq = epochs.copy().equalize_event_counts(['face', 'scrambled'])[0]
+    evoked_faces_eq = epochs_eq['face'].average()
+    evoked_scrambled_eq = epochs_eq['scrambled'].average()
+    assert evoked_faces_eq.nave == evoked_scrambled_eq.nave
+    evoked_faces_eq.comment = 'faces_eq'
+    evoked_scrambled_eq.comment = 'scrambled_eq'
+
     mne.evoked.write_evokeds(fname_evo, [evoked_famous, evoked_scrambled,
-                                         evoked_unfamiliar, contrast, faces])
-
-    print('  Computing regularized covariance')
-    cov = mne.compute_covariance(epochs, tmax=0, method='shrunk')
-    cov.save(fname_cov)
+                                         evoked_unfamiliar, contrast, faces,
+                                         evoked_faces_eq, evoked_scrambled_eq])
 
 
-parallel, run_func, _ = parallel_func(run_evoked, n_jobs=N_JOBS)
+parallel, run_func, _ = parallel_func(run_evoked, n_jobs=1)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
 parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

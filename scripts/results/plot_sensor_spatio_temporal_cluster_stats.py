@@ -17,17 +17,15 @@ import mne
 from mne.stats import permutation_cluster_1samp_test
 from mne.viz import plot_topomap
 
-from library.config import meg_dir, l_freq
+from library.config import meg_dir, l_freq, exclude_subjects
 
 ##############################################################################
 # Read all the data
 
-exclude = [1, 5, 16]  # Excluded subjects
-
 contrasts = list()
 
 for subject_id in range(1, 20):
-    if subject_id in exclude:
+    if subject_id in exclude_subjects:
         continue
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)

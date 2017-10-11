@@ -44,9 +44,9 @@ if not op.isdir('figures'):
     os.mkdir('figures')
 
 ###############################################################################
-# First, we don't highpass filter and only baseline. Note how it creates a
-# spatially varying distortation of the time-domain signal in the form
-# of "fanning"
+# First, we don't highpass filter and only baseline correct.
+# Note how it creates a spatially varying distortation of the time-domain
+# signal in the formof "fanning".
 
 raw.filter(None, 40, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,

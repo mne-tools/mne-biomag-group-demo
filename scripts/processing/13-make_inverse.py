@@ -29,7 +29,10 @@ def run_inverse(subject_id):
     fname_inv = op.join(data_path, '%s-meg-eeg-%s-inv.fif'
                         % (subject, spacing))
 
-    evokeds = mne.read_evokeds(fname_ave, condition=[0, 1, 2, 3, 4])
+    evokeds = mne.read_evokeds(
+        fname_ave, condition=['scrambled', 'unfamiliar', 'famous',
+                              'faces', 'contrast',
+                              'faces_eq', 'scrambled_eq'])
     cov = mne.read_cov(fname_cov)
     forward = mne.read_forward_solution(fname_fwd)
 

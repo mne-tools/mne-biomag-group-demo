@@ -15,15 +15,13 @@ import os
 import tempfile
 import os.path as op
 
-import numpy as np
-
 import mne
 from mne.parallel import parallel_func
 from mne.preprocessing import create_ecg_epochs, read_ica
 
 from autoreject import get_rejection_threshold
 
-from library.config import meg_dir, map_subjects, l_freq, N_JOBS
+from library.config import meg_dir, map_subjects, l_freq
 
 ###############################################################################
 # We define the events and the onset and offset of the epochs
@@ -103,8 +101,7 @@ def run_epochs(subject_id, tsss=False):
     print('  Getting rejection thresholds')
     reject = get_rejection_threshold(epochs)
     epochs.drop_bad(reject=reject)
-    print('  Dropped %0.1f%% of epochs'
-          % (100 * np.mean([len(x) > 0 for x in epochs.drop_log])))
+    print('  Dropped %0.1f%% of epochs' % (epochs.drop_log_stats(),))
 
     # ICA
     if tsss:
@@ -134,6 +131,7 @@ def run_epochs(subject_id, tsss=False):
 ###############################################################################
 # Let us make the script parallel across subjects
 
-parallel, run_func, _ = parallel_func(run_epochs, n_jobs=N_JOBS)
+# Here we usue n_jobs=1 to prevent potential memory problems
+parallel, run_func, _ = parallel_func(run_epochs, n_jobs=1)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
 parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

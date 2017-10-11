@@ -21,6 +21,8 @@ import shutil
 import subprocess
 import time
 
+import numpy as np
+
 import mne
 from mne.parallel import parallel_func
 import nibabel as nib
@@ -70,22 +72,21 @@ def process_subject_anat(subject_id, force_recon_all=False):
             f_dst = op.join(dst_flash, f_dst)
             shutil.copy(f_src, f_dst)
 
-        # Fix the headers for subject 19
-        if subject_id == 19:
-            print('  Fixing FLASH files for subject 19')
-            fnames = (['mef05_%d.mgz' % x for x in range(7)] +
-                      ['mef30_%d.mgz' % x for x in range(7)])
-            for fname in fnames:
-                dest_fname = op.join(dst_flash, fname)
-                dest_img = nib.load(dest_fname)
-                print("Fixing %s" % dest_fname)
+    # Fix the headers for subject 19
+    if not op.isfile(op.join(dst_flash, "mef05_0.nii.gz")):
+        print('  Fixing FLASH files for %s' % (subject,))
+        fnames = (['mef05_%d.mgz' % x for x in range(7)] +
+                  ['mef30_%d.mgz' % x for x in range(7)])
+        for fname in fnames:
+            dest_fname = op.join(dst_flash, fname)
+            dest_img = nib.load(op.splitext(dest_fname)[0] + '.nii.gz')
 
-                # Copy the headers from subjects 1
-                src_img = nib.load(op.join(
-                    subjects_dir, "sub001", "mri", "flash", fname))
-                hdr = src_img.header
-                fixed = nib.MGHImage(dest_img.get_data(), dest_img.affine, hdr)
-                nib.save(fixed, dest_fname)
+            # Copy the headers from subjects 1
+            src_img = nib.load(op.join(
+                subjects_dir, "sub001", "mri", "flash", fname))
+            hdr = src_img.header
+            fixed = nib.MGHImage(dest_img.get_data(), dest_img.affine, hdr)
+            nib.save(fixed, dest_fname)
 
     # Make BEMs
     if not op.isfile("%s/%s/mri/flash/parameter_maps/flash5.mgz"
@@ -134,3 +135,16 @@ def process_subject_anat(subject_id, force_recon_all=False):
 
 parallel, run_func, _ = parallel_func(process_subject_anat, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
+
+# now we do something special for fsaverage
+fsaverage_src = op.join(subjects_dir, 'fsaverage', 'bem')
+if not op.isdir(fsaverage_src):
+    os.mkdir(fsaverage_src)
+fsaverage_src = op.join(fsaverage_src, 'fsaverage-5-src.fif')
+if not op.isfile(fsaverage_src):
+    print('Setting up source space for fsaverage')
+    src = mne.setup_source_space('fsaverage', 'ico5',
+                                 subjects_dir=subjects_dir)
+    for s in src:
+        assert np.array_equal(s['vertno'], np.arange(10242))
+    mne.write_source_spaces(fsaverage_src, src)

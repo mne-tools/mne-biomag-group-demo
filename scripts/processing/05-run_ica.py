@@ -39,9 +39,9 @@ def run_ica(subject_id, tsss=None):
     else:
         n_components = 0.98
         ica_name = op.join(meg_dir, subject, 'run_concat-ica.fif')
-    # Here we only use MEG because we only eliminate ECG artifacts, which
-    # are not prevalent in EEG (blink artifats are, but we will remove trials
-    # with blinks at the epoching stage).
+    # Here we only compute ICA for MEG because we only eliminate ECG artifacts,
+    # which are not prevalent in EEG (blink artifacts are, but we will remove
+    # trials with blinks at the epoching stage).
     print('  Fitting ICA')
     ica = ICA(method='fastica', random_state=42, n_components=n_components)
     picks = mne.pick_types(raw.info, meg=True, eeg=False, eog=False,

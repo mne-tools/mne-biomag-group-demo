@@ -1,17 +1,27 @@
+:orphan:
+
 .. _processing_scripts:
 
-Setup 
-^^^^^
+Processing scripts
+==================
+
+.. contents:: Contents
+   :local:
+   :depth: 2
+
+
+Setup
+-----
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Fetch the data from OpenfMRI">
+    <div class="sphx-glr-thumbcontainer" tooltip="This script gives some basic code that can be adapted to fetch data. ">
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_02-python_filtering_thumb.png
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_00-fetch_data_thumb.png
 
-        :ref:`sphx_glr_auto_scripts_00-fetch_data.ipy`
+        :ref:`sphx_glr_auto_scripts_00-fetch_data.py`
 
 .. raw:: html
 
@@ -21,35 +31,35 @@ Setup
 .. toctree::
    :hidden:
 
-   /auto_scripts/02-python_filtering
+   /auto_scripts/00-fetch_data
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Run Freesurfer recon-all">
+    <div class="sphx-glr-thumbcontainer" tooltip="This runs Freesurfer recon-all on all subjects and computes the BEM surfaces later used for for...">
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_03-run_extract_events_thumb.png
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_01-anatomy_thumb.png
 
-        :ref:`sphx_glr_auto_scripts_01-run_anatomy.ipy`
+        :ref:`sphx_glr_auto_scripts_01-anatomy.py`
 
 .. raw:: html
 
     </div>
 
-
 .. toctree::
    :hidden:
 
-   /auto_scripts/03-run_extract_events
+   /auto_scripts/01-anatomy
+
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Config for paths">
+    <div class="sphx-glr-thumbcontainer" tooltip="Configuration parameters for the study. This should be in a folder called ``library/`` inside t...">
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_02-python_filtering_thumb.png
+    .. figure:: /auto_scripts/library/images/thumb/sphx_glr_config_thumb.png
 
         :ref:`sphx_glr_auto_scripts_library_config.py`
 
@@ -61,14 +71,59 @@ Setup
 .. toctree::
    :hidden:
 
-   /auto_scripts/config
+   /auto_scripts/library/config
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/01-anatomy
 
 .. raw:: html
 
     <div style='clear:both'></div>
 
 Sensor space
-^^^^^^^^^^^^
+------------
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The events are extracted from stimulus channel &#x27;STI101&#x27;. The events are saved to the subject&#x27;s ...">
+
+.. only:: html
+
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_02-extract_events_thumb.png
+
+        :ref:`sphx_glr_auto_scripts_02-extract_events.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/02-extract_events
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The data are Maxwell filtered using tSSS and movement compensation.">
+
+.. only:: html
+
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_03-maxwell_filtering_thumb.png
+
+        :ref:`sphx_glr_auto_scripts_03-maxwell_filtering.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/03-maxwell_filtering
 
 .. raw:: html
 
@@ -76,29 +131,9 @@ Sensor space
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_02-python_filtering_thumb.png
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_04-python_filtering_thumb.png
 
-        :ref:`sphx_glr_auto_scripts_02-python_filtering.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_scripts/02-python_filtering
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="The data are bandpass filtered (1 - 40 Hz) using linear-phase fir filter with delay compensatio...">
-
-.. only:: html
-
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_02-maxwell_filtering_thumb.png
-
-        :ref:`sphx_glr_auto_scripts_02-maxwell_filtering.py`
+        :ref:`sphx_glr_auto_scripts_04-python_filtering.py`
 
 .. raw:: html
 
@@ -108,27 +143,7 @@ Sensor space
 .. toctree::
    :hidden:
 
-   /auto_scripts/02-maxwell_filtering
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="The events are extracted from stimulus channel 'STI101'. The events are saved to the subject's ...">
-
-.. only:: html
-
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_03-run_extract_events_thumb.png
-
-        :ref:`sphx_glr_auto_scripts_03-run_extract_events.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_scripts/03-run_extract_events
+   /auto_scripts/04-python_filtering
 
 .. raw:: html
 
@@ -136,9 +151,9 @@ Sensor space
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_04-run_ica_thumb.png
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_05-run_ica_thumb.png
 
-        :ref:`sphx_glr_auto_scripts_04-run_ica.py`
+        :ref:`sphx_glr_auto_scripts_05-run_ica.py`
 
 .. raw:: html
 
@@ -148,7 +163,7 @@ Sensor space
 .. toctree::
    :hidden:
 
-   /auto_scripts/04-run_ica
+   /auto_scripts/05-run_ica
 
 .. raw:: html
 
@@ -156,9 +171,9 @@ Sensor space
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_05-make_epochs_thumb.png
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_06-make_epochs_thumb.png
 
-        :ref:`sphx_glr_auto_scripts_05-make_epochs.py`
+        :ref:`sphx_glr_auto_scripts_06-make_epochs.py`
 
 .. raw:: html
 
@@ -168,7 +183,7 @@ Sensor space
 .. toctree::
    :hidden:
 
-   /auto_scripts/05-make_epochs
+   /auto_scripts/06-make_epochs
 
 .. raw:: html
 
@@ -176,9 +191,9 @@ Sensor space
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_06-make_evoked_thumb.png
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_07-make_evoked_thumb.png
 
-        :ref:`sphx_glr_auto_scripts_06-make_evoked.py`
+        :ref:`sphx_glr_auto_scripts_07-make_evoked.py`
 
 .. raw:: html
 
@@ -188,7 +203,27 @@ Sensor space
 .. toctree::
    :hidden:
 
-   /auto_scripts/06-make_evoked
+   /auto_scripts/07-make_evoked
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Covariance matrices are computed and saved. ">
+
+.. only:: html
+
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_08-make_cov_thumb.png
+
+        :ref:`sphx_glr_auto_scripts_08-make_cov.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/08-make_cov
 
 .. raw:: html
 
@@ -196,9 +231,9 @@ Sensor space
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_07-time_frequency_thumb.png
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_09-time_frequency_thumb.png
 
-        :ref:`sphx_glr_auto_scripts_07-time_frequency.py`
+        :ref:`sphx_glr_auto_scripts_09-time_frequency.py`
 
 .. raw:: html
 
@@ -208,17 +243,17 @@ Sensor space
 .. toctree::
    :hidden:
 
-   /auto_scripts/07-time_frequency
+   /auto_scripts/09-time_frequency
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Time decoding fits a Logistic Regression model for every time point in the epoch. In this examp...">
+    <div class="sphx-glr-thumbcontainer" tooltip="A sliding estimator fits a logistic legression model for every time point. In this example, we ...">
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_08-run_time_decoding_thumb.png
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_10-sliding_estimator_thumb.png
 
-        :ref:`sphx_glr_auto_scripts_08-run_time_decoding.py`
+        :ref:`sphx_glr_auto_scripts_10-sliding_estimator.py`
 
 .. raw:: html
 
@@ -228,7 +263,7 @@ Sensor space
 .. toctree::
    :hidden:
 
-   /auto_scripts/08-run_time_decoding
+   /auto_scripts/10-sliding_estimator
 
 .. raw:: html
 
@@ -236,9 +271,9 @@ Sensor space
 
 .. only:: html
 
-    .. figure:: /auto_scripts/images/thumb/sphx_glr_09-group_average_sensors_thumb.png
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_11-group_average_sensors_thumb.png
 
-        :ref:`sphx_glr_auto_scripts_09-group_average_sensors.py`
+        :ref:`sphx_glr_auto_scripts_11-group_average_sensors.py`
 
 .. raw:: html
 
@@ -248,14 +283,7 @@ Sensor space
 .. toctree::
    :hidden:
 
-   /auto_scripts/09-group_average_sensors
-
-.. raw:: html
-
-    <div style='clear:both'></div>
-
-Source space
-^^^^^^^^^^^^
+   /auto_scripts/11-group_average_sensors
 
 .. raw:: html
 
@@ -271,6 +299,12 @@ Source space
 
     </div>
 
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+Source space
+------------
 
 .. toctree::
    :hidden:
@@ -299,7 +333,7 @@ Source space
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Source estimates are computed for contrast between faces and scrambled and morphed to average b...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Source estimates are morphed to the ``fsaverage`` brain. ">
 
 .. only:: html
 
@@ -319,7 +353,47 @@ Source space
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Make web report">
+    <div class="sphx-glr-thumbcontainer" tooltip="Compute LCMV beamformer. ">
+
+.. only:: html
+
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_15-lcmv_beamformer_thumb.png
+
+        :ref:`sphx_glr_auto_scripts_15-lcmv_beamformer.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/15-lcmv_beamformer
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Source estimates are computed for contrast between faces and scrambled and morphed to average b...">
+
+.. only:: html
+
+    .. figure:: /auto_scripts/images/thumb/sphx_glr_16-group_average_lcmv_thumb.png
+
+        :ref:`sphx_glr_auto_scripts_16-group_average_lcmv.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_scripts/16-group_average_lcmv
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Builds an html report containing all the relevant analysis plots. ">
 
 .. only:: html
 
@@ -337,11 +411,31 @@ Source space
 
    /auto_scripts/99-make_reports
 
+
 .. raw:: html
 
     <div style='clear:both'></div>
 
 
-.. rst-class:: sphx-glr-signature
 
-    `Generated by Sphinx-Gallery <http://sphinx-gallery.readthedocs.io>`_
+.. only :: html
+
+ .. container:: sphx-glr-footer
+
+
+  .. container:: sphx-glr-download
+
+    :download:`Download all examples in Python source code: auto_scripts_python.zip <//mnt/bakraid/larsoner/mne-biomag-group-demo/mne-biomag-group-demo/scripts/doc/auto_scripts/auto_scripts_python.zip>`
+
+
+
+  .. container:: sphx-glr-download
+
+    :download:`Download all examples in Jupyter notebooks: auto_scripts_jupyter.zip <//mnt/bakraid/larsoner/mne-biomag-group-demo/mne-biomag-group-demo/scripts/doc/auto_scripts/auto_scripts_jupyter.zip>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_

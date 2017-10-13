@@ -45,8 +45,12 @@ def run_time_decoding(subject_id, condition1, condition2):
     # We define the epochs and the labels
     epochs = mne.concatenate_epochs([epochs[condition1],
                                     epochs[condition2]])
+    epochs.apply_baseline()
 
-    epochs.pick_types(meg=True, eeg=True).apply_baseline((None, 0))
+    # Let us restrict ourselves to the MEG channels
+    epochs.pick_types(meg=True)
+
+    # Get the data and labels
     X = epochs.get_data()
     n_cond1 = len(epochs[condition1])
     n_cond2 = len(epochs[condition2])
@@ -54,9 +58,9 @@ def run_time_decoding(subject_id, condition1, condition2):
 
     # Use AUC because chance level is same regardless of the class balance
     se = SlidingEstimator(
-        make_pipeline(StandardScaler(with_mean=False), LogisticRegression()),
+        make_pipeline(StandardScaler(), LogisticRegression()),
         scoring='roc_auc', n_jobs=N_JOBS)
-    scores = cross_val_multiscore(se, X=X, y=y, cv=StratifiedKFold(10))
+    scores = cross_val_multiscore(se, X=X, y=y, cv=StratifiedKFold())
 
     # let's save the scores now
     a_vs_b = '%s_vs_%s' % (os.path.basename(condition1),

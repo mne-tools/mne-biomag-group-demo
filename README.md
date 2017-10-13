@@ -10,10 +10,13 @@ Results of our analysis is presented [here](http://mne-tools.github.io/mne-bioma
 Authors
 -------
 
-- [Alexandre Gramfort](http://alexandre.gramfort.net), Telecom ParisTech
 - [Mainak Jas](http://perso.telecom-paristech.fr/~mjas/), Telecom ParisTech
 - Jaakko Leppäkangas, Telecom ParisTech
 - [Denis Engemann](http://denis-engemann.de), Neurospin, CEA/INSERM, UNICOG Team
+- [Eric Larson](http://larsoner.com), University of Washington ILABS
+- [Samu Taulu](http://ilabs.washington.edu/institute-faculty/bio/i-labs-samu-taulu-dsc), University of Washington, ILABS
+- [Matti Hämäläinen](https://www.martinos.org/user/5923), Martinos Center, MGH, Harvard Medical School
+- [Alexandre Gramfort](http://alexandre.gramfort.net), Telecom ParisTech
 
 Abstract (of the satellite meeting)
 -----------------------------------

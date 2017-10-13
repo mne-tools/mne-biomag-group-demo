@@ -5,8 +5,6 @@ Analysis for one subject with tSSS
 
 Show analysis of tSSS data.
 """
-
-import os
 import os.path as op
 import sys
 
@@ -20,38 +18,43 @@ from library.config import study_path, meg_dir, ylim  # noqa: E402
 ###############################################################################
 # Configuration
 
-subjects_dir = os.path.join(study_path, 'subjects')
+subjects_dir = op.join(study_path, 'subjects')
 
-subject = "sub%03d" % 3
-st_duration = 10
+subject = "sub003"
+subject_dir = op.join(meg_dir, subject)
+st_duration = 1
 
-fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
-raw = mne.io.read_raw_fif(fname)
+###############################################################################
+# Continuous data
+raw_fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
+raw_filt_fname = op.join(subject_dir,
+                         'run_01_filt_tsss_%d_raw.fif' % st_duration)
 
-fname = op.join(meg_dir, subject, 'run_01_filt_tsss_%d_raw.fif' % st_duration)
-raw_filt = mne.io.read_raw_fif(fname)
+raw = mne.io.read_raw_fif(raw_fname)
+raw_filt = mne.io.read_raw_fif(raw_filt_fname)
 
 ###############################################################################
 # Filtering :ref:`sphx_glr_auto_scripts_04-python_filtering.py`.
-raw.plot_psd(average=False, spatial_colors=True, fmax=40, show=False)
-raw_filt.plot_psd(average=False, spatial_colors=True, fmax=40)
+raw.plot_psd(n_fft=8192, average=False, xscale='log', show=False)
+raw_filt.plot_psd(n_fft=8192, average=False, xscale='log')
 
 ###############################################################################
 # Events :ref:`sphx_glr_auto_scripts_02-extract_events.py`.
 # Epochs :ref:`sphx_glr_auto_scripts_06-make_epochs.py`.
-events = mne.read_events(op.join(meg_dir, subject, 'run_01-eve.fif'))
+eve_fname = op.join(subject_dir, 'run_01_filt_sss-eve.fif')
+epo_fname = op.join(subject_dir, '%s-tsss_%d-epo.fif' % (subject, st_duration))
+
+events = mne.read_events(eve_fname)
 fig = mne.viz.plot_events(events, show=False)
 fig.suptitle('Events from run 01')
 
-epochs = mne.read_epochs(op.join(meg_dir, subject,
-                                 subject + '-tsss_%d-epo.fif' % st_duration))
+epochs = mne.read_epochs(epo_fname)
 epochs.plot_drop_log()
 
 ###############################################################################
 # Evoked responses :ref:`sphx_glr_auto_scripts_07-make_evoked.py`
-evo_fname = op.join(meg_dir, subject, '%s-tsss_%d-ave.fif'
-                    % (subject, st_duration))
-evoked = mne.read_evokeds(evo_fname)
+ave_fname = op.join(subject_dir, '%s-tsss_%d-ave.fif' % (subject, st_duration))
+evoked = mne.read_evokeds(ave_fname)
 
 ###############################################################################
 # Faces
@@ -88,11 +91,13 @@ scrambled_evo.plot_topomap(times=times, title='Scrambled %s' % subject,
                            show=False)
 unfamiliar_evo.plot_topomap(times=times, title='Unfamiliar %s' % subject,
                             show=False)
-contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject)
+contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject,
+                          show=True)
 
 ###############################################################################
 # Covariance :ref:`sphx_glr_auto_scripts_07-make_evoked.py`.
-cov = mne.read_cov(op.join(meg_dir, subject, '%s-tsss_%d-cov.fif'
-                           % (subject, st_duration)))
+cov_fname = op.join(subject_dir,
+                    '%s-tsss_%d-cov.fif' % (subject, st_duration))
+cov = mne.read_cov(cov_fname)
 mne.viz.plot_cov(cov, faces_evo.info)
-faces_evo.plot_white(cov)
+faces_evo.copy().apply_baseline().plot_white(cov)

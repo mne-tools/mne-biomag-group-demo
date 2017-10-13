@@ -33,8 +33,8 @@ raw_filt = mne.io.read_raw_fif(raw_filt_fname)
 
 ###############################################################################
 # Filtering :ref:`sphx_glr_auto_scripts_04-python_filtering.py`.
-raw.plot_psd(n_fft=8192, average=False)
-raw_filt.plot_psd(n_fft=8192, average=False)
+raw.plot_psd(n_fft=8192, average=False, xscale='log', show=False)
+raw_filt.plot_psd(n_fft=8192, average=False, xscale='log')
 
 ###############################################################################
 # Events :ref:`sphx_glr_auto_scripts_02-extract_events.py`.
@@ -96,7 +96,7 @@ contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject,
 
 ###############################################################################
 # ICA
-ica_fname = op.join(subject_dir, 'run_01-ica.fif')
+ica_fname = op.join(subject_dir, 'run_concat-ica.fif')
 ica = mne.preprocessing.read_ica(ica_fname)
 ica.plot_sources(raw_filt, show=True)
 
@@ -128,7 +128,7 @@ cov_fname = op.join(subject_dir,
                     '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
 cov = mne.read_cov(cov_fname)
 mne.viz.plot_cov(cov, faces_evo.info)
-faces_evo.plot_white(cov)
+faces_evo.copy().apply_baseline().plot_white(cov)
 
 ###############################################################################
 # Trans

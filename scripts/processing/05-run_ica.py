@@ -1,7 +1,7 @@
 """
-=======
-Run ICA
-=======
+===========
+05. Run ICA
+===========
 
 ICA decomposition using fastICA.
 """

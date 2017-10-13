@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-===========================================
-Non-parametric statistics on one EEG sensor
-===========================================
+=======================================
+Temporal clustering on a single channel
+=======================================
 
 Run a non-parametric cluster stats on sensor EEG070
 on the contrast faces vs. scrambled.
@@ -44,7 +44,7 @@ contrast = mne.combine_evoked(contrasts, 'equal')
 
 channel = 'EEG065'
 idx = contrast.ch_names.index(channel)
-mne.viz.plot_compare_evokeds(contrast, [idx])
+mne.viz.plot_compare_evokeds(contrast, [idx], show_sensors=4)
 
 ##############################################################################
 # Assemble the data and run the cluster stats on channel data

@@ -1,7 +1,7 @@
 """
-============================================================
-Non-parametric spatio-temporal statistics on EEG sensor data
-============================================================
+=============================================
+Spatio-temporal sensor-space statistics (EEG)
+=============================================
 
 Run a non-parametric spatio-temporal cluster stats on EEG sensors
 on the contrast faces vs. scrambled.

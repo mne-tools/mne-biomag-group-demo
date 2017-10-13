@@ -1,7 +1,7 @@
 """
-=================================
-Group average at the sensor level
-=================================
+=====================================
+11. Group average at the sensor level
+=====================================
 
 The EEG-channel data are averaged for group averages.
 """

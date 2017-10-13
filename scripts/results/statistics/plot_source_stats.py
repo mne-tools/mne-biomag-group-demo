@@ -1,7 +1,7 @@
 """
-=====================
-Source space clusters
-=====================
+=============================================
+Spatio-temporal source-space statistics (MEG)
+=============================================
 
 Clustering in source space.
 """
@@ -73,5 +73,6 @@ stc_all_cluster_vis = summarize_clusters_stc(
 brain = stc_all_cluster_vis.plot(
     hemi='both', subjects_dir=subjects_dir,
     time_label='Duration significant (ms)', views='ven',
-    clim=dict(lims=[0, 0.1, 40], kind='value'), size=(1000, 1000))
+    clim=dict(lims=[0, 0.1, 40], kind='value'), size=(1000, 1000),
+    background='white')
 brain.save_image(op.join('..', 'figures', 'source_stats.png'))

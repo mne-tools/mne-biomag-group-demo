@@ -1,4 +1,4 @@
-Single subject analysis
+Single-subject analyses
 -----------------------
 
-Analysis of single subjects.
+Analysis of individual subjects.

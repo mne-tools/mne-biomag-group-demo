@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-==============
-Group analysis
-==============
+====================
+Group grand averages
+====================
 
-Run the group analysis.
+Grand-average group contrasts for sensor space, dSPM, and LCMV.
 """
+# sphinx_gallery_thumbnail_number = 1
+
 import os.path as op
 import sys
 
@@ -73,7 +75,8 @@ stc = mne.read_source_estimate(fname, subject='fsaverage').magnitude()
 
 brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
                  subjects_dir=subjects_dir, initial_time=0.17, time_unit='s',
-                 figure=1, clim=dict(kind='value', lims=(0.5, 1.5, 2.5)))
+                 figure=1, clim=dict(kind='value', lims=(0.5, 1.5, 2.5)),
+                 background='white')
 
 ###############################################################################
 # LCMV beamformer
@@ -82,4 +85,5 @@ stc = mne.read_source_estimate(fname, subject='fsaverage')
 
 brain = stc.plot(views=['ven'], hemi='both', subject='fsaverage',
                  subjects_dir=subjects_dir, initial_time=0.17, time_unit='s',
-                 figure=2, clim=dict(kind='value', lims=(0.02, 0.03, 0.04)))
+                 figure=2, clim=dict(kind='value', lims=(0.02, 0.03, 0.04)),
+                 background='white')

@@ -1,7 +1,7 @@
 """
-========================================
-Extract events from the stimulus channel
-========================================
+============================================
+02. Extract events from the stimulus channel
+============================================
 
 The events are extracted from stimulus channel 'STI101'. The events are saved
 to the subject's MEG directory.

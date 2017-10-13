@@ -1,6 +1,7 @@
 """
-Time-frequency representation
-=============================
+================================
+09. Time-frequency decomposition
+================================
 
 The epoched data is transformed to time-frequency domain using morlet wavelets.
 Faces and scrambled data sets are used and for both of them, the average power

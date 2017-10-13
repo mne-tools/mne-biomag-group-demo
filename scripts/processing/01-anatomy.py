@@ -1,7 +1,7 @@
 """
-======================================
-Run Freesurfer/MNE anatomical pipeline
-======================================
+==========================================
+01. Run Freesurfer/MNE anatomical pipeline
+==========================================
 
 This runs Freesurfer recon-all on all subjects and computes the BEM surfaces
 later used for forward modeling. BEM extraction is done using flash MRI data.

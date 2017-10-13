@@ -1,4 +1,4 @@
 Demos
 -----
 
-Demos with the data.
+Some simple demos with the data.

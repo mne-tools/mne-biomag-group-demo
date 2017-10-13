@@ -35,12 +35,11 @@ raw = mne.io.read_raw_fif(fname, preload=True)
 # Next, we get the list of bad channels
 mapping = map_subjects[subject_id]
 bads = list()
-bad_name = op.join(op.dirname(sys.argv[0]), '..', 'processing',
-                   'bads', mapping, 'run_%02d_raw_tr.fif_bad' % run)
-if os.path.exists(bad_name):
-    with open(bad_name) as f:
-        for line in f:
-            bads.append(line.strip())
+bad_name = op.join('..', '..', 'processing', 'bads', mapping,
+                   'run_%02d_raw_tr.fif_bad' % run)
+with open(bad_name) as f:
+    for line in f:
+        bads.append(line.strip())
 
 ###############################################################################
 # and set the EOG/ECG channels appropriately
@@ -92,7 +91,6 @@ for l, c in zip(ax.get_lines(), colors):
     else:
         l.set_zorder(4)
 
-###############################################################################
 # Next, the linear scale to check power line frequency
 
 ax = axes[1]

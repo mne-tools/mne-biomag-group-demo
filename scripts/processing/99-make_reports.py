@@ -1,8 +1,10 @@
 """
-Make report
-===========
+================
+99. Make reports
+================
 
-Builds an html report containing all the relevant analysis plots.
+Builds an HTML report for each subject containing all the relevant analysis
+plots.
 """
 
 from mayavi import mlab
@@ -103,4 +105,3 @@ rep.add_figs_to_section(fig, 'Average faces - scrambled')
 
 rep.save(fname=op.join(meg_dir, 'report_average.html'),
          open_browser=False, overwrite=True)
-

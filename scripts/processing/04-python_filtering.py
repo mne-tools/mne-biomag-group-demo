@@ -1,7 +1,7 @@
 """
-=======================
-Filter using MNE-python
-=======================
+===========================
+04. Filter using MNE-python
+===========================
 
 The data are bandpass filtered (1 - 40 Hz) using linear-phase fir filter with
 delay compensation. For the lowpass filter the transition bandwidth is

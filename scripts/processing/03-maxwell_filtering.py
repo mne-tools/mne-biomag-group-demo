@@ -1,7 +1,7 @@
 """
-===============================
-Maxwell filter using MNE-python
-===============================
+===================================
+03. Maxwell filter using MNE-python
+===================================
 
 The data are Maxwell filtered using tSSS and movement compensation.
 

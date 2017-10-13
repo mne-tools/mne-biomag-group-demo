@@ -1,8 +1,9 @@
 """
-Inverse solution
-================
+====================
+13. Inverse solution
+====================
 
-Compute inverse solution for each evoked data set.
+Compute and apply a dSPM inverse solution for each evoked data set.
 """
 
 import os.path as op

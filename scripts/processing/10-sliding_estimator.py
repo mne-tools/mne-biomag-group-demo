@@ -21,7 +21,6 @@ from scipy.io import savemat
 
 import mne
 from mne.decoding import SlidingEstimator, cross_val_multiscore
-from mne.selection import read_selection
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import StratifiedKFold
@@ -44,22 +43,20 @@ def run_time_decoding(subject_id, condition1, condition2):
                              '%s_highpass-%sHz-epo.fif' % (subject, l_freq)))
 
     # We define the epochs and the labels
-    n_cond1 = len(epochs[condition1])
-    n_cond2 = len(epochs[condition2])
-    y = np.r_[np.ones(n_cond1), np.zeros(n_cond2)]
     epochs = mne.concatenate_epochs([epochs[condition1],
                                     epochs[condition2]])
 
-    # Let us restrict ourselves to the occipital channels
-    ch_names = [ch_name.replace(' ', '') for ch_name
-                in read_selection('occipital')]
-    epochs.pick_types(meg='mag').pick_channels(ch_names)
+    epochs.pick_types(meg=True, eeg=True).apply_baseline((None, 0))
+    X = epochs.get_data()
+    n_cond1 = len(epochs[condition1])
+    n_cond2 = len(epochs[condition2])
+    y = np.r_[np.ones(n_cond1), np.zeros(n_cond2)]
 
     # Use AUC because chance level is same regardless of the class balance
-    scores = cross_val_multiscore(
-        SlidingEstimator(make_pipeline(StandardScaler(), LogisticRegression()),
-                         scoring='roc_auc', n_jobs=N_JOBS),
-        X=epochs.get_data(), y=y, cv=StratifiedKFold(n_splits=10))
+    se = SlidingEstimator(
+        make_pipeline(StandardScaler(with_mean=False), LogisticRegression()),
+        scoring='roc_auc', n_jobs=N_JOBS)
+    scores = cross_val_multiscore(se, X=X, y=y, cv=StratifiedKFold(10))
 
     # let's save the scores now
     a_vs_b = '%s_vs_%s' % (os.path.basename(condition1),

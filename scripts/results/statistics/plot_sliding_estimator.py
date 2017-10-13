@@ -1,7 +1,7 @@
 """
-=================
-Sliding estimator
-=================
+=================================
+Decoding (ML) across time (M/EEG)
+=================================
 
 A sliding estimator fits a logistic regression model for every time point.
 In this example, we contrast the condition `'famous'` vs `'scrambled'`

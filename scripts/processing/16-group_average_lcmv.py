@@ -1,6 +1,7 @@
 """
-Group average on LCMV beamformer
-================================
+====================================
+16. Group average on LCMV beamformer
+====================================
 
 Source estimates are computed for contrast between faces and scrambled and
 morphed to average brain,

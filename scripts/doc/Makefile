@@ -94,6 +94,12 @@ dirhtml:
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/dirhtml."
 
+html_dev-pattern: generate_examples html-pre
+	$(SPHINXBUILD) -D sphinx_gallery_conf.filename_pattern=$(PATTERN) -b html $(ALLSPHINXOPTS) _build/html
+	@make html-post
+	@echo
+	@echo "Build finished. The HTML pages are in _build/html"
+
 singlehtml:
 	$(SPHINXBUILD) -b singlehtml $(ALLSPHINXOPTS) $(BUILDDIR)/singlehtml
 	@echo

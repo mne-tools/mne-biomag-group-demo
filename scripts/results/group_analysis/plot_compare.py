@@ -1,7 +1,7 @@
 """
-===========================
-Comparison between subjects
-===========================
+========================================
+Sensor-space comparison between subjects
+========================================
 
 All the subjects compared.
 

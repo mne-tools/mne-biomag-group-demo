@@ -1,6 +1,7 @@
 """
-Evoked data
-===========
+===============
+07. Evoked data
+===============
 
 The evoked data sets are created by averaging different categories of epochs.
 The evoked data is saved using categories 'famous', 'scrambled', 'unfamiliar',
@@ -60,6 +61,6 @@ def run_evoked(subject_id, tsss=False):
                                          evoked_faces_eq, evoked_scrambled_eq])
 
 
-parallel, run_func, _ = parallel_func(run_evoked, n_jobs=1)
+parallel, run_func, _ = parallel_func(run_evoked, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
 parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

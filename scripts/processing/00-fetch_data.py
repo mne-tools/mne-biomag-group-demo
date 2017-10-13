@@ -1,7 +1,7 @@
 """
-======================
-Fetch data on OpenfMRI
-======================
+==========================
+00. Fetch data on OpenfMRI
+==========================
 
 This script gives some basic code that can be adapted to fetch data.
 """

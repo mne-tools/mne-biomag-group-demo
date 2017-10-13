@@ -1,6 +1,7 @@
 """
-Baseline covariance
-===================
+==================================
+08. Baseline covariance estimation
+==================================
 
 Covariance matrices are computed and saved.
 """

@@ -1,6 +1,7 @@
 """
-LCMV beamformer
-===============
+===================
+15. LCMV beamformer
+===================
 
 Compute LCMV beamformer.
 """

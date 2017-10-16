@@ -13,6 +13,7 @@
 import os
 from datetime import date
 import sphinx_gallery  # noqa
+from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
 import sphinx_bootstrap_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -275,9 +276,14 @@ texinfo_documents = []
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'python': ('http://docs.python.org/', None),
-    'numpy': ('http://docs.scipy.org/doc/numpy-dev/', None),
-    'scipy': ('http://scipy.github.io/devdocs/', None),
+    'python': ('https://docs.python.org/3', None),
+    'numpy': ('https://docs.scipy.org/doc/numpy-dev', None),
+    'scipy': ('http://scipy.github.io/devdocs', None),
+    'matplotlib': ('http://matplotlib.org', None),
+    'sklearn': ('http://scikit-learn.org/stable', None),
+    'mayavi': ('http://docs.enthought.com/mayavi/mayavi', None),
+    'surfer': ('https://pysurfer.github.io/', None),
+    'mne': ('https://mne-tools.github.io/dev', None),
 }
 
 try:
@@ -293,19 +299,21 @@ except Exception:  # can raise all sorts of errors
 
 
 sphinx_gallery_conf = {
-    'doc_module': ('sphinx_gallery', 'numpy'),
-    'reference_url': {
-        'mne': 'http://mne-tools.github.io/stable/',
-        'sphinx_gallery': None,
-        'matplotlib': 'http://matplotlib.org',
-        'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
-        'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
-        'mayavi': 'http://docs.enthought.com/mayavi/mayavi'},
+    'doc_module': ('mne',),
     'examples_dirs': ['../results', '../processing'],
     'gallery_dirs': ['auto_examples', 'auto_scripts'],
     'find_mayavi_figures': find_mayavi_figures,
     'backreferences_dir': 'gen_modules/backreferences',
     'default_thumb_file': os.path.join('_static', 'mne_helmet.png'),
+    'subsection_order': ExplicitOrder([
+        '../processing/library',
+        '../results/group_analysis',
+        '../results/statistics',
+        '../results/demos',
+        '../results/single_subject_analysis',
+    ]),
+    'within_subsection_order': FileNameSortKey,
+    'filename_pattern': '/plot_',
 }
 
 # sphinx gallery should see the library folder

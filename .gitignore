@@ -5,8 +5,11 @@ subjects
 *.fif
 *.html
 *.pdf
+scripts/doc/_build
 scripts/doc/auto_examples/
 scripts/doc/auto_library/
 scripts/doc/auto_scripts/
 scripts/doc/gen_modules/
 scripts/doc/library/
+scripts/results/figures/
+scripts/results/single_subject_analysis/plot_*

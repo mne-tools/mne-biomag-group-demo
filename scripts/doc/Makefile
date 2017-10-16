@@ -55,38 +55,50 @@ clean:
 	rm -rf generated/*
 	rm -rf modules/generated/*
 
-html-noplot:
-	cp index_custom.rst auto_examples/index_custom.rst
+html-pre:
+	@mkdir -p auto_scripts
 	cp index_scripts.rst auto_scripts/index_scripts.rst
-	cp 00-fetch_data.rst auto_scripts/00-fetch_data.rst
-	cp 01-run_anatomy.rst auto_scripts/01-run_anatomy.rst
 
-	cp ../processing/00-fetch_data.ipy auto_scripts/00-fetch_data.ipy
-	cp ../processing/01-run_anatomy.ipy auto_scripts/01-run_anatomy.ipy
-	$(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	@echo
-	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
-	mv $(BUILDDIR)/html/auto_examples/index_custom.html $(BUILDDIR)/html/auto_examples/index.html
+html-post:
 	mv $(BUILDDIR)/html/auto_scripts/index_scripts.html $(BUILDDIR)/html/auto_scripts/index.html
 
-html_abort_on_example_error:
-	$(SPHINXBUILD) -D abort_on_example_error=1 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+html-noplot: generate_examples html-pre
+	$(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@make html-post
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
-html: generate_examples
-	export DISPLAY=:99.0 & xvfb-run -s ':99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset' $(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+html_abort_on_example_error: generate_examples html-pre
+	$(SPHINXBUILD) -D abort_on_example_error=1 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@make html-post
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
-	make html-noplot
+
+html: generate_examples html-pre
+	export DISPLAY=:99.0 & xvfb-run -s ':99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset' $(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@make html-post
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+
+html-noxvfb: generate_examples html-pre
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@make html-post
+	@echo
+	@echo "Bulid finished. The HTML pages are in $(BUILDDIR)/html."
 
 generate_examples:
-	$(PYTHON) ../results/library/generate_scripts.py
+	$(PYTHON) ../processing/library/generate_scripts.py
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/dirhtml."
+
+html_dev-pattern: generate_examples html-pre
+	$(SPHINXBUILD) -D sphinx_gallery_conf.filename_pattern=$(PATTERN) -b html $(ALLSPHINXOPTS) _build/html
+	@make html-post
+	@echo
+	@echo "Build finished. The HTML pages are in _build/html"
 
 singlehtml:
 	$(SPHINXBUILD) -b singlehtml $(ALLSPHINXOPTS) $(BUILDDIR)/singlehtml
@@ -205,11 +217,6 @@ pseudoxml:
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 
-html_dev-pattern:
-	BUILD_DEV_HTML=1 $(SPHINXBUILD) -D plot_gallery=1 -D raise_gallery=1 -D abort_on_example_error=1 -D sphinx_gallery_conf.filename_pattern=$(PATTERN) -b html $(ALLSPHINXOPTS) _build/html
-	@echo
-	@echo "Build finished. The HTML pages are in _build/html"
-
 install:
 	rm -rf _build/doctrees _build/mne-biomag-group-demo.github.io
 	# first clone the mne-tools/mne-biomag-group-demo.github.io repo because it may ask
@@ -243,6 +250,18 @@ install-pr:
 	git commit -a -m 'Make install' && \
 	git push
 
+install-pr-user:
+	rm -rf _build/mne-biomag-group-demo.github.io
+	git clone -b gh-pages --single-branch --no-checkout --depth 1 git@github.com:/$(USER)/mne-biomag-group-demo _build/mne-biomag-group-demo.github.io
+	touch _build/mne-biomag-group-demo.github.io/.nojekyll
+	cd _build/ && \
+	cp -r html/* mne-biomag-group-demo.github.io && \
+	cd mne-biomag-group-demo.github.io && \
+	git add * && \
+	git add .nojekyll && \
+	git commit -a -m 'Make install' && \
+	git push
+
 install-noplot:
 	rm -rf _build/doctrees _build/mne-biomag-group-demo.github.io
 	# first clone the mne-tools/mne-biomag-group-demo.github.io repo because it may ask
@@ -262,3 +281,8 @@ install-noplot:
 	git add .nojekyll && \
 	git commit -a -m 'Make install' && \
 	git push
+
+view:
+	@python -c "import webbrowser; webbrowser.open_new_tab('file://$(PWD)/_build/html/index.html')"
+
+show: view

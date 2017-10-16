@@ -1,22 +1,20 @@
 """
-Group average on source level
-=============================
+=================================
+14. Group average on source level
+=================================
 
-Source estimates are computed for contrast between faces and scrambled and
-morphed to average brain,
+Source estimates are morphed to the ``fsaverage`` brain.
 """
 
 import os.path as op
+
 import numpy as np
 
 import mne
 from mne.parallel import parallel_func
-from mne.minimum_norm import apply_inverse, read_inverse_operator
 
-from library.config import meg_dir, subjects_dir, spacing, N_JOBS
-
-stcs = list()
-exclude = [1, 5, 16]  # Excluded subjects
+from library.config import (meg_dir, subjects_dir, N_JOBS, smooth,
+                            fsaverage_vertices, exclude_subjects)
 
 
 def morph_stc(subject_id):
@@ -24,27 +22,29 @@ def morph_stc(subject_id):
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 
-    evokeds = mne.read_evokeds(op.join(meg_dir, subject,
-                                       '%s_highpass-1Hz_ave.fif' % subject))
-
-    contrast = evokeds[3]
-    fname_inv = op.join(data_path, '%s-meg-%s-inv.fif' % (subject, spacing))
-    inv = read_inverse_operator(fname_inv)
-
-    # Compute inverse solution
-    snr = 3.0
-    lambda2 = 1.0 / snr ** 2
-    stc = apply_inverse(contrast, inv, lambda2, "dSPM", pick_ori=None)
-    morphed = stc.morph(subject_from=subject, subject_to='fsaverage',
-                        subjects_dir=subjects_dir, grade=4)
-    morphed.save(op.join(data_path, 'contrast-morphed'))
-    return morphed
+    # Morph STCs
+    morph_mat = None
+    for condition in ('contrast', 'faces_eq', 'scrambled_eq'):
+        stc = mne.read_source_estimate(
+            op.join(data_path, 'mne_dSPM_inverse-%s' % condition), subject)
+        if morph_mat is None:
+            morph_mat = mne.compute_morph_matrix(
+                subject, 'fsaverage', stc.vertices, fsaverage_vertices, smooth,
+                subjects_dir=subjects_dir, warn=False)
+        morphed = stc.morph_precomputed('fsaverage', fsaverage_vertices,
+                                        morph_mat)
+        morphed.save(op.join(data_path, 'mne_dSPM_inverse_morph-%s'
+                             % condition))
+        if condition == 'contrast':
+            out = morphed
+    return out
 
 
 parallel, run_func, _ = parallel_func(morph_stc, n_jobs=N_JOBS)
-stcs = parallel(run_func(subject_id) for subject_id in range(1, 20)
-                if subject_id not in exclude)
-
+stcs = parallel(run_func(subject_id) for subject_id in range(1, 20))
+stcs = [stc for stc, subject_id in zip(stcs, range(1, 20))
+        if subject_id not in exclude_subjects]
 data = np.average([s.data for s in stcs], axis=0)
-stc = mne.SourceEstimate(data, stcs[0].vertices, stcs[0].tmin, stcs[0].tstep)
+stc = mne.VectorSourceEstimate(data, stcs[0].vertices,
+                               stcs[0].tmin, stcs[0].tstep, stcs[0].subject)
 stc.save(op.join(meg_dir, 'contrast-average'))

@@ -1,6 +1,7 @@
 """
-Group average on LCMV beamformer
-================================
+====================================
+16. Group average on LCMV beamformer
+====================================
 
 Source estimates are computed for contrast between faces and scrambled and
 morphed to average brain,
@@ -11,22 +12,23 @@ import numpy as np
 
 import mne
 
-from library.config import subjects_dir, meg_dir
-
+from library.config import (subjects_dir, meg_dir, exclude_subjects, smooth,
+                            fsaverage_vertices)
 stcs = list()
-exclude = [1, 5, 16]  # Excluded subjects
 
-for run in range(1, 20):
-    if run in exclude:
+for subject_id in range(1, 20):
+    if subject_id in exclude_subjects:
         continue
-    subject = "sub%03d" % run
+    subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 
-    stc = mne.read_source_estimate(op.join(data_path,
-                                           'mne_LCMV_inverse-contrast'))
-    morphed = stc.morph(subject_from=subject, subject_to='fsaverage',
-                        subjects_dir=subjects_dir, grade=4)
+    stc = mne.read_source_estimate(
+        op.join(data_path, 'mne_LCMV_inverse-contrast'), subject)
+    morph_mat = mne.compute_morph_matrix(
+        subject, 'fsaverage', stc.vertices, fsaverage_vertices, smooth,
+        subjects_dir=subjects_dir, warn=False)
+    morphed = stc.morph_precomputed('fsaverage', fsaverage_vertices, morph_mat)
     stcs.append(morphed)
 
 data = np.average([s.data for s in stcs], axis=0)

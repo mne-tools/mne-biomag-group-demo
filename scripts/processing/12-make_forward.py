@@ -1,6 +1,7 @@
 """
-Forward solution
-================
+====================
+12. Forward solution
+====================
 
 Calculate forward solution for MEG channels.
 """
@@ -11,39 +12,30 @@ import mne
 from mne.parallel import parallel_func
 
 from library.config import (study_path, meg_dir, subjects_dir, spacing, N_JOBS,
-                            mindist)
-
-
-exclude = [1, 5, 16]  # Excluded subjects
+                            mindist, l_freq)
 
 
 def run_forward(subject_id):
-    if subject_id in exclude:
-        return
     subject = "sub%03d" % subject_id
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
 
-    fname_ave = op.join(data_path, '%s_highpass-1Hz_ave.fif' % subject)
-    fname_fwd = op.join(data_path, '%s-meg-%s-fwd.fif' % (subject, spacing))
+    fname_ave = op.join(data_path,
+                        '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
+    fname_fwd = op.join(data_path, '%s-meg-eeg-%s-fwd.fif'
+                        % (subject, spacing))
     fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
                           '%s-trans.fif' % subject)
+    fname_src = op.join(subjects_dir, subject, 'bem', '%s-%s-src.fif'
+                        % (subject, spacing))
+    # Here we only use 1-layer BEM because the 3-layer is unreliable
+    fname_bem = op.join(subjects_dir, subject, 'bem',
+                        '%s-5120-bem-sol.fif' % subject)
 
-    src = mne.setup_source_space(subject, spacing=spacing,
-                                 subjects_dir=subjects_dir,
-                                 n_jobs=1, add_dist=False)
-
-    src_fname = op.join(subjects_dir, subject, '%s-src.fif' % spacing)
-    mne.write_source_spaces(src_fname, src, overwrite=True)
-
-    bem_model = mne.make_bem_model(subject, ico=4, subjects_dir=subjects_dir,
-                                   conductivity=(0.3,))
-    bem = mne.make_bem_solution(bem_model)
-    info = mne.read_evokeds(fname_ave, condition=0).info
-    fwd = mne.make_forward_solution(info, trans=fname_trans, src=src, bem=bem,
-                                    meg=True, eeg=False, mindist=mindist,
-                                    n_jobs=1)
-    fwd = mne.convert_forward_solution(fwd, surf_ori=True)
+    info = mne.io.read_info(fname_ave)
+    # Because we use a 1-layer BEM, we do MEG only
+    fwd = mne.make_forward_solution(info, fname_trans, fname_src, fname_bem,
+                                    meg=True, eeg=False, mindist=mindist)
     mne.write_forward_solution(fname_fwd, fwd, overwrite=True)
 
 

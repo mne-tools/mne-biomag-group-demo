@@ -1,3 +1,5 @@
+.. -*- coding: utf-8 -*-
+
 .. title:: MNE
 
 .. raw:: html
@@ -14,10 +16,13 @@
 Authors
 -------
 
-- `Alexandre Gramfort <http://alexandre.gramfort.net/>`_, Telecom ParisTech
 - `Mainak Jas <http://perso.telecom-paristech.fr/~mjas/>`_, Telecom ParisTech
 - `Jaakko Leppäkangas <https://github.com/jaeilepp>`_, Telecom ParisTech
 - `Denis Engemann <http://www.denis-engemann.de/>`_, Neurospin, CEA/INSERM, UNICOG Team
+- `Eric Larson <http://larsoner.com>`_, University of Washington, ILABS
+- `Samu Taulu <http://ilabs.washington.edu/institute-faculty/bio/i-labs-samu-taulu-dsc>`_, University of Washington, ILABS
+- `Matti Hämäläinen <https://www.martinos.org/user/5923>`_, Martinos Center, MGH, Harvard Medical School
+- `Alexandre Gramfort <http://alexandre.gramfort.net/>`_, Telecom ParisTech
 
 Slides of presentation at Biomag 2016 Conf.
 -------------------------------------------

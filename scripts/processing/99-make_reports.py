@@ -1,8 +1,10 @@
 """
-Make report
-===========
+================
+99. Make reports
+================
 
-Builds an html report containing all the relevant analysis plots.
+Builds an HTML report for each subject containing all the relevant analysis
+plots.
 """
 
 from mayavi import mlab
@@ -11,7 +13,7 @@ import os.path as op
 from mne import Report
 import mne
 
-from library.config import study_path, subjects_dir, N_JOBS, meg_dir
+from library.config import study_path, subjects_dir, meg_dir, l_freq
 
 
 def make_report(subject_id):
@@ -19,13 +21,14 @@ def make_report(subject_id):
     print("processing %s" % subject)
 
     meg_path = op.join(meg_dir, subject)
-    ave_fname = op.join(meg_path, "%s-ave.fif" % subject)
+    ave_fname = op.join(meg_path,
+                        "%s_highpass-%sHz-ave.fif" % (subject, l_freq))
 
     rep = Report(info_fname=ave_fname, subject=subject,
                  subjects_dir=subjects_dir)
     rep.parse_folder(meg_path)
 
-    evokeds = mne.read_evokeds(op.join(meg_path, '%s-ave.fif' % subject))
+    evokeds = mne.read_evokeds(ave_fname)
     fam = evokeds[0]
     scramb = evokeds[1]
     unfam = evokeds[2]
@@ -102,4 +105,3 @@ rep.add_figs_to_section(fig, 'Average faces - scrambled')
 
 rep.save(fname=op.join(meg_dir, 'report_average.html'),
          open_browser=False, overwrite=True)
-

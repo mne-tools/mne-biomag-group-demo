@@ -16,7 +16,7 @@ import mne
 from mne import Epochs
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import (study_path, meg_dir,
+from library.config import (study_path, meg_dir, tmin, tmax,
                             set_matplotlib_defaults)  # noqa: E402
 
 subject = "sub003"
@@ -40,8 +40,8 @@ events = mne.find_events(raw, stim_channel='STI101', consecutive='increasing',
 
 set_matplotlib_defaults(plt)
 
-ylim = dict(mag=(-400, 400))
-times = [0, 0.12, 0.4]
+ylim = dict(mag=(-600, 600))
+times = [0, 0.12, 0.4, tmax-0.1]
 
 if not op.isdir('figures'):
     os.mkdir('figures')
@@ -53,7 +53,7 @@ if not op.isdir('figures'):
 
 raw.filter(None, 40, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
-                baseline=(None, 0)).average()
+                tmin=tmin, tmax=tmax, baseline=(None, 0)).average()
 fig = evoked.plot_joint(times=times, title=None,
                         ts_args=dict(ylim=ylim, spatial_colors=True),
                         topomap_args=dict(vmin=-300, vmax=300))
@@ -67,7 +67,7 @@ fig.savefig(op.join('..', 'figures', 'FanningA.pdf'), bbox_to_inches='tight')
 
 raw.filter(1, None, l_trans_bandwidth=0.5, **filter_params)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
-                baseline=None).average()
+                tmin=tmin, tmax=tmax, baseline=None).average()
 fig = evoked.plot_joint(times=times, title=None,
                         ts_args=dict(ylim=ylim, spatial_colors=True),
                         topomap_args=dict(vmin=-300, vmax=300))
@@ -82,7 +82,7 @@ fig.savefig(op.join('..', 'figures', 'FanningB.pdf'), bbox_to_inches='tight')
 raw_fname = op.join(meg_dir, subject, 'run_01_filt_tsss_1_raw.fif')
 raw = mne.io.read_raw_fif(raw_fname, preload=True)
 evoked = Epochs(raw, events, event_id=event_ids, picks=picks,
-                baseline=(None, 0)).average()
+                tmin=tmin, tmax=tmax, baseline=(None, 0)).average()
 fig = evoked.plot_joint(times=times, title=None,
                         ts_args=dict(ylim=ylim, spatial_colors=True),
                         topomap_args=dict(vmin=-300, vmax=300))

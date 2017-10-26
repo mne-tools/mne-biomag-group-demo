@@ -27,8 +27,8 @@ def run_inverse(subject_id):
                         '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
     fname_fwd = op.join(data_path, '%s-meg-eeg-%s-fwd.fif'
                         % (subject, spacing))
-    fname_inv = op.join(data_path, '%s-meg-eeg-%s-inv.fif'
-                        % (subject, spacing))
+    fname_inv = op.join(data_path, '%s_highpass-%sHz-meg-eeg-%s-inv.fif'
+                        % (subject, l_freq, spacing))
 
     evokeds = mne.read_evokeds(
         fname_ave, condition=['scrambled', 'unfamiliar', 'famous',
@@ -51,7 +51,8 @@ def run_inverse(subject_id):
     for evoked in evokeds:
         stc = apply_inverse(evoked, inverse_operator, lambda2, "dSPM",
                             pick_ori='vector')
-        stc.save(op.join(data_path, 'mne_dSPM_inverse-%s' % evoked.comment))
+        stc.save(op.join(data_path, 'mne_dSPM_inverse_highpass-%sHz-%s'
+                         % (l_freq, evoked.comment)))
 
 
 parallel, run_func, _ = parallel_func(run_inverse, n_jobs=N_JOBS)

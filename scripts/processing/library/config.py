@@ -75,7 +75,9 @@ cal = os.path.join(os.path.dirname(__file__), 'sss_cal.dat')
 ylim = {'eeg': [-10, 10], 'mag': [-300, 300], 'grad': [-80, 80]}
 
 
-def set_matplotlib_defaults(plt, fontsize=17):
+def set_matplotlib_defaults(plt=None, fontsize=17):
+    if plt is None:
+        import matplotlib.pyplot as plt
     params = {'axes.labelsize': fontsize + 2,
               'legend.fontsize': fontsize,
               'xtick.labelsize': fontsize,
@@ -90,7 +92,11 @@ def set_matplotlib_defaults(plt, fontsize=17):
     plt.rcParams.update(params)
 
 
-l_freq = 1
+l_freq = None
+
+tmin = -0.2
+tmax = 2.9  # min duration between onsets: (400 fix + 800 stim + 1700 ISI) ms
+reject_tmax = 0.8  # duration we really care about
 
 smooth = 10
 

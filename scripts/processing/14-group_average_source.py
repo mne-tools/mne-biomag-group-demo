@@ -14,7 +14,7 @@ import mne
 from mne.parallel import parallel_func
 
 from library.config import (meg_dir, subjects_dir, N_JOBS, smooth,
-                            fsaverage_vertices, exclude_subjects)
+                            fsaverage_vertices, exclude_subjects, l_freq)
 
 
 def morph_stc(subject_id):
@@ -26,15 +26,17 @@ def morph_stc(subject_id):
     morph_mat = None
     for condition in ('contrast', 'faces_eq', 'scrambled_eq'):
         stc = mne.read_source_estimate(
-            op.join(data_path, 'mne_dSPM_inverse-%s' % condition), subject)
+            op.join(data_path, 'mne_dSPM_inverse_highpass-%sHz-%s'
+                    % (l_freq, condition)), subject)
         if morph_mat is None:
             morph_mat = mne.compute_morph_matrix(
                 subject, 'fsaverage', stc.vertices, fsaverage_vertices, smooth,
                 subjects_dir=subjects_dir, warn=False)
         morphed = stc.morph_precomputed('fsaverage', fsaverage_vertices,
                                         morph_mat)
-        morphed.save(op.join(data_path, 'mne_dSPM_inverse_morph-%s'
-                             % condition))
+        morphed.save(op.join(data_path,
+                             'mne_dSPM_inverse_morph_highpass-%sHz-%s'
+                             % (l_freq, condition)))
         if condition == 'contrast':
             out = morphed
     return out
@@ -47,4 +49,4 @@ stcs = [stc for stc, subject_id in zip(stcs, range(1, 20))
 data = np.average([s.data for s in stcs], axis=0)
 stc = mne.VectorSourceEstimate(data, stcs[0].vertices,
                                stcs[0].tmin, stcs[0].tstep, stcs[0].subject)
-stc.save(op.join(meg_dir, 'contrast-average'))
+stc.save(op.join(meg_dir, 'contrast-average_highpass-%sHz' % l_freq))

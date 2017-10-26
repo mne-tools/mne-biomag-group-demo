@@ -81,7 +81,7 @@ ax = axes[0]
 raw.plot_psd(
     average=False, line_alpha=0.6, fmin=0, fmax=350, xscale='log',
     spatial_colors=False, show=False, ax=[ax])
-ax.set(xlabel='Frequency (Hz)')
+ax.set(xlabel='Frequency (Hz)', title='A')
 
 for l, c in zip(ax.get_lines(), colors):
     if c == 'r':
@@ -97,7 +97,7 @@ ax = axes[1]
 raw.plot_psd(
     average=False, line_alpha=0.6, n_fft=2048, n_overlap=1024, fmin=0,
     fmax=350, xscale='linear', spatial_colors=False, show=False, ax=[ax])
-ax.set(xlabel='Frequency (Hz)', ylabel='')
+ax.set(xlabel='Frequency (Hz)', ylabel='', title='B')
 ax.axvline(50., linestyle='--', alpha=0.25, linewidth=2)
 ax.axvline(50., linestyle='--', alpha=0.25, linewidth=2)
 

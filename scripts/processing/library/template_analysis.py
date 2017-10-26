@@ -9,11 +9,15 @@ import os.path as op
 import sys
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 import mne
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import study_path, meg_dir, ylim, l_freq  # noqa: E402
+from library.config import (study_path, meg_dir, ylim, l_freq,
+                            set_matplotlib_defaults)  # noqa: E402
+
+set_matplotlib_defaults(plt)
 
 ###############################################################################
 # Configuration
@@ -103,13 +107,17 @@ ica.plot_sources(raw_filt, show=True)
 ###############################################################################
 # TFR :ref:`sphx_glr_auto_scripts_09-time_frequency.py`.
 fpower = mne.time_frequency.read_tfrs(
-    op.join(subject_dir, '%s-faces-tfr.h5' % subject))[0]
+    op.join(subject_dir, '%s_highpass-%sHz-faces-tfr.h5'
+            % (subject, l_freq)))[0]
 fitc = mne.time_frequency.read_tfrs(
-    op.join(subject_dir, '%s-itc_faces-tfr.h5' % subject))[0]
+    op.join(subject_dir, '%s_highpass-%sHz-itc_faces-tfr.h5'
+            % (subject, l_freq)))[0]
 spower = mne.time_frequency.read_tfrs(
-    op.join(subject_dir, '%s-scrambled-tfr.h5' % subject))[0]
+    op.join(subject_dir, '%s_highpass-%sHz-scrambled-tfr.h5'
+            % (subject, l_freq)))[0]
 sitc = mne.time_frequency.read_tfrs(
-    op.join(subject_dir, '%s-itc_scrambled-tfr.h5' % subject))[0]
+    op.join(subject_dir, '%s_highpass-%sHz-itc_scrambled-tfr.h5'
+            % (subject, l_freq)))[0]
 channel = 'EEG065'
 idx = [fpower.ch_names.index(channel)]
 fpower.plot(idx, title='Faces power %s' % channel, baseline=(-0.1, 0.0),
@@ -128,7 +136,20 @@ cov_fname = op.join(subject_dir,
                     '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
 cov = mne.read_cov(cov_fname)
 mne.viz.plot_cov(cov, faces_evo.info)
-faces_evo.copy().apply_baseline().plot_white(cov)
+rank_dict = dict(
+    meg=raw_filt.copy().load_data().pick_types(eeg=False).estimate_rank())
+for kind in ('meg', 'eeg'):
+    type_dict = dict(meg=False)
+    type_dict.update({kind: True})
+    fig = faces_evo.copy().apply_baseline().pick_types(
+        **type_dict).plot_white(cov, rank=rank_dict if kind == 'meg' else {})
+    for ax, ylabel in zip(fig.axes, ('Whitened\n%s (AU)' % (kind.upper(),),
+                                     'GFP ($\chi^2$)')):
+        ax.set(ylabel=ylabel)
+    fig.axes[-1].set(title='', ylim=[0, 20])
+    fig.tight_layout()
+    fig.savefig(op.join('..', 'figures', '%s_highpass-%sHz-plot_white_%s.pdf'
+                        % (subject, l_freq, kind)))
 
 ###############################################################################
 # Trans
@@ -138,16 +159,31 @@ bem = mne.read_bem_surfaces(op.join(subjects_dir, subject, 'bem',
                                     '%s-5120-bem.fif' % subject))
 src = mne.read_source_spaces(
     op.join(subjects_dir, subject, 'bem', '%s-oct6-src.fif' % subject))
-mne.viz.plot_alignment(famous_evo.info, fname_trans, subject=subject,
-                       subjects_dir=subjects_dir, bem=bem, src=src,
-                       surfaces='inner_skull')
+aln = mne.viz.plot_alignment(raw.info, fname_trans, subject=subject,
+                             subjects_dir=subjects_dir, bem=bem, src=src,
+                             surfaces='inner_skull', coord_frame='meg')
+fig, axes = plt.subplots(1, 3, figsize=(10, 3), facecolor='k')
+from mayavi import mlab  # noqa: E402
+for ai, angle in enumerate((180, 90, 0)):
+    mlab.view(angle, 90, focalpoint=(0., 0., 0.), distance=0.6)
+    view = mlab.screenshot()
+    mask_w = (view == 0).all(axis=-1).all(axis=1)
+    mask_h = (view == 0).all(axis=-1).all(axis=0)
+    view = view[~mask_w][:, ~mask_h]
+    axes[ai].set_axis_off()
+    axes[ai].imshow(view, interpolation='bicubic')
+mlab.close(aln)
+fig.subplots_adjust(left=0, right=1, top=1, bottom=0, wspace=0.05, hspace=0)
+fig.savefig(op.join('..', 'figures', '%s_alignment.pdf' % subject),
+            dpi=150, facecolor=fig.get_facecolor(), edgecolor='none')
 
 ###############################################################################
 # Faces :ref:`sphx_glr_auto_scripts_13-make_inverse.py`.
 
 
 def plot_stc(cond, figure=None):
-    fname = op.join(subject_dir, 'mne_dSPM_inverse-%s' % cond)
+    fname = op.join(subject_dir, 'mne_dSPM_inverse_highpass-%sHz-%s'
+                    % (l_freq, cond))
     stc = mne.read_source_estimate(fname, subject).magnitude()
     brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
                      hemi='both', initial_time=0.17, time_unit='s',
@@ -163,11 +199,13 @@ brain_contrast = plot_stc('contrast', figure=2)
 
 ###############################################################################
 # LCMV Faces - scrambled
-fname = op.join(subject_dir, 'mne_LCMV_inverse-contrast')
+fname = op.join(subject_dir, 'mne_LCMV_inverse_highpass-%sHz-contrast'
+                % (l_freq,))
 stc = mne.read_source_estimate(fname, subject)
 stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
          hemi='both', initial_time=0.17, time_unit='s', figure=3)
 
 ###############################################################################
 # BEM
-mne.viz.plot_bem(subject, subjects_dir)
+fig = mne.viz.plot_bem(subject, subjects_dir, slices=[40, 100, 140, 180])
+fig.savefig(op.join('..', 'figures', '%s_bem.pdf' % subject))

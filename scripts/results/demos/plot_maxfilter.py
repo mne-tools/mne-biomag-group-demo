@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import (study_path, cal, ctc,
+from library.config import (study_path, cal, ctc, tmax, l_freq,
                             set_matplotlib_defaults)  # noqa: E402
 
 event_ids = [5, 6, 7]  # Famous faces
@@ -36,12 +36,12 @@ sss_fname_in = op.join(study_path, 'ds117', subject, 'MEG', 'run_%02d_sss.fif')
 raw = mne.io.read_raw_fif(raw_fname_in, preload=True)
 
 raw.info['bads'] = bads
-raw.filter(1., 40, **filter_params)
+raw.filter(l_freq, 40, **filter_params)
 
 events = mne.find_events(raw, stim_channel='STI101', consecutive='increasing',
                          mask=4352, mask_type='not_and', min_duration=0.003,
                          verbose=True)
-evoked_before = Epochs(raw, events, event_id=event_ids).average()
+evoked_before = Epochs(raw, events, event_id=event_ids, tmax=tmax).average()
 
 ###############################################################################
 # Then Maxfiltered and SSS'd data.
@@ -79,18 +79,20 @@ raw_sss_py = maxwell_filter(
     raw, calibration=cal, cross_talk=ctc, origin=origin, head_pos=head_pos)
 del raw
 
-raw_sss_py.filter(1., 40, **filter_params)
-raw_sss_mf.filter(1., 40, **filter_params)
+raw_sss_py.filter(l_freq, 40, **filter_params)
+raw_sss_mf.filter(l_freq, 40, **filter_params)
 
-evoked_sss_py = Epochs(raw_sss_py, events, event_id=event_ids).average()
-evoked_sss_mf = Epochs(raw_sss_mf, events, event_id=event_ids).average()
+evoked_sss_py = Epochs(raw_sss_py, events, event_id=event_ids,
+                       tmax=tmax).average()
+evoked_sss_mf = Epochs(raw_sss_mf, events, event_id=event_ids,
+                       tmax=tmax).average()
 
 ###############################################################################
 # Plotting
 
 set_matplotlib_defaults(plt)
 
-ylim = dict(mag=(-400, 400))
+ylim = dict(mag=(-600, 600) if l_freq is None else (-400, 400))
 
 fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 evoked_before.pick_types(meg='mag').plot(
@@ -98,10 +100,13 @@ evoked_before.pick_types(meg='mag').plot(
 axes[0].set_title('Raw data')
 evoked_sss_py.pick_types(meg='mag').plot(
     axes=axes[1], spatial_colors=True, ylim=ylim, show=False)
-axes[1].set_title(r'MNE $\mathtt{maxwell\_filter}$')
-evoked_sss_mf.pick_types(meg='mag').plot(
+axes[1].set(title=r'$\mathtt{maxwell\_filter}$', ylabel='')
+diff = mne.combine_evoked([evoked_sss_py.pick_types(meg='mag'),
+                           evoked_sss_mf.pick_types(meg='mag')],
+                          weights=[-1, 1])
+diff.plot(
     axes=axes[2], spatial_colors=True, ylim=ylim, show=False)
-axes[2].set_title(u'Maxfilter™')
+axes[2].set(title=u'$\mathtt{maxwell\_filter}$ -\nMaxfilter™', ylabel='')
 mne.viz.utils.tight_layout(fig=fig)
 fig.savefig(op.join('..', 'figures', 'Maxfilter.pdf'), bbox_to_inches='tight')
 plt.show()

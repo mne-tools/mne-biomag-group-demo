@@ -36,7 +36,7 @@ for subject_id in range(1, 20):
     contrast = mne.read_evokeds(op.join(data_path, '%s_highpass-%sHz-ave.fif'
                                         % (subject, l_freq)),
                                 condition='contrast')
-    contrast.pick_types(meg=False, eeg=True)
+    contrast.pick_types(meg=False, eeg=True).crop(None, 0.8)
     contrast.apply_baseline((-0.2, 0.0))
     contrasts.append(contrast)
 
@@ -106,7 +106,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
 
     # initialize figure
     fig, ax_topo = plt.subplots(1, 1, figsize=(10, 3))
-    title = 'Cluster #{0}'.format(i_clu + 1)
+    title = 'Cluster #{0} (p = {1:0.3f})'.format(i_clu + 1, p_values[clu_idx])
     fig.suptitle(title, fontsize=14)
 
     # plot average test statistic and mark significant sensors
@@ -149,5 +149,6 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     mne.viz.tight_layout(fig=fig)
     fig.subplots_adjust(bottom=.05)
     plt.savefig(op.join('..', 'figures',
-                        'spatiotemporal_stats_cluster-%02d.pdf' % i_clu))
+                        'spatiotemporal_stats_cluster_highpass-%sHz-%02d.pdf'
+                        % (l_freq, i_clu)))
     plt.show()

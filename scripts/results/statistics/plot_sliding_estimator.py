@@ -25,7 +25,7 @@ from scipy.io import loadmat
 from scipy.stats import sem
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import meg_dir  # noqa: E402
+from library.config import meg_dir, l_freq  # noqa: E402
 
 ###############################################################################
 # Now we loop over subjects to load the scores
@@ -37,8 +37,8 @@ for subject_id in range(1, 20):
 
     # Load the scores for the subject
     for a_vs_b in a_vs_bs:
-        fname_td = os.path.join(data_path, '%s-td-auc-%s.mat'
-                                % (subject, a_vs_b))
+        fname_td = os.path.join(data_path, '%s_highpass-%sHz-td-auc-%s.mat'
+                                % (subject, l_freq, a_vs_b))
         mat = loadmat(fname_td)
         scores[a_vs_b].append(mat['scores'][0])
 
@@ -66,8 +66,8 @@ ax.axhline(0.5, color='k', linestyle='--', label='Chance level')
 ax.axvline(0.0, color='k', linestyle='--')
 ax.legend()
 fig.tight_layout()
-fig.savefig(op.join('..', 'figures', 'time_decoding.pdf'),
-            bbox_to_inches='tight')
+fig.savefig(op.join('..', 'figures', 'time_decoding_highpass-%sHz.pdf'
+                    % (l_freq,)), bbox_to_inches='tight')
 plt.show()
 
 ###############################################################################

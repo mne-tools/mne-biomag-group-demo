@@ -16,6 +16,8 @@ import os
 import tempfile
 import os.path as op
 
+import numpy as np
+
 import mne
 from mne.parallel import parallel_func
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs, read_ica
@@ -104,8 +106,11 @@ def run_epochs(subject_id, tsss=False):
     if tsss:
         ica_name = op.join(meg_dir, subject, 'run_concat-tsss_%d-ica.fif'
                            % (tsss,))
+        ica_out_name = ica_name
     else:
         ica_name = op.join(meg_dir, subject, 'run_concat-ica.fif')
+        ica_out_name = op.join(meg_dir, subject,
+                               'run_concat_highpass-%sHz-ica.fif' % (l_freq,))
     print('  Using ICA')
     ica = read_ica(ica_name)
     ica.exclude = []
@@ -113,27 +118,37 @@ def run_epochs(subject_id, tsss=False):
     n_max_ecg = 3  # use max 3 components
     ecg_epochs = create_ecg_epochs(raw, tmin=-.1, tmax=.1)
     ecg_epochs.apply_baseline((None, None))
-    ecg_epochs.decimate(11, verbose='error')
+    ecg_epochs.decimate(5)
     ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
                                              threshold=0.8)
     print('    Found %d ECG indices' % (len(ecg_inds),))
     ica.exclude.extend(ecg_inds[:n_max_ecg])
 
     n_max_eog = 3  # use max 3 components
-    eog_epochs = create_eog_epochs(raw, tmin=-.1, tmax=.1)
+    eog_epochs = create_eog_epochs(raw, tmin=-.5, tmax=.5)
     eog_epochs.apply_baseline((None, None))
-    eog_epochs.decimate(11, verbose='error')
+    eog_epochs.decimate(5)
     eog_inds, scores_eog = ica.find_bads_eog(eog_epochs)
     print('    Found %d EOG indices' % (len(eog_inds),))
+    for ep, sco, kind in ([(ecg_epochs, scores_ecg, 'ecg'),
+                           (eog_epochs, scores_eog, 'eog')]):
+        if tsss:
+            ep.average().save(op.join(data_path, '%s-tsss_%d-%s-ave.fif'
+                                      % (subject, tsss, kind)))
+            np.save(op.join(data_path, '%s-tsss_%d-%s-scores.npy'
+                            % (subject, tsss, kind)), sco)
+        else:
+            ep.average().save(op.join(data_path, '%s_highpass-%sHz-%s-ave.fif'
+                                      % (subject, l_freq, kind)))
+            np.save(op.join(data_path, '%s_highpass-%sHz-%s-scores.npy'
+                            % (subject, l_freq, kind)), sco)
     ica.exclude.extend(eog_inds[:n_max_eog])
 
-    if l_freq is not None:
-        ica.save(ica_name)
+    ica.save(ica_out_name)
     ica.apply(epochs)
 
     print('  Getting rejection thresholds')
-    reject = get_rejection_threshold(
-        epochs.copy().crop(None, reject_tmax).pick_types(meg=True, eeg=True))
+    reject = get_rejection_threshold(epochs.copy().crop(None, reject_tmax))
     epochs.drop_bad(reject=reject)
     print('  Dropped %0.1f%% of epochs' % (epochs.drop_log_stats(),))
 
@@ -151,5 +166,5 @@ def run_epochs(subject_id, tsss=False):
 # Here we use n_jobs=1 to prevent potential memory problems
 parallel, run_func, _ = parallel_func(run_epochs, n_jobs=1)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-if l_freq is not None:
+if l_freq is None:
     parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

@@ -59,10 +59,10 @@ epochs.plot_drop_log()
 ave_fname = op.join(subject_dir,
                     '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
 evoked = mne.read_evokeds(ave_fname)
+famous_evo, scrambled_evo, unfamiliar_evo, contrast_evo, faces_evo = evoked[:5]
 
 ###############################################################################
 # Faces
-famous_evo, scrambled_evo, unfamiliar_evo, contrast_evo, faces_evo = evoked[:5]
 faces_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
                window_title='Faces %s' % subject)
 
@@ -99,10 +99,51 @@ contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject,
                           show=True)
 
 ###############################################################################
-# ICA
-ica_fname = op.join(subject_dir, 'run_concat-ica.fif')
+# ICA (ECG)
+ica_fname = op.join(subject_dir, 'run_concat_highpass-%sHz-ica.fif'
+                    % (l_freq,))
 ica = mne.preprocessing.read_ica(ica_fname)
-ica.plot_sources(raw_filt, show=True)
+
+ecg_scores = np.load(
+    op.join(subject_dir, '%s_highpass-%sHz-ecg-scores.npy'
+            % (subject, l_freq)))
+ica.plot_scores(ecg_scores, show=False, title='ICA ECG scores')
+ecg_evoked = mne.read_evokeds(
+    op.join(subject_dir, '%s_highpass-%sHz-ecg-ave.fif'
+            % (subject, l_freq)))[0]
+ica.plot_sources(ecg_evoked, title='ECG evoked', show=True)
+
+###############################################################################
+# ICA (EOG)
+eog_scores = np.load(
+    op.join(subject_dir, '%s_highpass-%sHz-eog-scores.npy'
+            % (subject, l_freq)))
+ica.plot_scores(eog_scores, show=False, title='ICA EOG scores')
+eog_evoked = mne.read_evokeds(
+    op.join(subject_dir, '%s_highpass-%sHz-eog-ave.fif'
+            % (subject, l_freq)))[0]
+ica.plot_sources(eog_evoked, title='EOG evoked', show=True)
+
+###############################################################################
+# Covariance :ref:`sphx_glr_auto_scripts_07-make_evoked.py`.
+cov_fname = op.join(subject_dir,
+                    '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
+cov = mne.read_cov(cov_fname)
+mne.viz.plot_cov(cov, faces_evo.info)
+rank_dict = dict(
+    meg=raw_filt.copy().load_data().pick_types(eeg=False).estimate_rank())
+for kind in ('meg', 'eeg'):
+    type_dict = dict(meg=False)
+    type_dict.update({kind: True})
+    fig = faces_evo.copy().apply_baseline().pick_types(
+        **type_dict).plot_white(cov, rank=rank_dict if kind == 'meg' else {})
+    for ax, ylabel in zip(fig.axes, ('Whitened\n%s (AU)' % (kind.upper(),),
+                                     'GFP ($\chi^2$)')):
+        ax.set(ylabel=ylabel)
+    fig.axes[-1].set(title='', ylim=[0, 20])
+    fig.tight_layout()
+    fig.savefig(op.join('..', 'figures', '%s_highpass-%sHz-plot_white_%s.pdf'
+                        % (subject, l_freq, kind)))
 
 ###############################################################################
 # TFR :ref:`sphx_glr_auto_scripts_09-time_frequency.py`.
@@ -128,28 +169,6 @@ fitc.plot(idx, title='Faces ITC %s' % channel, baseline=(-0.1, 0.0),
           mode='logratio', show=False)
 sitc.plot(idx, title='Scrambled ITC %s' % channel, baseline=(-0.1, 0.0),
           mode='logratio')
-
-
-###############################################################################
-# Covariance :ref:`sphx_glr_auto_scripts_07-make_evoked.py`.
-cov_fname = op.join(subject_dir,
-                    '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
-cov = mne.read_cov(cov_fname)
-mne.viz.plot_cov(cov, faces_evo.info)
-rank_dict = dict(
-    meg=raw_filt.copy().load_data().pick_types(eeg=False).estimate_rank())
-for kind in ('meg', 'eeg'):
-    type_dict = dict(meg=False)
-    type_dict.update({kind: True})
-    fig = faces_evo.copy().apply_baseline().pick_types(
-        **type_dict).plot_white(cov, rank=rank_dict if kind == 'meg' else {})
-    for ax, ylabel in zip(fig.axes, ('Whitened\n%s (AU)' % (kind.upper(),),
-                                     'GFP ($\chi^2$)')):
-        ax.set(ylabel=ylabel)
-    fig.axes[-1].set(title='', ylim=[0, 20])
-    fig.tight_layout()
-    fig.savefig(op.join('..', 'figures', '%s_highpass-%sHz-plot_white_%s.pdf'
-                        % (subject, l_freq, kind)))
 
 ###############################################################################
 # Trans

@@ -12,7 +12,10 @@ import mne
 from mne.preprocessing import ICA
 from mne.parallel import parallel_func
 
-from library.config import meg_dir, N_JOBS, l_freq
+from library.config import meg_dir, N_JOBS
+
+# Here we always process with the 1 Hz highpass data (instead of using
+# l_freq) because ICA needs a highpass.
 
 
 def run_ica(subject_id, tsss=None):
@@ -28,18 +31,17 @@ def run_ica(subject_id, tsss=None):
                                 % (run, tsss))
         else:
             run_fname = op.join(data_path, 'run_%02d_filt_sss_highpass-%sHz'
-                                '_raw.fif' % (run, l_freq))
+                                '_raw.fif' % (run, 1))
         raws.append(mne.io.read_raw_fif(run_fname))
     raw = mne.concatenate_raws(raws)
+    # SSS reduces the data rank and the noise levels, so let's include
+    # components based on a higher proportion of variance explained (0.999)
+    # than we would otherwise do for non-Maxwell-filtered raw data (0.98)
+    n_components = 0.999
     if tsss:
-        # SSS reduces the data rank and the noise levels, so let's include
-        # components based on a higher proportion of variance explained (0.999)
-        # than we do for the non-Maxwell-filtered raw data (0.98)
-        n_components = 0.999
         ica_name = op.join(meg_dir, subject,
                            'run_concat-tsss_%d-ica.fif' % tsss)
     else:
-        n_components = 0.98
         ica_name = op.join(meg_dir, subject, 'run_concat-ica.fif')
     # Here we only compute ICA for MEG because we only eliminate ECG artifacts,
     # which are not prevalent in EEG (blink artifacts are, but we will remove

@@ -3,17 +3,21 @@
 Analysis for one subject with tSSS
 ==================================
 
-Show analysis of tSSS data.
+Run the analysis.
 """
 import os.path as op
 import sys
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 import mne
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import study_path, meg_dir, ylim  # noqa: E402
+from library.config import (study_path, meg_dir, ylim,
+                            set_matplotlib_defaults)  # noqa: E402
+
+set_matplotlib_defaults(plt)
 
 ###############################################################################
 # Configuration
@@ -95,9 +99,48 @@ contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject,
                           show=True)
 
 ###############################################################################
+# ICA (ECG)
+ica_fname = op.join(subject_dir, 'run_concat-tsss_%d-ica.fif'
+                    % (st_duration,))
+ica = mne.preprocessing.read_ica(ica_fname)
+
+ecg_scores = np.load(
+    op.join(subject_dir, '%s-tsss_%d-ecg-scores.npy'
+            % (subject, st_duration)))
+ica.plot_scores(ecg_scores, show=False, title='ICA ECG scores')
+ecg_evoked = mne.read_evokeds(
+    op.join(subject_dir, '%s-tsss_%d-ecg-ave.fif'
+            % (subject, st_duration)))[0]
+ica.plot_sources(ecg_evoked, title='ECG evoked', show=True)
+
+###############################################################################
+# ICA (EOG)
+eog_scores = np.load(
+    op.join(subject_dir, '%s-tsss_%d-eog-scores.npy'
+            % (subject, st_duration)))
+ica.plot_scores(eog_scores, show=False, title='ICA EOG scores')
+eog_evoked = mne.read_evokeds(
+    op.join(subject_dir, '%s-tsss_%d-eog-ave.fif'
+            % (subject, st_duration)))[0]
+ica.plot_sources(eog_evoked, title='EOG evoked', show=True)
+
+###############################################################################
 # Covariance :ref:`sphx_glr_auto_scripts_07-make_evoked.py`.
 cov_fname = op.join(subject_dir,
                     '%s-tsss_%d-cov.fif' % (subject, st_duration))
 cov = mne.read_cov(cov_fname)
 mne.viz.plot_cov(cov, faces_evo.info)
-faces_evo.copy().apply_baseline().plot_white(cov)
+rank_dict = dict(
+    meg=raw_filt.copy().load_data().pick_types(eeg=False).estimate_rank())
+for kind in ('meg', 'eeg'):
+    type_dict = dict(meg=False)
+    type_dict.update({kind: True})
+    fig = faces_evo.copy().apply_baseline().pick_types(
+        **type_dict).plot_white(cov, rank=rank_dict if kind == 'meg' else {})
+    for ax, ylabel in zip(fig.axes, ('Whitened\n%s (AU)' % (kind.upper(),),
+                                     'GFP ($\chi^2$)')):
+        ax.set(ylabel=ylabel)
+    fig.axes[-1].set(title='', ylim=[0, 20])
+    fig.tight_layout()
+    fig.savefig(op.join('..', 'figures', '%s-tsss_%d-plot_white_%s.pdf'
+                        % (subject, st_duration, kind)))

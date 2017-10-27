@@ -17,7 +17,7 @@ sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (study_path, meg_dir, ylim, l_freq,
                             set_matplotlib_defaults)  # noqa: E402
 
-set_matplotlib_defaults(plt)
+set_matplotlib_defaults()
 
 ###############################################################################
 # Configuration
@@ -141,6 +141,8 @@ for kind in ('meg', 'eeg'):
                                      'GFP ($\chi^2$)')):
         ax.set(ylabel=ylabel)
     fig.axes[-1].set(title='', ylim=[0, 20])
+    fig.axes[-1].legend(loc='lower center')
+    fig.set_size_inches(3.5, 3, forward=True)
     fig.tight_layout()
     fig.savefig(op.join('..', 'figures', '%s_highpass-%sHz-plot_white_%s.pdf'
                         % (subject, l_freq, kind)))

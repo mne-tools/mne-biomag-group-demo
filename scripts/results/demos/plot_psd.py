@@ -75,8 +75,8 @@ for b in bads:
 ###############################################################################
 # First we show the log scale to spot bad sensors.
 
-fig, axes = plt.subplots(1, 2, figsize=(12, 6))
-set_matplotlib_defaults(plt)
+fig, axes = plt.subplots(1, 2, figsize=(7, 2.25))
+set_matplotlib_defaults()
 ax = axes[0]
 raw.plot_psd(
     average=False, line_alpha=0.6, fmin=0, fmax=350, xscale='log',
@@ -86,7 +86,6 @@ ax.set(xlabel='Frequency (Hz)', title='A')
 for l, c in zip(ax.get_lines(), colors):
     if c == 'r':
         l.set_color(c)
-        l.set_linewidth(2.)
         l.set_zorder(3)
     else:
         l.set_zorder(4)

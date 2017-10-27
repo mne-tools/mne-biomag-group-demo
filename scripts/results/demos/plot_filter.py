@@ -19,7 +19,7 @@ from mne.filter import create_filter
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import set_matplotlib_defaults  # noqa: E402
 
-set_matplotlib_defaults(plt)
+set_matplotlib_defaults()
 
 sfreq = 1100.
 
@@ -53,11 +53,9 @@ def design_filter(filter_type, f_p, fir_design, trans_bandwidth,
 def plot_filter_response(ax, h, xlim, label):
     f, H = freqz(h, worN=32768)
     f *= sfreq / (2 * np.pi)
-    ax.plot(f, 20 * np.log10(np.abs(H)),
-            linewidth=2, zorder=4, label=label)
+    ax.plot(f, 20 * np.log10(np.abs(H)), zorder=4, label=label)
     ax.set(xlim=xlim, ylim=dblim, xlabel='Frequency (Hz)',
            ylabel='Amplitude (dB)')
-    box_off(ax)
 
 
 ###############################################################################
@@ -70,34 +68,22 @@ def plot_impulse_response(ax, h, label, xlim, ylim):
     stop = start + len(h)
     h_plot[start:stop] = h
     t = np.arange(len(h_plot)) / sfreq - dur / 2
-    ax.plot(t, h_plot, linewidth=2, label=label)
+    ax.plot(t, h_plot, label=label)
     ax.set(xlim=xlim, ylim=ylim, xlabel='Time (s)',
            ylabel='Amplitude')
-    ax.legend()
-    box_off(ax)
-
-
-###############################################################################
-# Before we start plotting, let us define a simple function to turn off boxes
-# in a plot. It takes as argument the axis handle ``ax``.
-def box_off(ax):
-    """Helper to beautify plot."""
-    ax.grid(zorder=0)
-    for key in ('top', 'right'):
-        ax.spines[key].set_visible(False)
 
 
 ###############################################################################
 # Now we plot the frequency response and impulse response for the lowpass
 # and highpass filters in MNE versions 0.12 and 0.16.
-fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+fig, axes = plt.subplots(2, 2, figsize=(4.5, 4))
 
 filterlims = dict(highpass=[0, 4.], lowpass=[35, 55])
-dblim = [-80, 10]  # for dB plots
+dblim = [-60, 10]  # for dB plots
 f_ps = [1., 40.]  # corner frequencies (Hz)
 filter_types = ['highpass', 'lowpass']
 xlims = [(-2, 2), (-0.5, 0.5)]
-ylims = [(-0.002, 0.004), (-0.02, 0.08)]
+ylims = [(-0.002, 0.004), (-0.02, 0.04)]
 fig_num = {0: 'a', 1: 'b', 2: 'c', 3: 'd'}
 idx = 0
 
@@ -123,9 +109,12 @@ for ax, f_p, filter_type, xlim, ylim in zip(axes.T, f_ps, filter_types, xlims,
     else:
         gain = [1, 1, min_gain, min_gain]
     ax[0].plot(freq, 20 * np.log10(gain), 'r--', alpha=0.5,
-               linewidth=4, zorder=3, label='Ideal')
-    ax[0].legend()
-    # ax[0].set_title(filter_type + " (cutoff %s Hz)" % f_p)
+               linewidth=2, zorder=3, label='Ideal')
+    if filter_type == 'lowpass':
+        ax[0].legend(loc='lower right')
+    else:
+        ax[0].set(ylabel='')
+        ax[1].set(ylabel='')
 
 for ax, label in zip(axes.ravel(), ['A', 'B', 'C', 'D']):
     ax.set_title(label)

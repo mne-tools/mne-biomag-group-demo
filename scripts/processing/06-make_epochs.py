@@ -116,7 +116,7 @@ def run_epochs(subject_id, tsss=False):
     ica.exclude = []
 
     n_max_ecg = 3  # use max 3 components
-    ecg_epochs = create_ecg_epochs(raw, tmin=-.1, tmax=.1)
+    ecg_epochs = create_ecg_epochs(raw, tmin=-.3, tmax=.3)
     ecg_epochs.apply_baseline((None, None))
     ecg_epochs.decimate(5)
     ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
@@ -124,7 +124,7 @@ def run_epochs(subject_id, tsss=False):
     print('    Found %d ECG indices' % (len(ecg_inds),))
     ica.exclude.extend(ecg_inds[:n_max_ecg])
 
-    n_max_eog = 3  # use max 3 components
+    n_max_eog = 3  # use max 2 components
     eog_epochs = create_eog_epochs(raw, tmin=-.5, tmax=.5)
     eog_epochs.apply_baseline((None, None))
     eog_epochs.decimate(5)

@@ -17,10 +17,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import (study_path, cal, ctc, tmax, l_freq,
+from library.config import (study_path, cal, ctc, l_freq,
                             set_matplotlib_defaults)  # noqa: E402
 
 event_ids = [5, 6, 7]  # Famous faces
+tmax = 0.8  # just show the constant-stimulus period here
 
 subject = "sub001"
 bads = ['MEG1031', 'MEG1111', 'MEG2113']
@@ -90,11 +91,11 @@ evoked_sss_mf = Epochs(raw_sss_mf, events, event_id=event_ids,
 ###############################################################################
 # Plotting
 
-set_matplotlib_defaults(plt)
+set_matplotlib_defaults()
 
 ylim = dict(mag=(-600, 600) if l_freq is None else (-400, 400))
 
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+fig, axes = plt.subplots(1, 3, figsize=(7, 2))
 evoked_before.pick_types(meg='mag').plot(
     axes=axes[0], spatial_colors=True, ylim=ylim, show=False)
 axes[0].set_title('Raw data')
@@ -108,5 +109,8 @@ diff.plot(
     axes=axes[2], spatial_colors=True, ylim=ylim, show=False)
 axes[2].set(title=u'$\mathtt{maxwell\_filter}$ -\nMaxfilter™', ylabel='')
 mne.viz.utils.tight_layout(fig=fig)
+fig.delaxes(fig.axes[3])
+fig.delaxes(fig.axes[3])
+fig.axes[3].collections[0].set(sizes=[3])
 fig.savefig(op.join('..', 'figures', 'Maxfilter.pdf'), bbox_to_inches='tight')
 plt.show()

@@ -9,7 +9,6 @@ import os.path as op
 import sys
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 import mne
 
@@ -17,7 +16,7 @@ sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (study_path, meg_dir, ylim,
                             set_matplotlib_defaults)  # noqa: E402
 
-set_matplotlib_defaults(plt)
+set_matplotlib_defaults()
 
 ###############################################################################
 # Configuration
@@ -59,10 +58,10 @@ epochs.plot_drop_log()
 # Evoked responses :ref:`sphx_glr_auto_scripts_07-make_evoked.py`
 ave_fname = op.join(subject_dir, '%s-tsss_%d-ave.fif' % (subject, st_duration))
 evoked = mne.read_evokeds(ave_fname)
+famous_evo, scrambled_evo, unfamiliar_evo, contrast_evo, faces_evo = evoked[:5]
 
 ###############################################################################
 # Faces
-famous_evo, scrambled_evo, unfamiliar_evo, contrast_evo, faces_evo = evoked[:5]
 faces_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
                window_title='Faces %s' % subject)
 
@@ -141,6 +140,8 @@ for kind in ('meg', 'eeg'):
                                      'GFP ($\chi^2$)')):
         ax.set(ylabel=ylabel)
     fig.axes[-1].set(title='', ylim=[0, 20])
+    fig.axes[-1].legend(loc='lower center')
+    fig.set_size_inches(3.5, 3, forward=True)
     fig.tight_layout()
     fig.savefig(op.join('..', 'figures', '%s-tsss_%d-plot_white_%s.pdf'
                         % (subject, st_duration, kind)))

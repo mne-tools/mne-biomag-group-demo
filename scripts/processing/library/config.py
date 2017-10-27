@@ -75,15 +75,20 @@ cal = os.path.join(os.path.dirname(__file__), 'sss_cal.dat')
 ylim = {'eeg': [-10, 10], 'mag': [-300, 300], 'grad': [-80, 80]}
 
 
-def set_matplotlib_defaults(plt=None, fontsize=17):
-    if plt is None:
-        import matplotlib.pyplot as plt
-    params = {'axes.labelsize': fontsize + 2,
+def set_matplotlib_defaults():
+    import matplotlib.pyplot as plt
+    fontsize = 8
+    params = {'axes.labelsize': fontsize,
               'legend.fontsize': fontsize,
               'xtick.labelsize': fontsize,
               'ytick.labelsize': fontsize,
               'axes.titlesize': fontsize + 2,
-              'figure.max_open_warning': 200}
+              'figure.max_open_warning': 200,
+              'axes.spines.top': False,
+              'axes.spines.right': False,
+              'axes.grid': True,
+              'lines.linewidth': 1,
+              }
     import matplotlib
     if LooseVersion(matplotlib.__version__) >= '2':
         params['font.size'] = fontsize

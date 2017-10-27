@@ -18,7 +18,10 @@ import matplotlib.pyplot as plt
 import mne
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import meg_dir, ylim, l_freq  # noqa: E402
+from library.config import (meg_dir, ylim, l_freq,
+                            set_matplotlib_defaults)  # noqa: E402
+
+set_matplotlib_defaults()
 
 evokeds = list()
 for subject_id in range(1, 20):

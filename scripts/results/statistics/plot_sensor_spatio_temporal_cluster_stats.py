@@ -20,7 +20,8 @@ from mne.stats import permutation_cluster_1samp_test
 from mne.viz import plot_topomap
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import meg_dir, l_freq, exclude_subjects  # noqa: E402
+from library.config import (meg_dir, l_freq, exclude_subjects,
+                            set_matplotlib_defaults)  # noqa: E402
 
 ##############################################################################
 # Read all the data
@@ -76,6 +77,7 @@ print("Good clusters: %s" % good_cluster_inds)
 ##############################################################################
 # Visualize the spatio-temporal clusters
 
+set_matplotlib_defaults()
 times = contrast.times * 1e3
 colors = 'r', 'steelblue'
 linestyles = '-', '--'
@@ -105,9 +107,9 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     mask[ch_inds, :] = True
 
     # initialize figure
-    fig, ax_topo = plt.subplots(1, 1, figsize=(10, 3))
+    fig, ax_topo = plt.subplots(1, 1, figsize=(7, 2.))
     title = 'Cluster #{0} (p = {1:0.3f})'.format(i_clu + 1, p_values[clu_idx])
-    fig.suptitle(title, fontsize=14)
+    fig.suptitle(title, fontsize=10)
 
     # plot average test statistic and mark significant sensors
     image, _ = plot_topomap(T_obs_map, pos, mask=mask, axes=ax_topo,
@@ -121,7 +123,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     # add axes for colorbar
     ax_colorbar = divider.append_axes('right', size='5%', pad=0.05)
     plt.colorbar(image, cax=ax_colorbar, format='%0.1f')
-    ax_topo.set_xlabel('Averaged t-map ({:0.1f} - {:0.1f} ms)'.format(
+    ax_topo.set_xlabel('Averaged t-map\n({:0.1f} - {:0.1f} ms)'.format(
         *sig_times[[0, -1]]
     ))
 

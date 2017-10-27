@@ -49,21 +49,22 @@ for evoked in evokeds:
 # But here we prefer a slightly more involved plotting script to make a
 # publication ready graph.
 
-set_matplotlib_defaults(plt)
+set_matplotlib_defaults()
 
-fig, ax = plt.subplots(1, figsize=(7, 5))
+fig, ax = plt.subplots(1, figsize=(3.3, 2.3))
 scale = 1e6
 ax.plot(evoked.times * 1000, mapping['Scrambled'].data[idx] * scale,
-        'r', linewidth=2, label='Scrambled')
+        'r', label='Scrambled')
 ax.plot(evoked.times * 1000, mapping['Unfamiliar'].data[idx] * scale,
-        'g', linewidth=2, label='Unfamiliar')
+        'g', label='Unfamiliar')
 ax.plot(evoked.times * 1000, mapping['Famous'].data[idx] * scale, 'b',
-        linewidth=2, label='Famous')
+        label='Famous')
 ax.grid(True)
 ax.set(xlim=[-100, 1000 * tmax], xlabel='Time (in ms after stimulus onset)',
        ylim=[-12.5, 5], ylabel=u'Potential difference (μV)')
 ax.axvline(700, ls='--', color='k')
-ax.legend()
+if l_freq == 1:
+    ax.legend(loc='lower right')
 fig.tight_layout()
 fig.savefig(op.join('..', 'figures',
                     'grand_average_highpass-%sHz.pdf' % l_freq))

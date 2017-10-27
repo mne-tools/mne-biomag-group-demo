@@ -79,11 +79,11 @@ T_obs, clusters, cluster_p_values, _ = cluster_stats
 ##############################################################################
 # Visualize results
 
-set_matplotlib_defaults(plt)
+set_matplotlib_defaults()
 
 times = 1e3 * contrast.times
 
-fig, axes = plt.subplots(2, sharex=True)
+fig, axes = plt.subplots(2, sharex=True, figsize=(3.5, 2.5))
 ax = axes[0]
 ax.plot(times, 1e6 * data.mean(axis=0), label="ERP Contrast")
 ax.set(title='Channel : ' + channel, ylabel="EEG (uV)", ylim=[-5, 2.5])
@@ -96,8 +96,7 @@ for i_c, c in enumerate(clusters):
         h1 = ax.axvspan(times[c.start], times[c.stop - 1],
                         color='r', alpha=0.3)
 hf = ax.plot(times, T_obs, 'g')
-ax.legend((h1,), (u'p < %s' % p_thresh,),
-          loc='best', ncol=1, fontsize=14)
+ax.legend((h1,), (u'p < %s' % p_thresh,), loc='upper right', ncol=1)
 ax.set(xlabel="time (ms)", ylabel="T-values",
        ylim=[-10., 10.], xlim=contrast.times[[0, -1]] * 1000)
 fig.tight_layout()

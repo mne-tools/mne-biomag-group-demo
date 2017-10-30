@@ -94,7 +94,7 @@ eog_epochs.decimate(5).apply_baseline((None, None))
 eog_inds, scores_eog = ica.find_bads_eog(eog_epochs)
 print('Found %d EOG component(s)' % (len(eog_inds),))
 ica.exclude += eog_inds[:n_max_eog]
-ica.plot_scores(scores_ecg, exclude=eog_inds, title='EOG scores')
+ica.plot_scores(scores_eog, exclude=eog_inds, title='EOG scores')
 
 ###############################################################################
 # Again look at the impact of these sources on the EOG epochs:

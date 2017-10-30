@@ -62,7 +62,7 @@ ax.plot(evoked.times * 1000, mapping['Famous'].data[idx] * scale, 'b',
 ax.grid(True)
 ax.set(xlim=[-100, 1000 * tmax], xlabel='Time (in ms after stimulus onset)',
        ylim=[-12.5, 5], ylabel=u'Potential difference (μV)')
-ax.axvline(700, ls='--', color='k')
+ax.axvline(800, ls='--', color='k')
 if l_freq == 1:
     ax.legend(loc='lower right')
 fig.tight_layout()

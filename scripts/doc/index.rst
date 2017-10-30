@@ -37,17 +37,19 @@ The aim of this web site is to demonstrate the use of MNE to process the data fr
 The data processed here consists of simultaneous magneto-/electroencephalography (M/EEG) recordings from 19 participants
 performing a simple visual recognition task from presentations of famous, unfamiliar and scrambled faces.
 
-We provide the full scripts to analyse the data, going from the files on `OpenfMRI <https://openfmri.org/>`_, to processed data ready to
+We provide the full scripts to analyse the data, going from the files on OpenfMRI_, to processed data ready to
 make publication quality figures at the single subject and at the group level.
 
 The scripts are provided on `mne-biomag-group-demo github repository <https://github.com/mne-tools/mne-biomag-group-demo/>`_
+
+The original dataset analysis is available `here <https://www.ncbi.nlm.nih.gov/pubmed/25977808>`_.
 
 The code contains the `MNE <http://martinos.org/mne/>`_ contribution to the `Biomag 2016 <http://www.biomag2016.org/>`_ satellite meeting `"How to perform MEG group analysis with free academic software" <http://www.biomag2016.org/satellite_meetings2.php>`_
 
 Abstract (of the satellite meeting)
 -----------------------------------
 
-Free academic toolboxes have gained increasing prominence in MEG analysis as a means to disseminate cutting edge methods, share best practices between different research groups and pool resources for developing essential tools for the MEG community. In the recent years large and vibrant research communities have emerged around several of these toolboxes. Teaching events are regularly held around the world where the basics of each toolbox are explained by its respective developers and experienced power users. There are, however, two knowledge gaps that our BIOMAG satellite symposium aims to address. Firstly, most teaching examples only show analysis of a single ‘typical best’ subject whereas most real MEG studies involve analysis of group data. It is then left to the researchers in the field to figure out for themselves how to make the transition and obtain significant group results. Secondly, we are not familiar with any examples of fully analyzing the same group dataset with different academic toolboxes to assess the degree of agreement in scientific conclusions and compare strengths and weaknesses of various analysis methods and their independent implementations. Our workshop is organised by the lead developers of six most popular free academic MEG toolboxes (in alphabetic order): Brainstorm, EEGLAB, FieldTrip, MNE, NUTMEG, and SPM. Ahead of the workshop the research team for each toolbox will analyze the same group MEG/EEG dataset. This dataset containing evoked responses to face stimuli was acquired by Richard Henson and Daniel Wakeman, who won a special award at BIOMAG2010 to make it freely available to the community. All the raw data are available at https://openfmri.org/dataset/ds000117/.
+Free academic toolboxes have gained increasing prominence in MEG analysis as a means to disseminate cutting edge methods, share best practices between different research groups and pool resources for developing essential tools for the MEG community. In the recent years large and vibrant research communities have emerged around several of these toolboxes. Teaching events are regularly held around the world where the basics of each toolbox are explained by its respective developers and experienced power users. There are, however, two knowledge gaps that our BIOMAG satellite symposium aims to address. Firstly, most teaching examples only show analysis of a single ‘typical best’ subject whereas most real MEG studies involve analysis of group data. It is then left to the researchers in the field to figure out for themselves how to make the transition and obtain significant group results. Secondly, we are not familiar with any examples of fully analyzing the same group dataset with different academic toolboxes to assess the degree of agreement in scientific conclusions and compare strengths and weaknesses of various analysis methods and their independent implementations. Our workshop is organised by the lead developers of six most popular free academic MEG toolboxes (in alphabetic order): Brainstorm, EEGLAB, FieldTrip, MNE, NUTMEG, and SPM. Ahead of the workshop the research team for each toolbox will analyze the same group MEG/EEG dataset. This dataset containing evoked responses to face stimuli was acquired by Richard Henson and Daniel Wakeman, who won a special award at BIOMAG2010 to make it freely available to the community. All the raw data are available on OpenFMRI_.
 
 Detailed instructions for each toolbox will be made available online including analysis scripts and figures of results. All analyses will show a full pipeline from the raw data to detailed publication quality results. Researchers who are interested in using the respective toolbox will then be able to reproduce the analysis in their lab and port it to their own data.
 
@@ -107,3 +109,5 @@ Take a look at our scripts and results
 .. raw:: html
 
    </div>
+
+.. _OpenFMRI: https://openfmri.org/dataset/ds000117/

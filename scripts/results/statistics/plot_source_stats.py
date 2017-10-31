@@ -19,7 +19,7 @@ from mne.stats import (spatio_temporal_cluster_1samp_test,
 
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (meg_dir, subjects_dir, fsaverage_vertices,
-                            exclude_subjects, N_JOBS)  # noqa: E402
+                            exclude_subjects, N_JOBS, l_freq)  # noqa: E402
 
 faces = list()
 scrambled = list()
@@ -30,11 +30,13 @@ for subject_id in range(1, 20):
     print("processing subject: %s" % subject)
     data_path = op.join(meg_dir, subject)
     stc = mne.read_source_estimate(
-        op.join(data_path, 'mne_dSPM_inverse_morph-faces_eq'))
-    faces.append(stc.crop(0., None).magnitude().data.T)
+        op.join(data_path, 'mne_dSPM_inverse_morph_highpass-%sHz-faces_eq'
+                % (l_freq,)))
+    faces.append(stc.magnitude().crop(None, 0.8).data.T)
     stc = mne.read_source_estimate(
-        op.join(data_path, 'mne_dSPM_inverse_morph-scrambled_eq'))
-    scrambled.append(stc.crop(0., None).magnitude().data.T)
+        op.join(data_path, 'mne_dSPM_inverse_morph_highpass-%sHz-scrambled_eq'
+                % (l_freq,)))
+    scrambled.append(stc.magnitude().crop(None, 0.8).data.T)
     tstep = stc.tstep
 
 ###############################################################################
@@ -70,10 +72,11 @@ for ind in good_cluster_inds:
 
 stc_all_cluster_vis = summarize_clusters_stc(
     clu, tstep=tstep, vertices=fsaverage_vertices, subject='fsaverage')
-
+pos_lims = [0, 0.1, 100 if l_freq is None else 30]
 brain = stc_all_cluster_vis.plot(
     hemi='both', subjects_dir=subjects_dir,
     time_label='Duration significant (ms)', views='ven',
-    clim=dict(pos_lims=[0, 0.1, 40], kind='value'), size=(1000, 1000),
+    clim=dict(pos_lims=pos_lims, kind='value'), size=(1000, 1000),
     background='white', foreground='black')
-brain.save_image(op.join('..', 'figures', 'source_stats.png'))
+brain.save_image(op.join('..', 'figures', 'source_stats_highpass-%sHz.png'
+                         % (l_freq,)))

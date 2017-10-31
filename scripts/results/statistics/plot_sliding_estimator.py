@@ -25,7 +25,8 @@ from scipy.io import loadmat
 from scipy.stats import sem
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import meg_dir  # noqa: E402
+from library.config import (meg_dir, l_freq,
+                            set_matplotlib_defaults)  # noqa: E402
 
 ###############################################################################
 # Now we loop over subjects to load the scores
@@ -37,8 +38,8 @@ for subject_id in range(1, 20):
 
     # Load the scores for the subject
     for a_vs_b in a_vs_bs:
-        fname_td = os.path.join(data_path, '%s-td-auc-%s.mat'
-                                % (subject, a_vs_b))
+        fname_td = os.path.join(data_path, '%s_highpass-%sHz-td-auc-%s.mat'
+                                % (subject, l_freq, a_vs_b))
         mat = loadmat(fname_td)
         scores[a_vs_b].append(mat['scores'][0])
 
@@ -52,29 +53,30 @@ for a_vs_b in a_vs_bs:
 
 ###############################################################################
 # Let's plot the mean AUC score across subjects
-from library.config import set_matplotlib_defaults  # noqa
-set_matplotlib_defaults(plt)
+set_matplotlib_defaults()
 colors = ['b', 'g']
-fig, ax = plt.subplots(1, figsize=(12, 8))
+fig, ax = plt.subplots(1, figsize=(3.5, 2.5))
 for c, a_vs_b in zip(colors, a_vs_bs):
     ax.plot(times, mean_scores[a_vs_b], c, label=a_vs_b.replace('_', ' '))
     ax.set(xlabel='Time (s)', ylabel='Area under curve (AUC)')
     ax.fill_between(times, mean_scores[a_vs_b] - sem_scores[a_vs_b],
                     mean_scores[a_vs_b] + sem_scores[a_vs_b],
-                    color=c, alpha=0.2)
+                    color=c, alpha=0.33, edgecolor='none')
 ax.axhline(0.5, color='k', linestyle='--', label='Chance level')
 ax.axvline(0.0, color='k', linestyle='--')
 ax.legend()
 fig.tight_layout()
-fig.savefig(op.join('..', 'figures', 'time_decoding.pdf'),
-            bbox_to_inches='tight')
+fig.savefig(op.join('..', 'figures', 'time_decoding_highpass-%sHz.pdf'
+                    % (l_freq,)), bbox_to_inches='tight')
 plt.show()
 
 ###############################################################################
 # It seems that `'famous'` vs `'unfamiliar'` gives much noisier time course of
 # decoding scores than `'faces'` vs `'scrambled'`. To verify that this is not
 # due to bad subjects:
-fig, axes = plt.subplots(4, 5, sharex=True, sharey=True, figsize=(12, 8))
+
+fig, axes = plt.subplots(4, 5, sharex=True, sharey=True,
+                         figsize=(7, 7))
 axes = axes.ravel()
 for idx in range(19):
     axes[idx].axhline(0.5, color='k', linestyle='--', label='Chance level')
@@ -84,9 +86,9 @@ for idx in range(19):
         axes[idx].set_title('sub%03d' % (idx + 1))
 
 axes[-1].axis('off')
-axes[-2].legend(bbox_to_anchor=(2.35, 0.5), loc='center right', fontsize=12)
-fig.text(0.5, 0, 'Time (s)', ha='center', fontsize=16)
+axes[-2].legend(bbox_to_anchor=(2.2, 0.75), loc='center right')
+fig.text(0.5, 0.02, 'Time (s)', ha='center', fontsize=16)
 fig.text(0.01, 0.5, 'Area under curve (AUC)', va='center',
          rotation='vertical', fontsize=16)
-plt.subplots_adjust(bottom=0.06, left=0.06, right=0.98, top=0.95)
+fig.subplots_adjust(bottom=0.1, left=0.1, right=0.98, top=0.95)
 plt.show()

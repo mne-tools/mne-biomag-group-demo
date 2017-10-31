@@ -47,8 +47,9 @@ def run_time_decoding(subject_id, condition1, condition2):
                                     epochs[condition2]])
     epochs.apply_baseline()
 
-    # Let us restrict ourselves to the MEG channels
-    epochs.pick_types(meg=True)
+    # Let us restrict ourselves to the MEG channels, and also decimate to
+    # make it faster (although we might miss some detail / alias)
+    epochs.pick_types(meg=True).decimate(4, verbose='error')
 
     # Get the data and labels
     X = epochs.get_data()
@@ -65,8 +66,8 @@ def run_time_decoding(subject_id, condition1, condition2):
     # let's save the scores now
     a_vs_b = '%s_vs_%s' % (os.path.basename(condition1),
                            os.path.basename(condition2))
-    fname_td = os.path.join(data_path, '%s-td-auc-%s.mat'
-                            % (subject, a_vs_b))
+    fname_td = os.path.join(data_path, '%s_highpass-%sHz-td-auc-%s.mat'
+                            % (subject, l_freq, a_vs_b))
     savemat(fname_td, {'scores': scores, 'times': epochs.times})
 
 

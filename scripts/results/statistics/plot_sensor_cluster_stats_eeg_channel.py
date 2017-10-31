@@ -36,8 +36,8 @@ for subject_id in range(1, 20):
     contrast = mne.read_evokeds(op.join(data_path, '%s_highpass-%sHz-ave.fif'
                                         % (subject, l_freq)),
                                 condition='contrast')
+    contrast.apply_baseline((-0.2, 0.0)).crop(None, 0.8)
     contrast.pick_types(meg=False, eeg=True)
-    contrast.apply_baseline((-0.2, 0.0))
     contrasts.append(contrast)
 
 contrast = mne.combine_evoked(contrasts, 'equal')
@@ -58,7 +58,7 @@ n_permutations = 1000  # number of permutations to run
 p_initial = 0.001
 
 # set family-wise p-value
-p_thresh = 0.05
+p_thresh = 0.01
 
 connectivity = None
 tail = 0.  # for two sided test
@@ -79,11 +79,11 @@ T_obs, clusters, cluster_p_values, _ = cluster_stats
 ##############################################################################
 # Visualize results
 
-set_matplotlib_defaults(plt)
+set_matplotlib_defaults()
 
 times = 1e3 * contrast.times
 
-fig, axes = plt.subplots(2, sharex=True)
+fig, axes = plt.subplots(2, sharex=True, figsize=(3.5, 2.5))
 ax = axes[0]
 ax.plot(times, 1e6 * data.mean(axis=0), label="ERP Contrast")
 ax.set(title='Channel : ' + channel, ylabel="EEG (uV)", ylim=[-5, 2.5])
@@ -96,10 +96,10 @@ for i_c, c in enumerate(clusters):
         h1 = ax.axvspan(times[c.start], times[c.stop - 1],
                         color='r', alpha=0.3)
 hf = ax.plot(times, T_obs, 'g')
-ax.legend((h1,), (u'p < %s' % p_thresh,),
-          loc='best', ncol=1, fontsize=14)
+ax.legend((h1,), (u'p < %s' % p_thresh,), loc='upper right', ncol=1)
 ax.set(xlabel="time (ms)", ylabel="T-values",
-       ylim=[-10., 10.], xlim=[-200, 800])
+       ylim=[-10., 10.], xlim=contrast.times[[0, -1]] * 1000)
 fig.tight_layout()
-fig.savefig(op.join('..', 'figures', 'sensorstat.pdf'), bbox_to_inches='tight')
+fig.savefig(op.join('..', 'figures', 'sensorstat_highpass-%sHz.pdf'
+                    % (l_freq,)), bbox_to_inches='tight')
 plt.show()

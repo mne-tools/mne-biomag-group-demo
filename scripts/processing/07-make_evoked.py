@@ -63,4 +63,5 @@ def run_evoked(subject_id, tsss=False):
 
 parallel, run_func, _ = parallel_func(run_evoked, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
-parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data
+if l_freq is None:
+    parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

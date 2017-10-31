@@ -12,7 +12,7 @@ import mne
 
 from library.config import meg_dir, l_freq, exclude_subjects
 
-all_evokeds = [[], [], [], [], []]  # Container for all the categories
+all_evokeds = [list() for _ in range(7)]  # Container for all the categories
 
 for run in range(1, 20):
     if run in exclude_subjects:
@@ -24,6 +24,7 @@ for run in range(1, 20):
     evokeds = mne.read_evokeds(
         op.join(meg_dir, subject, '%s_highpass-%sHz-ave.fif'
                 % (subject, l_freq)))
+    assert len(evokeds) == len(all_evokeds)
     for idx, evoked in enumerate(evokeds):
         all_evokeds[idx].append(evoked)  # Insert to the container
 

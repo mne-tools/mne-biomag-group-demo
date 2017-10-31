@@ -180,10 +180,11 @@ bem = mne.read_bem_surfaces(op.join(subjects_dir, subject, 'bem',
                                     '%s-5120-bem.fif' % subject))
 src = mne.read_source_spaces(
     op.join(subjects_dir, subject, 'bem', '%s-oct6-src.fif' % subject))
-aln = mne.viz.plot_alignment(raw.info, fname_trans, subject=subject,
-                             subjects_dir=subjects_dir, bem=bem, src=src,
-                             surfaces='inner_skull', coord_frame='meg')
-fig, axes = plt.subplots(1, 3, figsize=(10, 3), facecolor='k')
+aln = mne.viz.plot_alignment(
+    raw.info, fname_trans, subject=subject, subjects_dir=subjects_dir, src=src,
+    surfaces=['outer_skin', 'inner_skull'], dig=True, coord_frame='meg')
+aln.scene.parallel_projection = True
+fig, axes = plt.subplots(1, 3, figsize=(6.5, 2.5), facecolor='k')
 from mayavi import mlab  # noqa: E402
 for ai, angle in enumerate((180, 90, 0)):
     mlab.view(angle, 90, focalpoint=(0., 0., 0.), distance=0.6)

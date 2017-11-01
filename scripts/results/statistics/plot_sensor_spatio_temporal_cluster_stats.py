@@ -20,7 +20,7 @@ from mne.stats import permutation_cluster_1samp_test
 from mne.viz import plot_topomap
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import (meg_dir, l_freq, exclude_subjects,
+from library.config import (meg_dir, l_freq, exclude_subjects, annot_kwargs,
                             set_matplotlib_defaults)  # noqa: E402
 
 ##############################################################################
@@ -108,8 +108,6 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
 
     # initialize figure
     fig, ax_topo = plt.subplots(1, 1, figsize=(7, 2.))
-    title = 'Cluster #{0} (p = {1:0.3f})'.format(i_clu + 1, p_values[clu_idx])
-    fig.suptitle(title, fontsize=10)
 
     # plot average test statistic and mark significant sensors
     image, _ = plot_topomap(T_obs_map, pos, mask=mask, axes=ax_topo,
@@ -126,6 +124,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     ax_topo.set_xlabel('Averaged t-map\n({:0.1f} - {:0.1f} ms)'.format(
         *sig_times[[0, -1]]
     ))
+    ax_topo.annotate(chr(65 + 2 * i_clu), (0.1, 1.1), **annot_kwargs)
 
     # add new axis for time courses and plot time courses
     ax_signals = divider.append_axes('right', size='300%', pad=1.2)
@@ -145,10 +144,12 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     ax_signals.fill_betweenx((ymin, ymax), sig_times[0], sig_times[-1],
                              color='orange', alpha=0.3)
     ax_signals.legend(loc='lower right')
-    ax_signals.set_ylim(ymin, ymax)
+    title = 'Cluster #{0} (p = {1:0.3f})'.format(i_clu + 1, p_values[clu_idx])
+    ax_signals.set(ylim=[ymin, ymax], title=title)
+    ax_signals.annotate(chr(65 + 2 * i_clu + 1), (-0.125, 1.1), **annot_kwargs)
 
     # clean up viz
-    mne.viz.tight_layout(fig=fig)
+    fig.tight_layout(fig=fig, pad=0.5, w_pad=0)
     fig.subplots_adjust(bottom=.05)
     plt.savefig(op.join('..', 'figures',
                         'spatiotemporal_stats_cluster_highpass-%sHz-%02d.pdf'

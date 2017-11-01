@@ -10,7 +10,6 @@ import os
 import os.path as op
 import sys
 
-import numpy as np
 import matplotlib.pyplot as plt
 
 import mne
@@ -18,7 +17,8 @@ from mne import Epochs
 
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (study_path, meg_dir, tmin, tmax, l_freq,
-                            set_matplotlib_defaults)  # noqa: E402
+                            set_matplotlib_defaults,
+                            annot_kwargs)  # noqa: E402
 
 subject = "sub003"
 event_ids = [5, 6, 7]  # Famous faces
@@ -54,20 +54,24 @@ if not op.isdir('figures'):
     os.mkdir('figures')
 
 
-def adjust_fig(fig, include_cbar=False):
-    fig.set_size_inches(2.5, 2.0, forward=True)
+def adjust_fig(fig, label, title, include_cbar=False):
+    fig.set_size_inches(2.0, 2.0, forward=True)
     plt.subplots_adjust(left=.18, right=.99, bottom=.18,
                         top=1.2)
     fig.delaxes(fig.axes[1])
     for ax in fig.axes[1:-1]:
-        ax.set(title=ax.get_title().split()[0])
+        ax.set(xticks=[0])
+        ax.set(xticklabels=[ax.get_title().split()[0]], title='')
+        ax.tick_params(length=0)
     fig.axes[-1].set_position([0.1, 0.73, 0.025, 0.2])
     if not include_cbar:
-        fig.axes[0].get_yaxis().set_label_coords(-0.15, 0.5)
         fig.delaxes(fig.axes[-1])
+    fig.axes[0].get_yaxis().set_label_coords(-0.15, 0.5)
     for li in range(len(times)):
         fig.lines[li] = mne.viz.evoked._connection_line(
             times[li] * 1000, fig, fig.axes[0], fig.axes[li + 1])
+    fig.axes[0].annotate(label, (-0.135, 1.35), **annot_kwargs)
+    fig.axes[2].set(title=title)
 
 
 ###############################################################################
@@ -84,7 +88,7 @@ evoked = Epochs(raw, events, event_id=event_ids,
 ica.apply(evoked)
 evoked.pick_types(meg='mag')
 fig = evoked.plot_joint(**kwargs)
-adjust_fig(fig, include_cbar=True)
+adjust_fig(fig, 'A', 'No highpass', include_cbar=True)
 fig.savefig(op.join('..', 'figures', 'FanningA.pdf'), bbox_to_inches='tight')
 
 ###############################################################################
@@ -98,7 +102,7 @@ evoked = Epochs(raw, events, event_id=event_ids,
 ica.apply(evoked)
 evoked.pick_types(meg='mag')
 fig = evoked.plot_joint(**kwargs)
-adjust_fig(fig)
+adjust_fig(fig, 'B', '1 Hz highpass')
 fig.savefig(op.join('..', 'figures', 'FanningB.pdf'), bbox_to_inches='tight')
 
 ###############################################################################
@@ -113,5 +117,5 @@ evoked = Epochs(raw, events, event_id=event_ids,
 ica.apply(evoked)
 evoked.pick_types(meg='mag')
 fig = evoked.plot_joint(**kwargs)
-adjust_fig(fig)
+adjust_fig(fig, 'C', 'tSSS')
 fig.savefig(op.join('..', 'figures', 'FanningC.pdf'), bbox_to_inches='tight')

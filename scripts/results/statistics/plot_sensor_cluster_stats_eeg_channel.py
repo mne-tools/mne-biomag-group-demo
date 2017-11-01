@@ -20,7 +20,7 @@ from mne.stats import permutation_cluster_1samp_test
 
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (meg_dir, l_freq, N_JOBS, set_matplotlib_defaults,
-                            exclude_subjects)  # noqa: E402
+                            exclude_subjects, annot_kwargs)  # noqa: E402
 
 ##############################################################################
 # Read all the data
@@ -88,6 +88,7 @@ ax = axes[0]
 ax.plot(times, 1e6 * data.mean(axis=0), label="ERP Contrast")
 ax.set(title='Channel : ' + channel, ylabel="EEG (uV)", ylim=[-5, 2.5])
 ax.legend()
+ax.annotate('A', (-0.16, 1.15), **annot_kwargs)
 
 ax = axes[1]
 for i_c, c in enumerate(clusters):
@@ -99,7 +100,7 @@ hf = ax.plot(times, T_obs, 'g')
 ax.legend((h1,), (u'p < %s' % p_thresh,), loc='upper right', ncol=1)
 ax.set(xlabel="time (ms)", ylabel="T-values",
        ylim=[-10., 10.], xlim=contrast.times[[0, -1]] * 1000)
-fig.tight_layout()
+fig.tight_layout(pad=0.5)
 fig.savefig(op.join('..', 'figures', 'sensorstat_highpass-%sHz.pdf'
                     % (l_freq,)), bbox_to_inches='tight')
 plt.show()

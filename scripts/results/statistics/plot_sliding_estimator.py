@@ -25,7 +25,7 @@ from scipy.io import loadmat
 from scipy.stats import sem
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import (meg_dir, l_freq,
+from library.config import (meg_dir, l_freq, annot_kwargs,
                             set_matplotlib_defaults)  # noqa: E402
 
 ###############################################################################
@@ -65,7 +65,8 @@ for c, a_vs_b in zip(colors, a_vs_bs):
 ax.axhline(0.5, color='k', linestyle='--', label='Chance level')
 ax.axvline(0.0, color='k', linestyle='--')
 ax.legend()
-fig.tight_layout()
+ax.annotate('B', (-0.15, 1), **annot_kwargs)
+fig.tight_layout(pad=0.5)
 fig.savefig(op.join('..', 'figures', 'time_decoding_highpass-%sHz.pdf'
                     % (l_freq,)), bbox_to_inches='tight')
 plt.show()

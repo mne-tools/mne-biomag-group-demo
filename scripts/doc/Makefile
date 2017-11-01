@@ -228,7 +228,6 @@ install:
 	# -b gh-pages fetches only the branch for the gh-pages
 	git clone -b gh-pages --single-branch --no-checkout --depth 1 https://github.com/mne-tools/mne-biomag-group-demo _build/mne-biomag-group-demo.github.io
 	touch _build/mne-biomag-group-demo.github.io/.nojekyll
-	make html
 	cd _build/ && \
 	cp -r html/* mne-biomag-group-demo.github.io && \
 	cd mne-biomag-group-demo.github.io && \
@@ -241,7 +240,6 @@ install-pr:
 	rm -rf _build/doctrees _build/mne-biomag-group-demo.github.io
 	git clone -b gh-pages --single-branch --no-checkout --depth 1 https://github.com/jasmainak/mne-biomag-group-demo _build/mne-biomag-group-demo.github.io
 	touch _build/mne-biomag-group-demo.github.io/.nojekyll
-	make html
 	cd _build/ && \
 	cp -r html/* mne-biomag-group-demo.github.io && \
 	cd mne-biomag-group-demo.github.io && \

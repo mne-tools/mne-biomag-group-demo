@@ -17,7 +17,7 @@ import mne
 
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (meg_dir, subjects_dir, set_matplotlib_defaults,
-                            l_freq, tmax)  # noqa: E402
+                            l_freq, tmax, annot_kwargs)  # noqa: E402
 
 evokeds = mne.read_evokeds(op.join(meg_dir,
                            'grand_average_highpass-%sHz-ave.fif' % l_freq))[:3]
@@ -65,7 +65,8 @@ ax.set(xlim=[-100, 1000 * tmax], xlabel='Time (in ms after stimulus onset)',
 ax.axvline(800, ls='--', color='k')
 if l_freq == 1:
     ax.legend(loc='lower right')
-fig.tight_layout()
+ax.annotate('A' if l_freq is None else 'B', (-0.2, 1), **annot_kwargs)
+fig.tight_layout(pad=0.5)
 fig.savefig(op.join('..', 'figures',
                     'grand_average_highpass-%sHz.pdf' % l_freq))
 plt.show()

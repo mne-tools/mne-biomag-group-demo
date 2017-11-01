@@ -97,6 +97,8 @@ def set_matplotlib_defaults():
     plt.rcParams.update(params)
 
 
+annot_kwargs = dict(fontsize=12, fontweight='bold',
+                    xycoords="axes fraction", ha='right', va='center')
 l_freq = None
 
 tmin = -0.2

@@ -23,7 +23,7 @@ archive_dir = os.path.join(os.getcwd(), 'archive')
 if not os.path.isdir(archive_dir):
     os.mkdir(archive_dir)
 
-os.systsem('http://openfmri.s3.amazonaws.com/tarballs/ds117_R0.1.1_metadata.tgz')  # noqa: E501
+os.system('http://openfmri.s3.amazonaws.com/tarballs/ds117_R0.1.1_metadata.tgz')  # noqa: E501
 os.system('tar xvzf ds117_R0.1.1_metadata.tgz')
 os.system('mkdir metadata')
 os.chdir(os.path.join(study_path, 'ds117', 'ds117'))

@@ -83,7 +83,7 @@ set_matplotlib_defaults()
 
 times = 1e3 * contrast.times
 
-fig, axes = plt.subplots(2, sharex=True, figsize=(3.5, 2.5))
+fig, axes = plt.subplots(2, sharex=True, figsize=(3.3, 2.5))
 ax = axes[0]
 ax.plot(times, 1e6 * data.mean(axis=0), label="ERP Contrast")
 ax.set(title='Channel : ' + channel, ylabel="EEG (uV)", ylim=[-5, 2.5])

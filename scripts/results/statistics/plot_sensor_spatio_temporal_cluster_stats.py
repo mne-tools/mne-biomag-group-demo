@@ -149,7 +149,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     ax_signals.annotate(chr(65 + 2 * i_clu + 1), (-0.125, 1.1), **annot_kwargs)
 
     # clean up viz
-    fig.tight_layout(fig=fig, pad=0.5, w_pad=0)
+    fig.tight_layout(pad=0.5, w_pad=0)
     fig.subplots_adjust(bottom=.05)
     plt.savefig(op.join('..', 'figures',
                         'spatiotemporal_stats_cluster_highpass-%sHz-%02d.pdf'

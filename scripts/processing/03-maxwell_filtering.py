@@ -29,9 +29,6 @@ import mne
 
 from library.config import study_path, meg_dir, N_JOBS, cal, ctc, l_freq
 
-if not op.exists(meg_dir):
-    os.mkdir(meg_dir)
-
 
 def run_maxwell_filter(subject_id):
     subject = "sub%03d" % subject_id
@@ -111,8 +108,6 @@ def run_maxwell_filter(subject_id):
                 origin=origin, destination=destination, head_pos=head_pos)
 
             raw_out = sss_fname_out % (run, st_duration)
-            if not op.exists(op.join(meg_dir, subject)):
-                os.mkdir(op.join(meg_dir, subject))
 
             # Here we only low-pass MEG (assuming MaxFilter has high-passed
             # the data already), but we still need to band-pass EEG:

@@ -17,8 +17,10 @@ fetch-recon:
 	$(PYTHON) 01-run_anatomy.py
 
 preproc:
-	@sed -i -E "s/.*l_freq = .*/l_freq = ${LFREQ}/" library/config.py
 	$(PYTHON) 02-extract_events.py
+	@sed -i -E "s/.*l_freq = .*/l_freq = 1/" library/config.py
+	$(PYTHON) 04-python_filtering.py
+	@sed -i -E "s/.*l_freq = .*/l_freq = ${LFREQ}/" library/config.py
 	$(PYTHON) 04-python_filtering.py
 	$(PYTHON) 05-run_ica.py
 	$(PYTHON) 06-make_epochs.py

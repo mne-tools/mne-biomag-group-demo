@@ -7,6 +7,7 @@ ICA decomposition using fastICA.
 """
 
 import os.path as op
+from warnings import warn
 
 import mne
 from mne.preprocessing import ICA
@@ -32,6 +33,10 @@ def run_ica(subject_id, tsss=None):
         else:
             run_fname = op.join(data_path, 'run_%02d_filt_sss_highpass-%sHz'
                                 '_raw.fif' % (run, 1))
+        if not op.exists(run_fname):
+            warn('Could not find file %s. '
+                 'Skipping run %s for subject %s.' % (run_fname, run, subject))
+            continue
         raws.append(mne.io.read_raw_fif(run_fname))
     raw = mne.concatenate_raws(raws)
     # SSS reduces the data rank and the noise levels, so let's include

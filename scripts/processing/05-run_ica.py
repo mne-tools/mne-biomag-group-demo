@@ -63,6 +63,6 @@ def run_ica(subject_id, tsss=None):
 
 
 # Memory footprint: around n_jobs * 4 GB
-parallel, run_func, _ = parallel_func(run_ica, n_jobs=2)
+parallel, run_func, _ = parallel_func(run_ica, n_jobs=1)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
 parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from mne.filter import create_filter
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import set_matplotlib_defaults  # noqa: E402
+from library.config import set_matplotlib_defaults, annot_kwargs  # noqa: E402
 
 set_matplotlib_defaults()
 
@@ -110,15 +110,17 @@ for ax, f_p, filter_type, xlim, ylim in zip(axes.T, f_ps, filter_types, xlims,
         gain = [1, 1, min_gain, min_gain]
     ax[0].plot(freq, 20 * np.log10(gain), 'r--', alpha=0.5,
                linewidth=2, zorder=3, label='Ideal')
-    if filter_type == 'lowpass':
+    if filter_type == 'highpass':
         ax[0].legend(loc='lower right')
     else:
         ax[0].set(ylabel='')
         ax[1].set(ylabel='')
+    ax[0].set(title='%d Hz %s' % (f_p, filter_type))
 
-for ax, label in zip(axes.ravel(), ['A', 'B', 'C', 'D']):
-    ax.set_title(label)
+for ii, (ax, label) in enumerate(zip(axes.ravel(), ['A', 'B', 'C', 'D'])):
+    xy = (-0.3, 1) if ii % 2 else (-0.4, 1)
+    ax.annotate(label, xy=xy, **annot_kwargs)
 
-plt.tight_layout()
+fig.tight_layout(pad=0.5, w_pad=2.0, h_pad=0.1)
 plt.show()
 plt.savefig(op.join('..', 'figures', 'filters.pdf'), bbox_to_inches='tight')

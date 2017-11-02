@@ -25,7 +25,7 @@ from scipy.io import loadmat
 from scipy.stats import sem
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import (meg_dir, l_freq,
+from library.config import (meg_dir, l_freq, annot_kwargs, tmax,
                             set_matplotlib_defaults)  # noqa: E402
 
 ###############################################################################
@@ -55,7 +55,7 @@ for a_vs_b in a_vs_bs:
 # Let's plot the mean AUC score across subjects
 set_matplotlib_defaults()
 colors = ['b', 'g']
-fig, ax = plt.subplots(1, figsize=(3.5, 2.5))
+fig, ax = plt.subplots(1, figsize=(3.3, 2.5))
 for c, a_vs_b in zip(colors, a_vs_bs):
     ax.plot(times, mean_scores[a_vs_b], c, label=a_vs_b.replace('_', ' '))
     ax.set(xlabel='Time (s)', ylabel='Area under curve (AUC)')
@@ -65,7 +65,9 @@ for c, a_vs_b in zip(colors, a_vs_bs):
 ax.axhline(0.5, color='k', linestyle='--', label='Chance level')
 ax.axvline(0.0, color='k', linestyle='--')
 ax.legend()
-fig.tight_layout()
+ax.set(xlim=[-0.2, tmax])
+ax.annotate('B', (-0.15, 1), **annot_kwargs)
+fig.tight_layout(pad=0.5)
 fig.savefig(op.join('..', 'figures', 'time_decoding_highpass-%sHz.pdf'
                     % (l_freq,)), bbox_to_inches='tight')
 plt.show()

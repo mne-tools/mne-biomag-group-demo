@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import (study_path, cal, ctc, l_freq,
+from library.config import (study_path, cal, ctc, l_freq, annot_kwargs,
                             set_matplotlib_defaults)  # noqa: E402
 
 event_ids = [5, 6, 7]  # Famous faces
@@ -111,6 +111,9 @@ axes[2].set(title=u'$\mathtt{maxwell\_filter}$ -\nMaxfilter™', ylabel='')
 mne.viz.utils.tight_layout(fig=fig)
 fig.delaxes(fig.axes[3])
 fig.delaxes(fig.axes[3])
+for ai, (ax, label) in enumerate(zip(axes[:3], 'ABC')):
+    ax.annotate(label, (-0.25 if ai == 0 else -0.15, 1.2), **annot_kwargs)
+fig.tight_layout(pad=0.5)
 fig.axes[3].collections[0].set(sizes=[3])
 fig.savefig(op.join('..', 'figures', 'Maxfilter.pdf'), bbox_to_inches='tight')
 plt.show()

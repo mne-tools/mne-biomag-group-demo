@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import mne
 
 sys.path.append(op.join('..', '..', 'processing'))
-from library.config import (study_path, map_subjects,
+from library.config import (study_path, map_subjects, annot_kwargs,
                             set_matplotlib_defaults)  # noqa: E402
 
 ###############################################################################
@@ -81,7 +81,7 @@ ax = axes[0]
 raw.plot_psd(
     average=False, line_alpha=0.6, fmin=0, fmax=350, xscale='log',
     spatial_colors=False, show=False, ax=[ax])
-ax.set(xlabel='Frequency (Hz)', title='A')
+ax.set(xlabel='Frequency (Hz)', title='')
 
 for l, c in zip(ax.get_lines(), colors):
     if c == 'r':
@@ -96,9 +96,12 @@ ax = axes[1]
 raw.plot_psd(
     average=False, line_alpha=0.6, n_fft=2048, n_overlap=1024, fmin=0,
     fmax=350, xscale='linear', spatial_colors=False, show=False, ax=[ax])
-ax.set(xlabel='Frequency (Hz)', ylabel='', title='B')
+ax.set(xlabel='Frequency (Hz)', ylabel='', title='')
 ax.axvline(50., linestyle='--', alpha=0.25, linewidth=2)
 ax.axvline(50., linestyle='--', alpha=0.25, linewidth=2)
+
+for ai, (ax, label) in enumerate(zip(axes, 'AB')):
+    ax.annotate(label, (-0.15 if ai == 0 else -0.1, 1), **annot_kwargs)
 
 # HPI coils
 for freq in [293., 307., 314., 321., 328.]:

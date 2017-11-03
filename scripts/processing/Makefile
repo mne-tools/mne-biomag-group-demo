@@ -2,15 +2,11 @@ PYTHON = python
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
-	@echo "  demos          to build maxwell filtering demo"
 	@echo "  fetch-recon   to fetch the data and run anatomy scripts"
 	@echo "  preproc        to run all scripts after anatomy. LFREQ must be set for highpass cutoff"
 	@echo "  preproc-log   to send the output through tee also to a logfile"
 	@echo "  profile        to profile memory consumption"
-	@echo "  all        to build demos, fetch data, run anatomy scripts and all the processing scripts with no highpass"
-
-demos:
-	$(PYTHON) 03-maxwell_filtering.py
+	@echo "  all        to build fetch data, run anatomy scripts and all the processing scripts with no highpass"
 
 fetch-recon:
 	$(PYTHON) 00-fetch_data.py
@@ -18,6 +14,7 @@ fetch-recon:
 
 preproc:
 	$(PYTHON) 02-extract_events.py
+	$(PYTHON) 03-maxwell_filtering.py
 	@sed -i -E "s/.*l_freq = .*/l_freq = 1/" library/config.py
 	$(PYTHON) 04-python_filtering.py
 	@sed -i -E "s/.*l_freq = .*/l_freq = ${LFREQ}/" library/config.py
@@ -66,5 +63,4 @@ profile:
 
 all:
 	$(MAKE) fetch-recon
-	$(MAKE) demos
 	@LFREQ="None" $(MAKE) preproc

@@ -99,7 +99,7 @@ def run_epochs(subject_id, tsss=False):
     print('  Epoching')
     epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
                         picks=picks, baseline=baseline, preload=False,
-                        decim=4, reject=None, reject_tmax=reject_tmax)
+                        decim=5, reject=None, reject_tmax=reject_tmax)
     print('  Interpolating bad channels')
 
     # ICA
@@ -116,10 +116,14 @@ def run_epochs(subject_id, tsss=False):
     ica.exclude = []
 
     filter_label = '-tsss_%d' % tsss if tsss else '_highpass-%sHz' % l_freq
+    ecg_epochs = create_ecg_epochs(raw, tmin=-.3, tmax=.3, preload=False)
+    eog_epochs = create_eog_epochs(raw, tmin=-.5, tmax=.5, preload=False)
+    del raw
+
     n_max_ecg = 3  # use max 3 components
-    ecg_epochs = create_ecg_epochs(raw, tmin=-.3, tmax=.3)
-    ecg_epochs.apply_baseline((None, None))
     ecg_epochs.decimate(5)
+    ecg_epochs.load_data()
+    ecg_epochs.apply_baseline((None, None))
     ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
                                              threshold=0.8)
     print('    Found %d ECG indices' % (len(ecg_inds),))
@@ -131,9 +135,9 @@ def run_epochs(subject_id, tsss=False):
     del ecg_epochs
 
     n_max_eog = 3  # use max 2 components
-    eog_epochs = create_eog_epochs(raw, tmin=-.5, tmax=.5)
-    eog_epochs.apply_baseline((None, None))
     eog_epochs.decimate(5)
+    eog_epochs.load_data()
+    eog_epochs.apply_baseline((None, None))
     eog_inds, scores_eog = ica.find_bads_eog(eog_epochs)
     print('    Found %d EOG indices' % (len(eog_inds),))
     ica.exclude.extend(eog_inds[:n_max_eog])
@@ -144,7 +148,6 @@ def run_epochs(subject_id, tsss=False):
     del eog_epochs
 
     ica.save(ica_out_name)
-    del raw
     epochs.load_data()
     ica.apply(epochs)
 

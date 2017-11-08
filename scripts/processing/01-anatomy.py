@@ -74,7 +74,7 @@ def process_subject_anat(subject_id, force_recon_all=False):
             shutil.copy(f_src, f_dst)
 
     # Fix the headers for subject 19
-    if not op.isfile(op.join(dst_flash, "mef05_0.nii.gz")):
+    if subject_id == 19:
         print('  Fixing FLASH files for %s' % (subject,))
         fnames = (['mef05_%d.mgz' % x for x in range(7)] +
                   ['mef30_%d.mgz' % x for x in range(7)])

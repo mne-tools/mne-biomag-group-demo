@@ -238,7 +238,7 @@ install:
 
 install-pr-user:
 	rm -rf _build/mne-biomag-group-demo.github.io
-	git clone -b gh-pages --single-branch --no-checkout --depth 1 git@github.com:/$(USER)/mne-biomag-group-demo _build/mne-biomag-group-demo.github.io
+	git clone -b gh-pages --single-branch --no-checkout --depth 1 https://github.com:/$(USER)/mne-biomag-group-demo _build/mne-biomag-group-demo.github.io
 	touch _build/mne-biomag-group-demo.github.io/.nojekyll
 	cd _build/ && \
 	cp -r html/* mne-biomag-group-demo.github.io && \

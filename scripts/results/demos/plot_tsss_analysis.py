@@ -44,7 +44,7 @@ raw_filt.plot_psd(n_fft=8192, average=False, xscale='log')
 ###############################################################################
 # Events :ref:`sphx_glr_auto_scripts_02-extract_events.py`.
 # Epochs :ref:`sphx_glr_auto_scripts_06-make_epochs.py`.
-eve_fname = op.join(subject_dir, 'run_01_filt_sss-eve.fif')
+eve_fname = op.join(subject_dir, 'run_01-eve.fif')
 epo_fname = op.join(subject_dir, '%s-tsss_%d-epo.fif' % (subject, st_duration))
 
 events = mne.read_events(eve_fname)

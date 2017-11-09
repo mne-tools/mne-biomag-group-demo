@@ -10,7 +10,7 @@ help:
 
 fetch-recon:
 	$(PYTHON) 00-fetch_data.py
-	$(PYTHON) 01-run_anatomy.py
+	$(PYTHON) 01-anatomy.py
 
 preproc:
 	$(PYTHON) 02-extract_events.py

@@ -56,9 +56,12 @@ def run_epochs(subject_id, tsss=False):
 
     data_path = op.join(meg_dir, subject)
 
-    # Get all bad channels
-    mapping = map_subjects[subject_id]  # map to correct subject
-    all_bads = list()
+    # map to correct subject for bad channels
+    mapping = map_subjects[subject_id]
+
+    raw_list = list()
+    events_list = list()
+    print("  Loading raw data")
     for run in range(1, 7):
         bads = list()
         bad_name = op.join('bads', mapping, 'run_%02d_raw_tr.fif_bad' % run)
@@ -66,12 +69,7 @@ def run_epochs(subject_id, tsss=False):
             with open(bad_name) as f:
                 for line in f:
                     bads.append(line.strip())
-        all_bads += [bad for bad in bads if bad not in all_bads]
 
-    raw_list = list()
-    events_list = list()
-    print("  Loading raw data")
-    for run in range(1, 7):
         if tsss:
             run_fname = op.join(data_path, 'run_%02d_filt_tsss_%d_raw.fif'
                                 % (run, tsss))
@@ -79,17 +77,20 @@ def run_epochs(subject_id, tsss=False):
             run_fname = op.join(data_path, 'run_%02d_filt_sss_'
                                 'highpass-%sHz_raw.fif' % (run, l_freq))
 
-        raw = mne.io.read_raw_fif(run_fname)
+        raw = mne.io.read_raw_fif(run_fname, preload=True)
 
         delay = int(round(0.0345 * raw.info['sfreq']))
         events = mne.read_events(op.join(data_path, 'run_%02d-eve.fif' % run))
         events[:, 0] = events[:, 0] + delay
         events_list.append(events)
 
-        raw.info['bads'] = all_bads
+        raw.info['bads'] = bads
+        raw.interpolate_bads()
         raw_list.append(raw)
+
     raw, events = mne.concatenate_raws(raw_list, events_list=events_list)
     raw.set_eeg_reference(projection=True)
+    del raw_list
 
     picks = mne.pick_types(raw.info, meg=True, eeg=True, stim=True,
                            eog=True, exclude=())
@@ -97,10 +98,9 @@ def run_epochs(subject_id, tsss=False):
     # Epoch the data
     print('  Epoching')
     epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
-                        picks=picks, baseline=baseline, preload=True,
+                        picks=picks, baseline=baseline, preload=False,
                         decim=5, reject=None, reject_tmax=reject_tmax)
     print('  Interpolating bad channels')
-    epochs.interpolate_bads()
 
     # ICA
     if tsss:
@@ -115,36 +115,40 @@ def run_epochs(subject_id, tsss=False):
     ica = read_ica(ica_name)
     ica.exclude = []
 
+    filter_label = '-tsss_%d' % tsss if tsss else '_highpass-%sHz' % l_freq
+    ecg_epochs = create_ecg_epochs(raw, tmin=-.3, tmax=.3, preload=False)
+    eog_epochs = create_eog_epochs(raw, tmin=-.5, tmax=.5, preload=False)
+    del raw
+
     n_max_ecg = 3  # use max 3 components
-    ecg_epochs = create_ecg_epochs(raw, tmin=-.3, tmax=.3)
-    ecg_epochs.apply_baseline((None, None))
     ecg_epochs.decimate(5)
+    ecg_epochs.load_data()
+    ecg_epochs.apply_baseline((None, None))
     ecg_inds, scores_ecg = ica.find_bads_ecg(ecg_epochs, method='ctps',
                                              threshold=0.8)
     print('    Found %d ECG indices' % (len(ecg_inds),))
     ica.exclude.extend(ecg_inds[:n_max_ecg])
+    ecg_epochs.average().save(op.join(data_path, '%s%s-ecg-ave.fif'
+                                      % (subject, filter_label)))
+    np.save(op.join(data_path, '%s%s-ecg-scores.npy'
+                    % (subject, filter_label)), scores_ecg)
+    del ecg_epochs
 
     n_max_eog = 3  # use max 2 components
-    eog_epochs = create_eog_epochs(raw, tmin=-.5, tmax=.5)
-    eog_epochs.apply_baseline((None, None))
     eog_epochs.decimate(5)
+    eog_epochs.load_data()
+    eog_epochs.apply_baseline((None, None))
     eog_inds, scores_eog = ica.find_bads_eog(eog_epochs)
     print('    Found %d EOG indices' % (len(eog_inds),))
-    for ep, sco, kind in ([(ecg_epochs, scores_ecg, 'ecg'),
-                           (eog_epochs, scores_eog, 'eog')]):
-        if tsss:
-            ep.average().save(op.join(data_path, '%s-tsss_%d-%s-ave.fif'
-                                      % (subject, tsss, kind)))
-            np.save(op.join(data_path, '%s-tsss_%d-%s-scores.npy'
-                            % (subject, tsss, kind)), sco)
-        else:
-            ep.average().save(op.join(data_path, '%s_highpass-%sHz-%s-ave.fif'
-                                      % (subject, l_freq, kind)))
-            np.save(op.join(data_path, '%s_highpass-%sHz-%s-scores.npy'
-                            % (subject, l_freq, kind)), sco)
     ica.exclude.extend(eog_inds[:n_max_eog])
+    eog_epochs.average().save(op.join(data_path, '%s%s-eog-ave.fif'
+                                      % (subject, filter_label)))
+    np.save(op.join(data_path, '%s%s-eog-scores.npy'
+                    % (subject, filter_label)), scores_eog)
+    del eog_epochs
 
     ica.save(ica_out_name)
+    epochs.load_data()
     ica.apply(epochs)
 
     print('  Getting rejection thresholds')

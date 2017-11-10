@@ -13,13 +13,12 @@ directory.
 
 import os
 import os.path as op
-from warnings import warn
 
 import mne
 from mne import pick_types
 from mne.parallel import parallel_func
 
-from library.config import study_path, meg_dir, N_JOBS, l_freq
+from library.config import study_path, meg_dir, l_freq
 
 
 if not op.exists(meg_dir):
@@ -35,14 +34,7 @@ def run_filter(subject_id):
                            'run_%02d_sss.fif')
     for run in range(1, 7):
         raw_in = raw_fname_in % run
-        try:
-            raw = mne.io.read_raw_fif(raw_in, preload=True, verbose='error')
-        except AttributeError:
-            # Some files on openfmri are corrupted and cannot be read.
-            warn('Could not read file %s. '
-                 'Skipping run %s from subject %s.' % (raw_in, run, subject))
-            continue
-
+        raw = mne.io.read_raw_fif(raw_in, preload=True, verbose='error')
         raw.set_channel_types({'EEG061': 'eog',
                                'EEG062': 'eog',
                                'EEG063': 'ecg',
@@ -69,5 +61,5 @@ def run_filter(subject_id):
         raw.save(raw_out, overwrite=True)
 
 
-parallel, run_func, _ = parallel_func(run_filter, n_jobs=N_JOBS)
+parallel, run_func, _ = parallel_func(run_filter, n_jobs=1)
 parallel(run_func(subject_id) for subject_id in range(1, 20))

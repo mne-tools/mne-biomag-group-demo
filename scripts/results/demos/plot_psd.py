@@ -82,6 +82,11 @@ raw.plot_psd(
     average=False, line_alpha=0.6, fmin=0, fmax=350, xscale='log',
     spatial_colors=False, show=False, ax=[ax])
 ax.set(xlabel='Frequency (Hz)', title='')
+# A little hack fix for matplotlib bug on some systems
+for text in fig.axes[0].texts:
+    pos = text.get_position()
+    if pos[0] <= 0:
+        text.set_position([0.1, pos[1]])
 
 for l, c in zip(ax.get_lines(), colors):
     if c == 'r':

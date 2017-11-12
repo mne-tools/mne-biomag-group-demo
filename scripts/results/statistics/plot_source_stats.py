@@ -15,7 +15,8 @@ from scipy import stats
 import mne
 from mne import spatial_src_connectivity
 from mne.stats import (spatio_temporal_cluster_1samp_test,
-                       summarize_clusters_stc, ttest_1samp_no_p)
+                       summarize_clusters_stc, ttest_1samp_no_p,
+                       random_state)
 
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (meg_dir, subjects_dir, fsaverage_vertices,
@@ -60,8 +61,8 @@ stat_fun = partial(ttest_1samp_no_p, sigma=1e-3)
 T_obs, clusters, cluster_p_values, H0 = clu = \
     spatio_temporal_cluster_1samp_test(
         X, connectivity=connectivity, n_jobs=N_JOBS, threshold=t_threshold,
-        stat_fun=stat_fun, buffer_size=None, seed=0, step_down_p=0.05,
-        verbose=True)
+        stat_fun=stat_fun, buffer_size=None, seed=random_state,
+        step_down_p=0.05, verbose=True)
 
 good_cluster_inds = np.where(cluster_p_values < 0.05)[0]
 for ind in good_cluster_inds:

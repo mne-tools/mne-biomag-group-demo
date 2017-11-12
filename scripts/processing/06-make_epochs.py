@@ -25,7 +25,7 @@ from mne.preprocessing import create_ecg_epochs, create_eog_epochs, read_ica
 from autoreject import get_rejection_threshold
 
 from library.config import (meg_dir, map_subjects, l_freq, tmin, tmax,
-                            reject_tmax)
+                            reject_tmax, random_state)
 
 ###############################################################################
 # We define the events and the onset and offset of the epochs
@@ -152,7 +152,8 @@ def run_epochs(subject_id, tsss=False):
     ica.apply(epochs)
 
     print('  Getting rejection thresholds')
-    reject = get_rejection_threshold(epochs.copy().crop(None, reject_tmax))
+    reject = get_rejection_threshold(epochs.copy().crop(None, reject_tmax),
+                                     random_state=random_state)
     epochs.drop_bad(reject=reject)
     print('  Dropped %0.1f%% of epochs' % (epochs.drop_log_stats(),))
 

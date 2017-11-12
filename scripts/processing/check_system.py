@@ -6,6 +6,11 @@ try:
 except:
     raise ValueError('mne is not installed.')
 
+try:
+    import nibabel  # noqa
+except:
+    raise ValueError('nibabel is not installed.')
+
 mne.sys_info()
 
 FREESURFER_HOME = os.environ.get("FREESURFER_HOME", None)

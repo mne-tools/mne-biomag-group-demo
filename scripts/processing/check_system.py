@@ -11,6 +11,16 @@ try:
 except:
     raise ValueError('nibabel is not installed.')
 
+try:
+    import autoreject  # noqa
+except:
+    raise ValueError('autoreject is not installed.')
+
+try:
+    import sklearn  # noqa
+except:
+    raise ValueError('sklearn is not installed.')
+
 mne.sys_info()
 
 FREESURFER_HOME = os.environ.get("FREESURFER_HOME", None)

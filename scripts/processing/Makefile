@@ -8,6 +8,9 @@ help:
 	@echo "  profile        to profile memory consumption"
 	@echo "  all        to build fetch data, run anatomy scripts and all the processing scripts with no highpass"
 
+check:
+	$(PYTHON) check_system.py
+
 fetch-recon:
 	$(PYTHON) 00-fetch_data.py
 	$(PYTHON) 01-anatomy.py

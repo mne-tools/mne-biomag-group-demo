@@ -7,6 +7,35 @@ The code contains the [MNE](http://martinos.org/mne/) contribution to the [Bioma
 
 Results of our analysis is presented [here](http://mne-tools.github.io/mne-biomag-group-demo/)
 
+Run analysis
+------------
+
+To replicate our results go to the scripts/processing folder then do::
+
+   $ make check
+
+If should check that your system is properly configured. It tests that you have
+mne installed as well as freesurfer. It also recommends you set the
+OMP_NUM_THREADS environment variable. This limits the number CPUs used by
+linear algebra routines.
+
+If you don't get any error you can do::
+
+   $ make all
+
+This will fetch the data from openfmri, then run freesurfer on all subjects
+and then do the analysis with MNE. You may want to edit the file
+`scripts/processing/library/config.py` to specify the number of subjects
+you can to run in parallel.
+
+Once this is done, you can go in the folder `scripts/doc` where you can
+type::
+
+   $ make html
+
+This will build the website with all the results. To build the website
+you need sphinx_gallery
+
 Authors
 -------
 

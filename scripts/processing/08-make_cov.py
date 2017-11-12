@@ -11,7 +11,8 @@ import os.path as op
 import mne
 from mne.parallel import parallel_func
 
-from library.config import meg_dir, N_JOBS, l_freq
+from library.config import meg_dir, N_JOBS, l_freq, random_state
+from sklearn.model_selection import ShuffleSplit
 
 
 def run_covariance(subject_id, tsss=False):
@@ -30,7 +31,8 @@ def run_covariance(subject_id, tsss=False):
                             % (subject, l_freq))
     print('  Computing regularized covariance')
     epochs = mne.read_epochs(fname_epo, preload=True)
-    cov = mne.compute_covariance(epochs, tmax=0, method='shrunk')
+    cv = ShuffleSplit(3, random_state=random_state)
+    cov = mne.compute_covariance(epochs, tmax=0, method='shrunk', cv=cv)
     cov.save(fname_cov)
 
 

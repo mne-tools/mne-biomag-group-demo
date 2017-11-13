@@ -1,3 +1,10 @@
+"""
+=====
+Clean
+=====
+
+Auxiliary file for Make
+"""
 import shutil
 import os
 import os.path as op

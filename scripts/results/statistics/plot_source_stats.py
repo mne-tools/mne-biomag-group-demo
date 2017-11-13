@@ -15,12 +15,11 @@ from scipy import stats
 import mne
 from mne import spatial_src_connectivity
 from mne.stats import (spatio_temporal_cluster_1samp_test,
-                       summarize_clusters_stc, ttest_1samp_no_p,
-                       random_state)
+                       summarize_clusters_stc, ttest_1samp_no_p)
 
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (meg_dir, subjects_dir, fsaverage_vertices,
-                            exclude_subjects, N_JOBS, l_freq)  # noqa: E402
+                            exclude_subjects, N_JOBS, l_freq, random_state)  # noqa: E402
 
 faces = list()
 scrambled = list()

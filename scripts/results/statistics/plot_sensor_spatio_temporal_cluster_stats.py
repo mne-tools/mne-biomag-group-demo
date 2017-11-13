@@ -21,7 +21,7 @@ from mne.viz import plot_topomap
 
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (meg_dir, l_freq, exclude_subjects, annot_kwargs,
-                            set_matplotlib_defaults)  # noqa: E402
+                            set_matplotlib_defaults, random_state)  # noqa: E402
 
 ##############################################################################
 # Read all the data
@@ -67,7 +67,7 @@ data = np.transpose(data, (0, 2, 1))  # transpose for clustering
 cluster_stats = permutation_cluster_1samp_test(
     data, threshold=threshold, n_jobs=2, verbose=True, tail=1,
     connectivity=connectivity, out_type='indices',
-    check_disjoint=True, step_down_p=0.05)
+    check_disjoint=True, step_down_p=0.05, seed=random_state)
 
 T_obs, clusters, p_values, _ = cluster_stats
 good_cluster_inds = np.where(p_values < 0.05)[0]

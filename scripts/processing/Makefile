@@ -11,8 +11,13 @@ help:
 check:
 	$(PYTHON) check_system.py
 
-fetch-recon:
+clean:
+	rm -rf ../../ds119
+
+fetch:
 	$(PYTHON) 00-fetch_data.py
+
+recon:
 	$(PYTHON) 01-anatomy.py
 
 preproc:
@@ -69,5 +74,6 @@ profile:
 	mprof plot -o group_average_source
 
 all:
-	$(MAKE) fetch-recon
+	$(MAKE) fetch
+	$(MAKE) recon
 	@LFREQ="None" $(MAKE) preproc

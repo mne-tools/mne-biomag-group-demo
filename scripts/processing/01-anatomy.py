@@ -138,10 +138,18 @@ parallel, run_func, _ = parallel_func(process_subject_anat, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
 
 # now we do something special for fsaverage
-fsaverage_src = op.join(subjects_dir, 'fsaverage', 'bem')
-if not op.isdir(fsaverage_src):
-    os.mkdir(fsaverage_src)
-fsaverage_src = op.join(fsaverage_src, 'fsaverage-5-src.fif')
+fsaverage_src_dir = op.join(os.environ['FREESURFER_HOME'], 'subjects', 'fsaverage')
+fsaverage_dst_dir = op.join(subjects_dir, 'fsaverage')
+
+print('Copying fsaverage into subjects directory')  # to allow writting in folder
+os.unlink(fsaverage_dst_dir)  # remove symlink
+shutil.copytree(fsaverage_src_dir, fsaverage_dst_dir)
+
+fsaverage_bem = op.join(fsaverage_dst_dir, 'bem')
+if not op.isdir(fsaverage_bem):
+    os.mkdir(fsaverage_bem)
+
+fsaverage_src = op.join(fsaverage_bem, 'fsaverage-5-src.fif')
 if not op.isfile(fsaverage_src):
     print('Setting up source space for fsaverage')
     src = mne.setup_source_space('fsaverage', 'ico5',

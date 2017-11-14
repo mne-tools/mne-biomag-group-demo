@@ -32,6 +32,7 @@ from library.config import study_path, subjects_dir, N_JOBS, spacing
 
 
 def tee_output(command, log_file):
+    print('Running :\n%s' % " ".join(command))
     with open(log_file, 'wb') as fid:
         proc = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

@@ -2,7 +2,8 @@ PYTHON = python
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
-	@echo "  fetch-recon   to fetch the data and run anatomy scripts"
+	@echo "  fetch         to fetch the data"
+	@echo "  recon         to run anatomy scripts"
 	@echo "  preproc        to run all scripts after anatomy. LFREQ must be set for highpass cutoff"
 	@echo "  preproc-log   to send the output through tee also to a logfile"
 	@echo "  profile        to profile memory consumption"
@@ -11,8 +12,10 @@ help:
 check:
 	$(PYTHON) check_system.py
 
-fetch-recon:
+fetch:
 	$(PYTHON) 00-fetch_data.py
+
+recon:
 	$(PYTHON) 01-anatomy.py
 
 preproc:
@@ -69,5 +72,6 @@ profile:
 	mprof plot -o group_average_source
 
 all:
-	$(MAKE) fetch-recon
+	$(MAKE) fetch
+	$(MAKE) recon
 	@LFREQ="None" $(MAKE) preproc

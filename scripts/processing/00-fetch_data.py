@@ -12,6 +12,8 @@ from library.config import study_path, subjects_dir, meg_dir
 
 pwd = os.getcwd()
 
+print("study_path : %s" % study_path)
+
 if not os.path.exists(study_path):
     os.mkdir(study_path)
 
@@ -43,10 +45,11 @@ for i in range(1, 20):
     url = "http://openfmri.s3.amazonaws.com/tarballs/" + fname
     if os.path.isdir(subject):
         continue
-    os.system('wget %s' % url)
+    if not os.path.exists(fname):
+        os.system('wget %s' % url)
     os.system('tar xvzf %s' % fname)
-    os.system('mv ds117/$subject .')
-    os.system('mv $fname archive/')
+    os.system('mv ds117/%s .' % subject)
+    os.system('mv %s archive/' % fname)
     os.system('rmdir ds117')
     if not op.exists(op.join(meg_dir, subject)):
         os.mkdir(op.join(meg_dir, subject))

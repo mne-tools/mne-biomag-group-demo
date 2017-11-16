@@ -31,7 +31,7 @@ def run_covariance(subject_id, tsss=False):
                             % (subject, l_freq))
     print('  Computing regularized covariance')
     epochs = mne.read_epochs(fname_epo, preload=True)
-    cv = KFold(3, random_state=random_state)
+    cv = KFold(3, random_state=random_state)  # make sure cv is deterministic
     cov = mne.compute_covariance(epochs, tmax=0, method='shrunk', cv=cv)
     cov.save(fname_cov)
 

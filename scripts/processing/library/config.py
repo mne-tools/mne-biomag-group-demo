@@ -104,6 +104,7 @@ l_freq = None
 tmin = -0.2
 tmax = 2.9  # min duration between onsets: (400 fix + 800 stim + 1700 ISI) ms
 reject_tmax = 0.8  # duration we really care about
+random_state = 42
 
 smooth = 10
 

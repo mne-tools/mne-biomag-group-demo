@@ -27,7 +27,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LogisticRegression
 
-from library.config import meg_dir, l_freq, N_JOBS
+from library.config import meg_dir, l_freq, N_JOBS, random_state
 
 ###############################################################################
 # Then we write a function to do time decoding on one subject
@@ -59,9 +59,11 @@ def run_time_decoding(subject_id, condition1, condition2):
 
     # Use AUC because chance level is same regardless of the class balance
     se = SlidingEstimator(
-        make_pipeline(StandardScaler(), LogisticRegression()),
+        make_pipeline(StandardScaler(),
+                      LogisticRegression(random_state=random_state)),
         scoring='roc_auc', n_jobs=N_JOBS)
-    scores = cross_val_multiscore(se, X=X, y=y, cv=StratifiedKFold())
+    cv = StratifiedKFold(random_state=random_state)
+    scores = cross_val_multiscore(se, X=X, y=y, cv=cv)
 
     # let's save the scores now
     a_vs_b = '%s_vs_%s' % (os.path.basename(condition1),

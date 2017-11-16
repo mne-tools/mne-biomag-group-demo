@@ -20,7 +20,7 @@ from mne.stats import permutation_cluster_1samp_test
 
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (meg_dir, l_freq, N_JOBS, set_matplotlib_defaults,
-                            exclude_subjects, annot_kwargs)  # noqa: E402
+                            exclude_subjects, annot_kwargs, random_state)  # noqa: E402
 
 ##############################################################################
 # Read all the data
@@ -72,7 +72,7 @@ if np.sign(tail) < 0:
 cluster_stats = permutation_cluster_1samp_test(
     data, threshold=threshold, n_jobs=N_JOBS, verbose=True, tail=tail,
     step_down_p=0.05, connectivity=connectivity,
-    n_permutations=n_permutations)
+    n_permutations=n_permutations, seed=random_state)
 
 T_obs, clusters, cluster_p_values, _ = cluster_stats
 

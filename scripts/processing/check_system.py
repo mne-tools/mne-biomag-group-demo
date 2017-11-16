@@ -1,3 +1,10 @@
+"""
+==================
+Check dependencies
+==================
+
+Check if dependencies are present
+"""
 import os
 import warnings
 

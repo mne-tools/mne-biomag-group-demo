@@ -19,7 +19,7 @@ from mne.stats import (spatio_temporal_cluster_1samp_test,
 
 sys.path.append(op.join('..', '..', 'processing'))
 from library.config import (meg_dir, subjects_dir, fsaverage_vertices,
-                            exclude_subjects, N_JOBS, l_freq)  # noqa: E402
+                            exclude_subjects, N_JOBS, l_freq, random_state)  # noqa: E402
 
 faces = list()
 scrambled = list()
@@ -60,8 +60,8 @@ stat_fun = partial(ttest_1samp_no_p, sigma=1e-3)
 T_obs, clusters, cluster_p_values, H0 = clu = \
     spatio_temporal_cluster_1samp_test(
         X, connectivity=connectivity, n_jobs=N_JOBS, threshold=t_threshold,
-        stat_fun=stat_fun, buffer_size=None, seed=0, step_down_p=0.05,
-        verbose=True)
+        stat_fun=stat_fun, buffer_size=None, seed=random_state,
+        step_down_p=0.05, verbose=True)
 
 good_cluster_inds = np.where(cluster_p_values < 0.05)[0]
 for ind in good_cluster_inds:

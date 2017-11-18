@@ -46,6 +46,7 @@ help:
 	@echo "  pseudoxml  to make pseudoxml-XML files for display purposes"
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
+
 clean:
 	rm -rf $(BUILDDIR)/*
 	rm -rf auto_examples/
@@ -56,6 +57,7 @@ clean:
 	rm -rf modules/generated/*
 
 html-pre:
+	@mkdir -p ../results/figures
 	@mkdir -p auto_scripts
 	cp index_scripts.rst auto_scripts/index_scripts.rst
 

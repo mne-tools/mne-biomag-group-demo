@@ -19,7 +19,7 @@ if user == 'gramfort':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
     N_JOBS = 8
 elif user == 'mjas':
-    study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
+    study_path = '/tsi/doctorants/data_gramfort/dgw_faces_reproduce'
     N_JOBS = 4
 elif user == 'jleppakangas':
     study_path = '/tsi/doctorants/data_gramfort/dgw_faces'
@@ -55,6 +55,10 @@ map_subjects = {1: 'subject_01', 2: 'subject_02', 3: 'subject_03',
                 13: 'subject_16', 14: 'subject_17', 15: 'subject_18',
                 16: 'subject_19', 17: 'subject_23', 18: 'subject_24',
                 19: 'subject_25'}
+
+
+if not os.path.isdir(study_path):
+    os.mkdir(study_path)
 
 if not os.path.isdir(subjects_dir):
     os.mkdir(subjects_dir)

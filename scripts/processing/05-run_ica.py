@@ -12,7 +12,7 @@ import mne
 from mne.preprocessing import ICA
 from mne.parallel import parallel_func
 
-from library.config import meg_dir, random_state
+from library.config import meg_dir, random_state, N_JOBS
 
 # Here we always process with the 1 Hz highpass data (instead of using
 # l_freq) because ICA needs a highpass.
@@ -58,6 +58,6 @@ def run_ica(subject_id, tsss=None):
 
 
 # Memory footprint: around n_jobs * 4 GB
-parallel, run_func, _ = parallel_func(run_ica, n_jobs=1)
+parallel, run_func, _ = parallel_func(run_ica, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
 parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

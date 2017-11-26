@@ -18,7 +18,7 @@ import mne
 from mne import pick_types
 from mne.parallel import parallel_func
 
-from library.config import study_path, meg_dir, l_freq
+from library.config import study_path, meg_dir, l_freq, N_JOBS
 
 
 if not op.exists(meg_dir):
@@ -61,5 +61,5 @@ def run_filter(subject_id):
         raw.save(raw_out, overwrite=True)
 
 
-parallel, run_func, _ = parallel_func(run_filter, n_jobs=1)
+parallel, run_func, _ = parallel_func(run_filter, n_jobs=N_JOBS)
 parallel(run_func(subject_id) for subject_id in range(1, 20))

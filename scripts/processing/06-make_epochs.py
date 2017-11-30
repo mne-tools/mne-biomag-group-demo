@@ -25,7 +25,7 @@ from mne.preprocessing import create_ecg_epochs, create_eog_epochs, read_ica
 from autoreject import get_rejection_threshold
 
 from library.config import (meg_dir, map_subjects, l_freq, tmin, tmax,
-                            reject_tmax, random_state, N_JOBS)
+                            reject_tmax, random_state)
 
 ###############################################################################
 # We define the events and the onset and offset of the epochs

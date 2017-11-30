@@ -169,7 +169,7 @@ def run_epochs(subject_id, tsss=False):
 # Let us make the script parallel across subjects
 
 # Here we use n_jobs=1 to prevent potential memory problems
-parallel, run_func, _ = parallel_func(run_epochs, n_jobs=N_JOBS)
+parallel, run_func, _ = parallel_func(run_epochs, n_jobs=1)
 parallel(run_func(subject_id) for subject_id in range(1, 20))
 if l_freq is None:
     parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

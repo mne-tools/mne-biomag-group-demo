@@ -11,6 +11,7 @@ import sys
 
 import numpy as np
 from scipy import stats
+from mayavi import mlab
 
 import mne
 from mne import spatial_src_connectivity
@@ -73,6 +74,7 @@ for ind in good_cluster_inds:
 stc_all_cluster_vis = summarize_clusters_stc(
     clu, tstep=tstep, vertices=fsaverage_vertices, subject='fsaverage')
 pos_lims = [0, 0.1, 100 if l_freq is None else 30]
+mlab.view(90, 180, roll=180, focalpoint=(0., 15., 0.), distance=500)
 brain = stc_all_cluster_vis.plot(
     hemi='both', subjects_dir=subjects_dir,
     time_label='Duration significant (ms)', views='ven',

@@ -25,7 +25,7 @@ from mne.preprocessing import create_ecg_epochs, create_eog_epochs, read_ica
 from autoreject import get_rejection_threshold
 
 from library.config import (meg_dir, map_subjects, l_freq, tmin, tmax,
-                            reject_tmax, random_state)
+                            reject_tmax, random_state, N_JOBS)
 
 ###############################################################################
 # We define the events and the onset and offset of the epochs
@@ -168,8 +168,8 @@ def run_epochs(subject_id, tsss=False):
 ###############################################################################
 # Let us make the script parallel across subjects
 
-# Here we use n_jobs=1 to prevent potential memory problems
-parallel, run_func, _ = parallel_func(run_epochs, n_jobs=1)
+# Here we use fewer N_JOBS to prevent potential memory problems
+parallel, run_func, _ = parallel_func(run_epochs, n_jobs=max(N_JOBS // 4, 1))
 parallel(run_func(subject_id) for subject_id in range(1, 20))
 if l_freq is None:
     parallel(run_func(3, tsss) for tsss in (10, 1))  # Maxwell filtered data

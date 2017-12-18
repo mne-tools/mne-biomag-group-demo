@@ -13,7 +13,6 @@ a factor of 5 (from a sample rate of 1100 Hz to 220 Hz).
 """
 
 import os
-import tempfile
 import os.path as op
 
 import numpy as np
@@ -43,8 +42,6 @@ events_id = {
 }
 
 baseline = (None, 0) if l_freq is None else None
-
-tempdir = tempfile.mkdtemp()
 
 
 ###############################################################################
@@ -100,7 +97,6 @@ def run_epochs(subject_id, tsss=False):
     epochs = mne.Epochs(raw, events, events_id, tmin, tmax, proj=True,
                         picks=picks, baseline=baseline, preload=False,
                         decim=5, reject=None, reject_tmax=reject_tmax)
-    print('  Interpolating bad channels')
 
     # ICA
     if tsss:

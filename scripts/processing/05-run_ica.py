@@ -47,7 +47,8 @@ def run_ica(subject_id, tsss=None):
     # which are not prevalent in EEG (blink artifacts are, but we will remove
     # trials with blinks at the epoching stage).
     print('  Fitting ICA')
-    ica = ICA(method='fastica', random_state=random_state, n_components=n_components)
+    ica = ICA(method='fastica', random_state=random_state,
+              n_components=n_components)
     picks = mne.pick_types(raw.info, meg=True, eeg=False, eog=False,
                            stim=False, exclude='bads')
     ica.fit(raw, picks=picks, reject=dict(grad=4000e-13, mag=4e-12),

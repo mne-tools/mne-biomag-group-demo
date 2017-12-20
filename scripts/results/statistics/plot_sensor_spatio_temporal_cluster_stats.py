@@ -144,7 +144,7 @@ for i_clu, clu_idx in enumerate(good_cluster_inds):
     ax_signals.fill_betweenx((ymin, ymax), sig_times[0], sig_times[-1],
                              color='orange', alpha=0.3)
     ax_signals.legend(loc='lower right')
-    title = 'Cluster #{0} (p = {1:0.3f})'.format(i_clu + 1, p_values[clu_idx])
+    title = 'Cluster #{0} (p < {1:0.3f})'.format(i_clu + 1, p_values[clu_idx])
     ax_signals.set(ylim=[ymin, ymax], title=title)
     ax_signals.annotate(chr(65 + 2 * i_clu + 1), (-0.125, 1.1), **annot_kwargs)
 

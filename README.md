@@ -58,13 +58,13 @@ This will build the website with all the results (takes around a few hours).
 Authors
 -------
 
-- [Mainak Jas](http://perso.telecom-paristech.fr/~mjas/), Telecom ParisTech
+- [Mainak Jas](http://perso.telecom-paristech.fr/~mjas/), Telecom ParisTech, Université Paris-Saclay
 - [Eric Larson](http://larsoner.com), University of Washington ILABS
 - [Denis Engemann](http://denis-engemann.de), Neurospin, CEA/INSERM, UNICOG Team
-- Jaakko Leppäkangas, Telecom ParisTech
+- Jaakko Leppäkangas, Telecom ParisTech, Université Paris-Saclay
 - [Samu Taulu](http://ilabs.washington.edu/institute-faculty/bio/i-labs-samu-taulu-dsc), University of Washington, ILABS
 - [Matti Hämäläinen](https://www.martinos.org/user/5923), Martinos Center, MGH, Harvard Medical School
-- [Alexandre Gramfort](http://alexandre.gramfort.net), Telecom ParisTech
+- [Alexandre Gramfort](http://alexandre.gramfort.net), INRIA, Université Paris-Saclay
 
 Abstract (of the satellite meeting)
 -----------------------------------

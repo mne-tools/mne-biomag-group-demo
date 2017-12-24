@@ -128,7 +128,8 @@ html_theme_options = {
     'bootstrap_version': "3",
     'navbar_links': [
         ("Results", "auto_examples/index"),
-        ("Processing Scripts", "auto_scripts/index")
+        ("Processing Scripts", "auto_scripts/index"),
+        ("Github", "https://github.com/mne-tools/mne-biomag-group-demo/")
     ],
 }
 

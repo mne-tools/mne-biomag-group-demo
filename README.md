@@ -10,23 +10,27 @@ Results of our analysis is presented [here](http://mne-tools.github.io/mne-bioma
 Steps to replicate
 ------------------
 
-First, clone the repository using git::
+First, clone the repository using git:
 
 	$ git clone https://github.com/mne-tools/mne-biomag-group-demo.git
 
-Then go to the directory `mne-biomag-group-demo` and check out the tag `v0.1` using the command::
+Then go to the directory `mne-biomag-group-demo` and check out the tag `v0.1` using the command:
 
 	$ git checkout tags/v0.1
 
 This ensures that you use the same code which was used to produce the results in the paper.
 
-Next, make sure your system is properly configured. You should have the following
-installed::
+Next, make sure your system is properly configured. You should have the dependencies installed,
+namely: numpy, scipy, matplotlib, scikit-learn, pysurfer, mayavi, mne-python, sphinx_gallery,
+and freesurfer.
 
-	Python packages: numpy, scipy, matplotlib, scikit-learn, pysurfer, mayavi, mne-python, sphinx_gallery
-	Anatomy: freesurfer
+The easiest way to get the Python dependencies is to use the `environment.yml` file that we ship
+inside the `scripts/` folder. First, download [Anaconda](https://anaconda.org/) and then run the following two commands:
 
-Then, go to the `scripts/processing` folder and do::
+	$ conda env create -f environment.yml
+	$ source activate mne
+
+For freesurfer, follow the instructions on [their website](https://surfer.nmr.mgh.harvard.edu/). Then, go to the `scripts/processing` folder and do:
 
 	$ make check
 
@@ -35,7 +39,7 @@ If should check that your system is properly configured. It tests that you have
 OMP_NUM_THREADS environment variable. This limits the number CPUs used by
 linear algebra routines.
 
-If you don't get any error you can do::
+If you don't get any error you can do:
 
 	$ make all
 
@@ -49,7 +53,7 @@ using more `N_JOBS` will increase the memory requirements as the data will be
 copied across parallel processes.
 
 Once this is done, you can go in the folder `scripts/doc` where you can
-type::
+type:
 
 	$ make html
 

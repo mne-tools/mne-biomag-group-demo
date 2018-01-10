@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Config file &#8212; MNE Biomag Demo</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MNE Biomag Demo</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../auto_examples/index.html">Results</a></li>
+                <li><a href="../index.html">Processing Scripts</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Config file</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="config-file">
+<span id="sphx-glr-auto-scripts-library-config-py"></span><h1>Config file<a class="headerlink" href="#config-file" title="Permalink to this headline">¶</a></h1>
+<p>Configuration parameters for the study. This should be in a folder called
+<code class="docutils literal"><span class="pre">library/</span></code> inside the <code class="docutils literal"><span class="pre">processing/</span></code> directory.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">distutils.version</span> <span class="kn">import</span> <span class="n">LooseVersion</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<p>Let’s set the path where the data is downloaded and stored.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;USER&#39;</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">user</span> <span class="o">==</span> <span class="s1">&#39;gramfort&#39;</span><span class="p">:</span>
+    <span class="n">study_path</span> <span class="o">=</span> <span class="s1">&#39;/tsi/doctorants/data_gramfort/dgw_faces&#39;</span>
+    <span class="n">N_JOBS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="k">elif</span> <span class="n">user</span> <span class="o">==</span> <span class="s1">&#39;mjas&#39;</span><span class="p">:</span>
+    <span class="n">study_path</span> <span class="o">=</span> <span class="s1">&#39;/tsi/doctorants/data_gramfort/dgw_faces_reproduce&#39;</span>
+    <span class="n">N_JOBS</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">elif</span> <span class="n">user</span> <span class="o">==</span> <span class="s1">&#39;jleppakangas&#39;</span><span class="p">:</span>
+    <span class="n">study_path</span> <span class="o">=</span> <span class="s1">&#39;/tsi/doctorants/data_gramfort/dgw_faces&#39;</span>
+    <span class="n">N_JOBS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="k">elif</span> <span class="n">user</span> <span class="o">==</span> <span class="s1">&#39;alex&#39;</span><span class="p">:</span>
+    <span class="n">study_path</span> <span class="o">=</span> <span class="s1">&#39;/Users/alex/work/data/mne-biomag-group-demo/&#39;</span>
+    <span class="n">N_JOBS</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">elif</span> <span class="n">user</span> <span class="o">==</span> <span class="s1">&#39;larsoner&#39;</span><span class="p">:</span>
+    <span class="n">study_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span>
+    <span class="n">N_JOBS</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">study_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span>
+    <span class="n">N_JOBS</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">subjects_dir</span></code> and <code class="docutils literal"><span class="pre">meg_dir</span></code> for reading anatomical and MEG files.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">subjects_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">study_path</span><span class="p">,</span> <span class="s1">&#39;subjects&#39;</span><span class="p">)</span>
+<span class="n">meg_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">study_path</span><span class="p">,</span> <span class="s1">&#39;MEG&#39;</span><span class="p">)</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SUBJECTS_DIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subjects_dir</span>
+
+<span class="n">spacing</span> <span class="o">=</span> <span class="s1">&#39;oct6&#39;</span>
+<span class="n">mindist</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>Some mapping betwen filenames for bad sensors and subjects</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">map_subjects</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;subject_01&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;subject_02&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;subject_03&#39;</span><span class="p">,</span>
+                <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;subject_05&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s1">&#39;subject_06&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s1">&#39;subject_08&#39;</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">:</span> <span class="s1">&#39;subject_09&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span> <span class="s1">&#39;subject_10&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">:</span> <span class="s1">&#39;subject_11&#39;</span><span class="p">,</span>
+                <span class="mi">10</span><span class="p">:</span> <span class="s1">&#39;subject_12&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">:</span> <span class="s1">&#39;subject_14&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">:</span> <span class="s1">&#39;subject_15&#39;</span><span class="p">,</span>
+                <span class="mi">13</span><span class="p">:</span> <span class="s1">&#39;subject_16&#39;</span><span class="p">,</span> <span class="mi">14</span><span class="p">:</span> <span class="s1">&#39;subject_17&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">:</span> <span class="s1">&#39;subject_18&#39;</span><span class="p">,</span>
+                <span class="mi">16</span><span class="p">:</span> <span class="s1">&#39;subject_19&#39;</span><span class="p">,</span> <span class="mi">17</span><span class="p">:</span> <span class="s1">&#39;subject_23&#39;</span><span class="p">,</span> <span class="mi">18</span><span class="p">:</span> <span class="s1">&#39;subject_24&#39;</span><span class="p">,</span>
+                <span class="mi">19</span><span class="p">:</span> <span class="s1">&#39;subject_25&#39;</span><span class="p">}</span>
+
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">study_path</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">study_path</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Subjects that are known to be bad from the publication</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">exclude_subjects</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span>  <span class="c1"># Excluded subjects</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://github.com/mne-tools/mne-biomag-group-demo/blob/master/scripts/results/library/ct_sparse.fif">cross talk file</a>
+and <a class="reference external" href="https://github.com/mne-tools/mne-biomag-group-demo/blob/master/scripts/results/library/sss_cal.dat">calibration file</a>
+are placed in the same folder.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ctc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;ct_sparse.fif&#39;</span><span class="p">)</span>
+<span class="n">cal</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;sss_cal.dat&#39;</span><span class="p">)</span>
+
+<span class="n">ylim</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;eeg&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;mag&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span> <span class="s1">&#39;grad&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">]}</span>
+
+
+<span class="k">def</span> <span class="nf">set_matplotlib_defaults</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+    <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;axes.labelsize&#39;</span><span class="p">:</span> <span class="n">fontsize</span><span class="p">,</span>
+              <span class="s1">&#39;legend.fontsize&#39;</span><span class="p">:</span> <span class="n">fontsize</span><span class="p">,</span>
+              <span class="s1">&#39;xtick.labelsize&#39;</span><span class="p">:</span> <span class="n">fontsize</span><span class="p">,</span>
+              <span class="s1">&#39;ytick.labelsize&#39;</span><span class="p">:</span> <span class="n">fontsize</span><span class="p">,</span>
+              <span class="s1">&#39;axes.titlesize&#39;</span><span class="p">:</span> <span class="n">fontsize</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
+              <span class="s1">&#39;figure.max_open_warning&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;axes.spines.top&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+              <span class="s1">&#39;axes.spines.right&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+              <span class="s1">&#39;axes.grid&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+              <span class="s1">&#39;lines.linewidth&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+              <span class="p">}</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span>
+    <span class="k">if</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fontsize</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;text.fontsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fontsize</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+
+<span class="n">annot_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+                    <span class="n">xycoords</span><span class="o">=</span><span class="s2">&quot;axes fraction&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">l_freq</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="n">tmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span>
+<span class="n">tmax</span> <span class="o">=</span> <span class="mf">2.9</span>  <span class="c1"># min duration between onsets: (400 fix + 800 stim + 1700 ISI) ms</span>
+<span class="n">reject_tmax</span> <span class="o">=</span> <span class="mf">0.8</span>  <span class="c1"># duration we really care about</span>
+<span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span>
+
+<span class="n">smooth</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">fsaverage_vertices</span> <span class="o">=</span> <span class="p">[</span><a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10242</span><span class="p">),</span> <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10242</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<div class="sphx-glr-footer container">
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/config.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">config.py</span></code></a></div>
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/config.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">config.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MNE Developers. Last updated on 2017-12-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

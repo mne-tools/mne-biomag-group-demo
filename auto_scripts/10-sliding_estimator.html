@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Sliding estimator &#8212; MNE Biomag Demo</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          MNE Biomag Demo</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../auto_examples/index.html">Results</a></li>
+                <li><a href="index.html">Processing Scripts</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Sliding estimator</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="sliding-estimator">
+<span id="sphx-glr-auto-scripts-10-sliding-estimator-py"></span><h1>Sliding estimator<a class="headerlink" href="#sliding-estimator" title="Permalink to this headline">¶</a></h1>
+<p>A sliding estimator fits a logistic legression model for every time point.
+In this example, we contrast the condition ‘famous’ against ‘scrambled’
+using this approach. The end result is an averaging effect across sensors.
+The contrast across different sensors are combined into a single plot.</p>
+<p>Results script: <a class="reference internal" href="../auto_examples/statistics/plot_sliding_estimator.html#sphx-glr-auto-examples-statistics-plot-sliding-estimator-py"><span class="std std-ref">Decoding (ML) across time (MEG)</span></a></p>
+<p>Let us first import the libraries</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <a href="http://scipy.github.io/devdocs/generated/scipy.io.savemat.html#scipy.io.savemat" title="View documentation for scipy.io.savemat"><span class="n">savemat</span></a>
+
+<span class="kn">import</span> <span class="nn">mne</span>
+<span class="kn">from</span> <span class="nn">mne.decoding</span> <span class="kn">import</span> <a href="https://mne-tools.github.io/dev/generated/mne.decoding.SlidingEstimator.html#mne.decoding.SlidingEstimator" title="View documentation for mne.decoding.SlidingEstimator"><span class="n">SlidingEstimator</span></a><span class="p">,</span> <a href="https://mne-tools.github.io/dev/generated/mne.decoding.cross_val_multiscore.html#mne.decoding.cross_val_multiscore" title="View documentation for mne.decoding.cross_val_multiscore"><span class="n">cross_val_multiscore</span></a>
+
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="View documentation for sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="View documentation for sklearn.model_selection.StratifiedKFold"><span class="n">StratifiedKFold</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="View documentation for sklearn.pipeline.make_pipeline"><span class="n">make_pipeline</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="View documentation for sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a>
+
+<span class="kn">from</span> <span class="nn">library.config</span> <span class="kn">import</span> <span class="n">meg_dir</span><span class="p">,</span> <span class="n">l_freq</span><span class="p">,</span> <span class="n">N_JOBS</span><span class="p">,</span> <span class="n">random_state</span>
+</pre></div>
+</div>
+<p>Then we write a function to do time decoding on one subject</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_time_decoding</span><span class="p">(</span><span class="n">subject_id</span><span class="p">,</span> <span class="n">condition1</span><span class="p">,</span> <span class="n">condition2</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;processing subject: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2"> vs </span><span class="si">%s</span><span class="s2">)&quot;</span>
+          <span class="o">%</span> <span class="p">(</span><span class="n">subject_id</span><span class="p">,</span> <span class="n">condition1</span><span class="p">,</span> <span class="n">condition2</span><span class="p">))</span>
+
+    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;sub</span><span class="si">%03d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">subject_id</span>
+    <span class="n">data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">meg_dir</span><span class="p">,</span> <span class="n">subject</span><span class="p">)</span>
+    <span class="n">epochs</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.read_epochs.html#mne.read_epochs" title="View documentation for mne.read_epochs"><span class="n">mne</span><span class="o">.</span><span class="n">read_epochs</span></a><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span>
+                             <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_highpass-</span><span class="si">%s</span><span class="s1">Hz-epo.fif&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">l_freq</span><span class="p">)))</span>
+
+    <span class="c1"># We define the epochs and the labels</span>
+    <span class="n">epochs</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.concatenate_epochs.html#mne.concatenate_epochs" title="View documentation for mne.concatenate_epochs"><span class="n">mne</span><span class="o">.</span><span class="n">concatenate_epochs</span></a><span class="p">([</span><span class="n">epochs</span><span class="p">[</span><span class="n">condition1</span><span class="p">],</span>
+                                    <span class="n">epochs</span><span class="p">[</span><span class="n">condition2</span><span class="p">]])</span>
+    <span class="n">epochs</span><span class="o">.</span><span class="n">apply_baseline</span><span class="p">()</span>
+
+    <span class="c1"># Let us restrict ourselves to the MEG channels, and also decimate to</span>
+    <span class="c1"># make it faster (although we might miss some detail / alias)</span>
+    <span class="n">epochs</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">meg</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">decimate</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the data and labels</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">epochs</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+    <span class="n">n_cond1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">epochs</span><span class="p">[</span><span class="n">condition1</span><span class="p">])</span>
+    <span class="n">n_cond2</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">epochs</span><span class="p">[</span><span class="n">condition2</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.r_.html#numpy.r_" title="View documentation for numpy.r_"><span class="n">np</span><span class="o">.</span><span class="n">r_</span></a><span class="p">[</span><a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.ones.html#numpy.ones" title="View documentation for numpy.ones"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="n">n_cond1</span><span class="p">),</span> <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.zeros.html#numpy.zeros" title="View documentation for numpy.zeros"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">n_cond2</span><span class="p">)]</span>
+
+    <span class="c1"># Use AUC because chance level is same regardless of the class balance</span>
+    <span class="n">se</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.decoding.SlidingEstimator.html#mne.decoding.SlidingEstimator" title="View documentation for mne.decoding.SlidingEstimator"><span class="n">SlidingEstimator</span></a><span class="p">(</span>
+        <a href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="View documentation for sklearn.pipeline.make_pipeline"><span class="n">make_pipeline</span></a><span class="p">(</span><a href="http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="View documentation for sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a><span class="p">(),</span>
+                      <a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="View documentation for sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)),</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">N_JOBS</span><span class="p">)</span>
+    <span class="n">cv</span> <span class="o">=</span> <a href="http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="View documentation for sklearn.model_selection.StratifiedKFold"><span class="n">StratifiedKFold</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.decoding.cross_val_multiscore.html#mne.decoding.cross_val_multiscore" title="View documentation for mne.decoding.cross_val_multiscore"><span class="n">cross_val_multiscore</span></a><span class="p">(</span><span class="n">se</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">)</span>
+
+    <span class="c1"># let&#39;s save the scores now</span>
+    <span class="n">a_vs_b</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_vs_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">condition1</span><span class="p">),</span>
+                           <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">condition2</span><span class="p">))</span>
+    <span class="n">fname_td</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_highpass-</span><span class="si">%s</span><span class="s1">Hz-td-auc-</span><span class="si">%s</span><span class="s1">.mat&#39;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">l_freq</span><span class="p">,</span> <span class="n">a_vs_b</span><span class="p">))</span>
+    <a href="http://scipy.github.io/devdocs/generated/scipy.io.savemat.html#scipy.io.savemat" title="View documentation for scipy.io.savemat"><span class="n">savemat</span></a><span class="p">(</span><span class="n">fname_td</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;scores&#39;</span><span class="p">:</span> <span class="n">scores</span><span class="p">,</span> <span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="n">epochs</span><span class="o">.</span><span class="n">times</span><span class="p">})</span>
+
+
+<span class="c1"># Here we go parallel inside the :class:`mne.decoding.SlidingEstimator`</span>
+<span class="c1"># so we don&#39;t dispatch manually to multiple jobs.</span>
+
+<span class="k">for</span> <span class="n">subject_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">conditions</span> <span class="ow">in</span> <span class="p">((</span><span class="s1">&#39;face&#39;</span><span class="p">,</span> <span class="s1">&#39;scrambled&#39;</span><span class="p">),</span>
+                       <span class="p">(</span><span class="s1">&#39;face/famous&#39;</span><span class="p">,</span> <span class="s1">&#39;face/unfamiliar&#39;</span><span class="p">)):</span>
+        <span class="n">run_time_decoding</span><span class="p">(</span><span class="n">subject_id</span><span class="p">,</span> <span class="o">*</span><span class="n">conditions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<div class="sphx-glr-footer container">
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../_downloads/10-sliding_estimator.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">10-sliding_estimator.py</span></code></a></div>
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../_downloads/10-sliding_estimator.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">10-sliding_estimator.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MNE Developers. Last updated on 2017-12-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

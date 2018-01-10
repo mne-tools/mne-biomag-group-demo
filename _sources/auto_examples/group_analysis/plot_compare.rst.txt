@@ -1,0 +1,2923 @@
+
+
+.. _sphx_glr_auto_examples_group_analysis_plot_compare.py:
+
+
+========================================
+Sensor-space comparison between subjects
+========================================
+
+All the subjects compared.
+
+.. warning:: This example will open a lot of figures simultaneously!
+
+
+
+.. code-block:: python
+
+
+    import os.path as op
+    import sys
+
+    import numpy as np
+
+    import matplotlib.pyplot as plt
+
+    import mne
+
+    sys.path.append(op.join('..', '..', 'processing'))
+    from library.config import (meg_dir, ylim, l_freq,
+                                set_matplotlib_defaults)  # noqa: E402
+
+    set_matplotlib_defaults()
+
+    evokeds = list()
+    for subject_id in range(1, 20):
+        subject = "sub%03d" % subject_id
+        fname_in = op.join(meg_dir, subject,
+                           '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
+        evokeds.append(mne.read_evokeds(fname_in))
+    times = np.arange(0.1, 0.26, 0.025)
+
+    plt.rcParams['figure.max_open_warning'] = 200
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub001/sub001_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 263 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 262 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 260 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 175 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 523 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 262 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 262 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub002/sub002_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 227 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 235 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 228 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 155 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 455 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 235 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 235 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub003/sub003_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 234 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 211 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 236 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 146 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 470 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 211 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 211 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub004/sub004_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 209 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 207 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 210 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 139 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 419 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 207 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 207 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub005/sub005_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 223 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 229 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 227 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 152 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 450 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 229 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 229 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub006/sub006_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 159 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 164 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 156 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 108 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 315 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 164 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 164 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub007/sub007_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 292 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 288 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 289 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 193 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 581 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 288 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 288 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub008/sub008_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 195 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 187 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 197 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 127 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 392 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 187 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 187 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub009/sub009_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 150 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 128 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 146 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 89 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 296 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 128 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 128 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub010/sub010_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 169 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 174 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 168 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 115 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 337 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 174 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 174 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub011/sub011_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 164 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 171 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 171 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 113 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 335 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 171 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 171 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/sub012_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 183 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 169 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 189 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 116 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 372 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 169 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 169 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub013/sub013_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 168 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 184 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 175 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 120 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 343 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 184 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 184 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub014/sub014_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 169 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 176 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 169 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 116 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 338 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 176 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 176 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub015/sub015_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 104 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 84 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 101 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 60 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 205 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 84 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 84 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub016/sub016_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 124 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 110 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 129 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 77 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 253 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 110 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 110 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub017/sub017_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 148 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 127 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 151 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 89 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 299 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 127 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 127 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub018/sub018_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 213 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 196 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 222 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 135 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 435 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 196 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 196 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub019/sub019_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 197 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 213 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 193 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 138 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 390 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 213 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 213 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+
+
+Evoked responses on EEG and MEG, see
+:ref:`sphx_glr_auto_scripts_07-make_evoked.py`.
+
+
+
+.. code-block:: python
+
+
+    ch_type_kwargs = [dict(meg=False, eeg=True), dict(meg='grad'), dict(meg='mag')]
+    for ch_type_kwarg in ch_type_kwargs:
+        for idx, evoked in enumerate(evokeds):
+            for cond in range(3):
+                picks = mne.pick_types(evoked[cond].info, **ch_type_kwarg)
+                comm = evoked[cond].comment
+                evoked[cond].plot_joint(picks=picks, ts_args={'ylim': ylim},
+                                        title='Subject %s %s' % (idx + 1, comm),
+                                        show=False)
+    plt.show()
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_001.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_002.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_003.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_004.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_005.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_006.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_007.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_008.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_009.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_010.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_011.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_012.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_013.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_014.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_015.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_016.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_017.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_018.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_019.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_020.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_021.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_022.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_023.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_024.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_025.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_026.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_027.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_028.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_029.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_030.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_031.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_032.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_033.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_034.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_035.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_036.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_037.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_038.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_039.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_040.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_041.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_042.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_043.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_044.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_045.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_046.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_047.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_048.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_049.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_050.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_051.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_052.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_053.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_054.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_055.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_056.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_057.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_058.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_059.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_060.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_061.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_062.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_063.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_064.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_065.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_066.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_067.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_068.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_069.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_070.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_071.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_072.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_073.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_074.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_075.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_076.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_077.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_078.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_079.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_080.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_081.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_082.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_083.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_084.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_085.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_086.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_087.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_088.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_089.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_090.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_091.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_092.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_093.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_094.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_095.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_096.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_097.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_098.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_099.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_100.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_101.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_102.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_103.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_104.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_105.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_106.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_107.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_108.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_109.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_110.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_111.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_112.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_113.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_114.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_115.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_116.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_117.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_118.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_119.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_120.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_121.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_122.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_123.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_124.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_125.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_126.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_127.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_128.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_129.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_130.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_131.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_132.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_133.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_134.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_135.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_136.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_137.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_138.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_139.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_140.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_141.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_142.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_143.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_144.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_145.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_146.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_147.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_148.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_149.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_150.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_151.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_152.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_153.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_154.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_155.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_156.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_157.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_158.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_159.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_160.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_161.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_162.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_163.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_164.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_165.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_166.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_167.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_168.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_169.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_170.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_171.png
+            :scale: 47
+
+
+
+
+Topomaps
+
+
+
+.. code-block:: python
+
+    for ch_type in ['eeg', 'mag', 'grad']:
+        for idx, evoked in enumerate(evokeds):
+            for cond in range(3):
+                comm = evoked[cond].comment
+                evoked[cond].plot_topomap(ch_type=ch_type, times=times,
+                                          title='Subject %s %s (%s)'
+                                          % (idx + 1, comm, ch_type),
+                                          show=False)
+    plt.show()
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_172.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_173.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_174.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_175.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_176.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_177.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_178.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_179.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_180.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_181.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_182.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_183.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_184.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_185.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_186.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_187.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_188.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_189.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_190.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_191.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_192.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_193.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_194.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_195.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_196.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_197.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_198.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_199.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_200.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_201.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_202.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_203.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_204.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_205.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_206.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_207.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_208.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_209.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_210.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_211.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_212.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_213.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_214.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_215.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_216.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_217.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_218.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_219.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_220.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_221.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_222.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_223.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_224.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_225.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_226.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_227.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_228.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_229.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_230.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_231.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_232.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_233.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_234.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_235.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_236.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_237.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_238.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_239.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_240.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_241.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_242.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_243.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_244.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_245.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_246.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_247.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_248.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_249.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_250.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_251.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_252.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_253.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_254.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_255.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_256.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_257.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_258.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_259.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_260.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_261.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_262.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_263.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_264.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_265.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_266.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_267.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_268.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_269.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_270.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_271.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_272.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_273.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_274.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_275.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_276.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_277.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_278.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_279.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_280.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_281.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_282.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_283.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_284.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_285.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_286.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_287.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_288.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_289.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_290.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_291.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_292.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_293.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_294.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_295.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_296.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_297.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_298.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_299.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_300.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_301.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_302.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_303.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_304.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_305.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_306.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_307.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_308.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_309.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_310.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_311.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_312.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_313.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_314.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_315.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_316.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_317.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_318.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_319.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_320.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_321.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_322.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_323.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_324.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_325.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_326.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_327.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_328.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_329.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_330.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_331.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_332.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_333.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_334.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_335.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_336.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_337.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_338.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_339.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_340.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_341.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/group_analysis/images/sphx_glr_plot_compare_342.png
+            :scale: 47
+
+
+
+
+**Total running time of the script:** ( 6 minutes  28.898 seconds)
+
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Python source code: plot_compare.py <plot_compare.py>`
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Jupyter notebook: plot_compare.ipynb <plot_compare.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_

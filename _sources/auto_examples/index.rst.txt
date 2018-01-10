@@ -1,0 +1,719 @@
+:orphan:
+
+.. _general_analysis:
+
+Results
+=======
+
+.. contents:: Contents
+   :local:
+   :depth: 2
+
+
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+Group analysis
+--------------
+
+Qualitative group analysis plots.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="All the subjects compared.">
+
+.. only:: html
+
+    .. figure:: /auto_examples/group_analysis/images/thumb/sphx_glr_plot_compare_thumb.png
+
+        :ref:`sphx_glr_auto_examples_group_analysis_plot_compare.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/group_analysis/plot_compare
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Grand-average group contrasts for sensor space, dSPM, and LCMV. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/group_analysis/images/thumb/sphx_glr_plot_group_thumb.png
+
+        :ref:`sphx_glr_auto_examples_group_analysis_plot_group.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/group_analysis/plot_group
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+Statistics and machine learning
+-------------------------------
+
+Statistical analyses of the data.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run a non-parametric cluster stats on sensor EEG070 on the contrast faces vs. scrambled. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/statistics/images/thumb/sphx_glr_plot_sensor_cluster_stats_eeg_channel_thumb.png
+
+        :ref:`sphx_glr_auto_examples_statistics_plot_sensor_cluster_stats_eeg_channel.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/statistics/plot_sensor_cluster_stats_eeg_channel
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run a non-parametric spatio-temporal cluster stats on EEG sensors on the contrast faces vs. scr...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/statistics/images/thumb/sphx_glr_plot_sensor_spatio_temporal_cluster_stats_thumb.png
+
+        :ref:`sphx_glr_auto_examples_statistics_plot_sensor_spatio_temporal_cluster_stats.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/statistics/plot_sensor_spatio_temporal_cluster_stats
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="A sliding estimator fits a logistic regression model for every time point. In this example, we ...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/statistics/images/thumb/sphx_glr_plot_sliding_estimator_thumb.png
+
+        :ref:`sphx_glr_auto_examples_statistics_plot_sliding_estimator.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/statistics/plot_sliding_estimator
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Clustering in source space. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/statistics/images/thumb/sphx_glr_plot_source_stats_thumb.png
+
+        :ref:`sphx_glr_auto_examples_statistics_plot_source_stats.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/statistics/plot_source_stats
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+Demos
+-----
+
+Some simple demos with the data.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Remove physiological artifacts for sub005 using ICA. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/demos/images/thumb/sphx_glr_05a-compare_ica_thumb.png
+
+        :ref:`sphx_glr_auto_examples_demos_05a-compare_ica.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/demos/05a-compare_ica
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Here we compare the evokeds when we baseline it vs. highpass filter it. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/demos/images/thumb/sphx_glr_plot_fanning_thumb.png
+
+        :ref:`sphx_glr_auto_examples_demos_plot_fanning.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/demos/plot_fanning
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Here we look at the choice of filters both for low and high pass. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/demos/images/thumb/sphx_glr_plot_filter_thumb.png
+
+        :ref:`sphx_glr_auto_examples_demos_plot_filter.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/demos/plot_filter
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Remove physiological artifacts for sub005 using ICA. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/demos/images/thumb/sphx_glr_plot_ica_thumb.png
+
+        :ref:`sphx_glr_auto_examples_demos_plot_ica.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/demos/plot_ica
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Demonstrates maxwell filtering for one run (sub003, run01) using MNE-python. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/demos/images/thumb/sphx_glr_plot_maxfilter_thumb.png
+
+        :ref:`sphx_glr_auto_examples_demos_plot_maxfilter.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/demos/plot_maxfilter
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The Power Spectral Density (PSD) plot shows different information for linear vs. log scale. We ...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/demos/images/thumb/sphx_glr_plot_psd_thumb.png
+
+        :ref:`sphx_glr_auto_examples_demos_plot_psd.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/demos/plot_psd
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/demos/images/thumb/sphx_glr_plot_tsss_analysis_thumb.png
+
+        :ref:`sphx_glr_auto_examples_demos_plot_tsss_analysis.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/demos/plot_tsss_analysis
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+Single-subject analyses
+-----------------------
+
+Analysis of individual subjects.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_01_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_01.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_01
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_02_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_02.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_02
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_03_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_03.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_03
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_04_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_04.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_04
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_05_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_05.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_05
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_06_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_06.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_06
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_07_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_07.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_07
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_08_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_08.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_08
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_09_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_09.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_09
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_10_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_10.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_10
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_11_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_11.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_11
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_12_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_12.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_12
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_13_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_13.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_13
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_14_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_14.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_14
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_15_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_15.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_15
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_16_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_16.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_16
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_17_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_17.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_17
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_18_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_18.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_18
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Run the analysis. ">
+
+.. only:: html
+
+    .. figure:: /auto_examples/single_subject_analysis/images/thumb/sphx_glr_plot_analysis_19_thumb.png
+
+        :ref:`sphx_glr_auto_examples_single_subject_analysis_plot_analysis_19.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/single_subject_analysis/plot_analysis_19
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+
+
+  .. container:: sphx-glr-download
+
+    :download:`Download all examples in Python source code: auto_examples_python.zip <//tsi/doctorants/mainak/mne-biomag-group-demo/scripts/doc/auto_examples/auto_examples_python.zip>`
+
+
+
+  .. container:: sphx-glr-download
+
+    :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip <//tsi/doctorants/mainak/mne-biomag-group-demo/scripts/doc/auto_examples/auto_examples_jupyter.zip>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_

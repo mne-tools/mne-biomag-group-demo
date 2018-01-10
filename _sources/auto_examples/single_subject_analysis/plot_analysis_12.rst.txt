@@ -1,0 +1,824 @@
+
+
+.. _sphx_glr_auto_examples_single_subject_analysis_plot_analysis_12.py:
+
+
+=======================
+Analysis for subject 12
+=======================
+
+Run the analysis.
+
+
+
+.. code-block:: python
+
+    import os.path as op
+    import sys
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    import mne
+
+    sys.path.append(op.join('..', '..', 'processing'))
+    from library.config import (study_path, meg_dir, ylim, l_freq,
+                                set_matplotlib_defaults)  # noqa: E402
+
+    set_matplotlib_defaults()
+
+
+
+
+
+
+
+Configuration
+
+
+
+.. code-block:: python
+
+
+    subjects_dir = op.join(study_path, 'subjects')
+
+    subject = "sub012"
+    subject_dir = op.join(meg_dir, subject)
+
+
+
+
+
+
+
+Continuous data
+
+
+
+.. code-block:: python
+
+    raw_fname = op.join(study_path, 'ds117', subject, 'MEG', 'run_01_raw.fif')
+    raw_filt_fname = op.join(subject_dir,
+                             'run_01_filt_sss_highpass-%sHz_raw.fif' % l_freq)
+    raw = mne.io.read_raw_fif(raw_fname)
+    raw_filt = mne.io.read_raw_fif(raw_filt_fname)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Opening raw data file /tsi/doctorants/data_gramfort/dgw_faces_reproduce/ds117/sub012/MEG/run_01_raw.fif...
+        Read a total of 8 projection items:
+            mag_ssp_upright.fif : PCA-mags-v1 (1 x 306)  idle
+            mag_ssp_upright.fif : PCA-mags-v2 (1 x 306)  idle
+            mag_ssp_upright.fif : PCA-mags-v3 (1 x 306)  idle
+            mag_ssp_upright.fif : PCA-mags-v4 (1 x 306)  idle
+            mag_ssp_upright.fif : PCA-mags-v5 (1 x 306)  idle
+            grad_ssp_upright.fif : PCA-grad-v1 (1 x 306)  idle
+            grad_ssp_upright.fif : PCA-grad-v2 (1 x 306)  idle
+            grad_ssp_upright.fif : PCA-grad-v3 (1 x 306)  idle
+        Range : 235400 ... 785399 =    214.000 ...   713.999 secs
+    Ready.
+    Current compensation grade : 0
+    Opening raw data file /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/run_01_filt_sss_highpass-NoneHz_raw.fif...
+        Range : 235400 ... 785399 =    214.000 ...   713.999 secs
+    Ready.
+    Current compensation grade : 0
+
+
+Filtering :ref:`sphx_glr_auto_scripts_04-python_filtering.py`.
+
+
+
+.. code-block:: python
+
+    raw.plot_psd(n_fft=8192, average=False, xscale='log', show=False)
+    raw_filt.plot_psd(n_fft=8192, average=False, xscale='log')
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_001.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_002.png
+            :scale: 47
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Effective window size : 7.447 (s)
+    Effective window size : 7.447 (s)
+    Effective window size : 7.447 (s)
+    Effective window size : 7.447 (s)
+    Effective window size : 7.447 (s)
+    Effective window size : 7.447 (s)
+
+
+Events :ref:`sphx_glr_auto_scripts_02-extract_events.py`.
+Epochs :ref:`sphx_glr_auto_scripts_06-make_epochs.py`.
+
+
+
+.. code-block:: python
+
+    eve_fname = op.join(subject_dir, 'run_01-eve.fif')
+    epo_fname = op.join(subject_dir,
+                        '%s_highpass-%sHz-epo.fif' % (subject, l_freq))
+
+    events = mne.read_events(eve_fname)
+    fig = mne.viz.plot_events(events, show=False)
+    fig.suptitle('Events from run 01')
+
+    epochs = mne.read_epochs(epo_fname)
+    epochs.plot_drop_log()
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_003.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_004.png
+            :scale: 47
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/sub012_highpass-NoneHz-epo.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms
+            0 CTF compensation matrices available
+    541 matching events found
+    Created an SSP operator (subspace dimension = 1)
+    541 matching events found
+    Created an SSP operator (subspace dimension = 1)
+    1 projection items activated
+
+
+Evoked responses :ref:`sphx_glr_auto_scripts_07-make_evoked.py`
+
+
+
+.. code-block:: python
+
+    ave_fname = op.join(subject_dir,
+                        '%s_highpass-%sHz-ave.fif' % (subject, l_freq))
+    evoked = mne.read_evokeds(ave_fname)
+    famous_evo, scrambled_evo, unfamiliar_evo, contrast_evo, faces_evo = evoked[:5]
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/sub012_highpass-NoneHz-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (famous)
+            0 CTF compensation matrices available
+            nave = 183 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled)
+            0 CTF compensation matrices available
+            nave = 169 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (unfamiliar)
+            0 CTF compensation matrices available
+            nave = 189 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (contrast)
+            0 CTF compensation matrices available
+            nave = 116 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces)
+            0 CTF compensation matrices available
+            nave = 372 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (faces_eq)
+            0 CTF compensation matrices available
+            nave = 169 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+        Found the data of interest:
+            t =    -200.00 ...    2900.00 ms (scrambled_eq)
+            0 CTF compensation matrices available
+            nave = 169 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    No baseline correction applied
+
+
+Faces
+
+
+
+.. code-block:: python
+
+    faces_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
+                   window_title='Faces %s' % subject)
+
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_005.png
+    :align: center
+
+
+
+
+Famous
+
+
+
+.. code-block:: python
+
+    famous_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
+                    window_title='Famous %s' % subject)
+
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_006.png
+    :align: center
+
+
+
+
+Scrambled
+
+
+
+.. code-block:: python
+
+    scrambled_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
+                       window_title='Scrambled %s' % subject)
+
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_007.png
+    :align: center
+
+
+
+
+Unfamiliar
+
+
+
+.. code-block:: python
+
+    unfamiliar_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
+                        window_title='Unfamiliar %s' % subject)
+
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_008.png
+    :align: center
+
+
+
+
+Faces - scrambled
+
+
+
+.. code-block:: python
+
+    contrast_evo.plot(spatial_colors=True, gfp=True, ylim=ylim,
+                      window_title='Faces - scrambled %s' % subject)
+
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_009.png
+    :align: center
+
+
+
+
+Topomaps
+
+
+
+.. code-block:: python
+
+    times = np.arange(0.05, 0.3, 0.025)
+    famous_evo.plot_topomap(times=times, title='Famous %s' % subject,
+                            show=False)
+    scrambled_evo.plot_topomap(times=times, title='Scrambled %s' % subject,
+                               show=False)
+    unfamiliar_evo.plot_topomap(times=times, title='Unfamiliar %s' % subject,
+                                show=False)
+    contrast_evo.plot_topomap(times=times, title='Faces - scrambled %s' % subject,
+                              show=True)
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_010.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_011.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_012.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_013.png
+            :scale: 47
+
+
+
+
+ICA (ECG)
+
+
+
+.. code-block:: python
+
+    ica_fname = op.join(subject_dir, 'run_concat_highpass-%sHz-ica.fif'
+                        % (l_freq,))
+    ica = mne.preprocessing.read_ica(ica_fname)
+
+    ecg_scores = np.load(
+        op.join(subject_dir, '%s_highpass-%sHz-ecg-scores.npy'
+                % (subject, l_freq)))
+    ica.plot_scores(ecg_scores, show=False, title='ICA ECG scores')
+    ecg_evoked = mne.read_evokeds(
+        op.join(subject_dir, '%s_highpass-%sHz-ecg-ave.fif'
+                % (subject, l_freq)))[0]
+    ica.plot_sources(ecg_evoked, title='ECG evoked', show=True)
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_014.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_015.png
+            :scale: 47
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/run_concat_highpass-NoneHz-ica.fif ...
+    Now restoring ICA solution ...
+    Ready.
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/sub012_highpass-NoneHz-ecg-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70)  idle
+        Found the data of interest:
+            t =    -300.00 ...     300.00 ms (999)
+            0 CTF compensation matrices available
+            nave = 3530 - aspect type = 100
+    Created an SSP operator (subspace dimension = 1)
+    1 projection items activated
+    SSP projectors applied...
+    No baseline correction applied
+
+
+ICA (EOG)
+
+
+
+.. code-block:: python
+
+    eog_scores = np.load(
+        op.join(subject_dir, '%s_highpass-%sHz-eog-scores.npy'
+                % (subject, l_freq)))
+    ica.plot_scores(eog_scores, show=False, title='ICA EOG scores')
+    eog_evoked = mne.read_evokeds(
+        op.join(subject_dir, '%s_highpass-%sHz-eog-ave.fif'
+                % (subject, l_freq)))[0]
+    ica.plot_sources(eog_evoked, title='EOG evoked', show=True)
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_016.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_017.png
+            :scale: 47
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/sub012_highpass-NoneHz-eog-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70)  idle
+        Found the data of interest:
+            t =    -500.00 ...     500.00 ms (998)
+            0 CTF compensation matrices available
+            nave = 945 - aspect type = 100
+    Created an SSP operator (subspace dimension = 1)
+    1 projection items activated
+    SSP projectors applied...
+    No baseline correction applied
+
+
+Covariance :ref:`sphx_glr_auto_scripts_07-make_evoked.py`.
+
+
+
+.. code-block:: python
+
+    cov_fname = op.join(subject_dir,
+                        '%s_highpass-%sHz-cov.fif' % (subject, l_freq))
+    cov = mne.read_cov(cov_fname)
+    mne.viz.plot_cov(cov, faces_evo.info)
+    rank_dict = dict(
+        meg=raw_filt.copy().load_data().pick_types(eeg=False).estimate_rank())
+    for kind in ('meg', 'eeg'):
+        type_dict = dict(meg=False)
+        type_dict.update({kind: True})
+        fig = faces_evo.copy().apply_baseline().pick_types(
+            **type_dict).plot_white(cov, rank=rank_dict if kind == 'meg' else {})
+        for ax, ylabel in zip(fig.axes, ('Whitened\n%s (AU)' % (kind.upper(),),
+                                         'GFP ($\chi^2$)')):
+            ax.set(ylabel=ylabel)
+        fig.axes[-1].set(title='', ylim=[0, 20])
+        fig.axes[-1].legend(loc='lower center')
+        fig.set_size_inches(3.5, 3, forward=True)
+        fig.tight_layout()
+        fig.savefig(op.join('..', 'figures', '%s_highpass-%sHz-plot_white_%s.pdf'
+                            % (subject, l_freq, kind)))
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_018.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_019.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_020.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_021.png
+            :scale: 47
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    376 x 376 full covariance (kind = 1) found.
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 70) active
+    Reading 0 ... 549999  =      0.000 ...   499.999 secs...
+    estimated rank (mag + grad): 68
+    Applying baseline correction (mode: mean)
+    SSS has been applied to data. Showing mag and grad whitening jointly.
+    Setting small MEG eigenvalues to zero.
+    Not doing PCA for MEG.
+    Total rank is 68
+    Applying baseline correction (mode: mean)
+    estimated rank (eeg): 70
+        Created an SSP operator (subspace dimension = 1)
+    Setting small EEG eigenvalues to zero.
+    Not doing PCA for EEG.
+    Total rank is 69
+
+
+TFR :ref:`sphx_glr_auto_scripts_09-time_frequency.py`.
+
+
+
+.. code-block:: python
+
+    fpower = mne.time_frequency.read_tfrs(
+        op.join(subject_dir, '%s_highpass-%sHz-faces-tfr.h5'
+                % (subject, l_freq)))[0]
+    fitc = mne.time_frequency.read_tfrs(
+        op.join(subject_dir, '%s_highpass-%sHz-itc_faces-tfr.h5'
+                % (subject, l_freq)))[0]
+    spower = mne.time_frequency.read_tfrs(
+        op.join(subject_dir, '%s_highpass-%sHz-scrambled-tfr.h5'
+                % (subject, l_freq)))[0]
+    sitc = mne.time_frequency.read_tfrs(
+        op.join(subject_dir, '%s_highpass-%sHz-itc_scrambled-tfr.h5'
+                % (subject, l_freq)))[0]
+    channel = 'EEG065'
+    idx = [fpower.ch_names.index(channel)]
+    fpower.plot(idx, title='Faces power %s' % channel, baseline=(-0.1, 0.0),
+                mode='logratio', show=False)
+    spower.plot(idx, title='Scrambled power %s' % channel, baseline=(-0.1, 0.0),
+                mode='logratio', show=False)
+    fitc.plot(idx, title='Faces ITC %s' % channel, baseline=(-0.1, 0.0),
+              mode='logratio', show=False)
+    sitc.plot(idx, title='Scrambled ITC %s' % channel, baseline=(-0.1, 0.0),
+              mode='logratio')
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_022.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_023.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_024.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_025.png
+            :scale: 47
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/sub012_highpass-NoneHz-faces-tfr.h5 ...
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/sub012_highpass-NoneHz-itc_faces-tfr.h5 ...
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/sub012_highpass-NoneHz-scrambled-tfr.h5 ...
+    Reading /tsi/doctorants/data_gramfort/dgw_faces_reproduce/MEG/sub012/sub012_highpass-NoneHz-itc_scrambled-tfr.h5 ...
+    Applying baseline correction (mode: logratio)
+    Applying baseline correction (mode: logratio)
+    Applying baseline correction (mode: logratio)
+    Applying baseline correction (mode: logratio)
+
+
+Trans
+
+
+
+.. code-block:: python
+
+    fname_trans = op.join(study_path, 'ds117', subject, 'MEG',
+                          '%s-trans.fif' % subject)
+    bem = mne.read_bem_surfaces(op.join(subjects_dir, subject, 'bem',
+                                        '%s-5120-bem.fif' % subject))
+    src = mne.read_source_spaces(
+        op.join(subjects_dir, subject, 'bem', '%s-oct6-src.fif' % subject))
+    aln = mne.viz.plot_alignment(
+        raw.info, fname_trans, subject=subject, subjects_dir=subjects_dir, src=src,
+        surfaces=['outer_skin', 'inner_skull'], dig=True, coord_frame='meg')
+    aln.scene.parallel_projection = True
+    fig, axes = plt.subplots(1, 3, figsize=(6.5, 2.5), facecolor='k')
+    from mayavi import mlab  # noqa: E402
+    for ai, angle in enumerate((180, 90, 0)):
+        mlab.view(angle, 90, focalpoint=(0., 0., 0.), distance=0.6)
+        view = mlab.screenshot()
+        mask_w = (view == 0).all(axis=-1).all(axis=1)
+        mask_h = (view == 0).all(axis=-1).all(axis=0)
+        view = view[~mask_w][:, ~mask_h]
+        axes[ai].set_axis_off()
+        axes[ai].imshow(view, interpolation='bicubic')
+    mlab.close(aln)
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0, wspace=0.05, hspace=0)
+    fig.savefig(op.join('..', 'figures', '%s_alignment.pdf' % subject),
+                dpi=150, facecolor=fig.get_facecolor(), edgecolor='none')
+
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_026.png
+    :align: center
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    1 BEM surfaces found
+        Reading a surface...
+    [done]
+        1 BEM surfaces read
+        Reading a source space...
+        Computing patch statistics...
+        Patch information added...
+        Distance information added...
+        [done]
+        Reading a source space...
+        Computing patch statistics...
+        Patch information added...
+        Distance information added...
+        [done]
+        2 source spaces read
+    Using outer_skin for head surface.
+    Getting helmet for system 306m
+    Using /tsi/doctorants/data_gramfort/dgw_faces_reproduce/subjects/sub012/bem/flash/inner_skull.surf for head surface.
+
+
+Faces :ref:`sphx_glr_auto_scripts_13-make_inverse.py`.
+
+
+
+.. code-block:: python
+
+
+
+    def plot_stc(cond, figure=None):
+        fname = op.join(subject_dir, 'mne_dSPM_inverse_highpass-%sHz-%s'
+                        % (l_freq, cond))
+        stc = mne.read_source_estimate(fname, subject).magnitude()
+        brain = stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
+                         hemi='both', initial_time=0.17, time_unit='s',
+                         figure=figure)
+        return brain
+
+
+    brain_faces = plot_stc('faces', figure=1)
+
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_027.png
+    :align: center
+
+
+
+
+Faces - scrambled
+
+
+
+.. code-block:: python
+
+    brain_contrast = plot_stc('contrast', figure=2)
+
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_028.png
+    :align: center
+
+
+
+
+LCMV Faces - scrambled
+
+
+
+.. code-block:: python
+
+    fname = op.join(subject_dir, 'mne_LCMV_inverse_highpass-%sHz-contrast'
+                    % (l_freq,))
+    stc = mne.read_source_estimate(fname, subject)
+    stc.plot(subject=subject, subjects_dir=subjects_dir, views=['ven'],
+             hemi='both', initial_time=0.17, time_unit='s', figure=3)
+
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_029.png
+    :align: center
+
+
+
+
+BEM
+
+
+
+.. code-block:: python
+
+    fig = mne.viz.plot_bem(subject, subjects_dir, slices=[40, 100, 140, 180])
+    fig.savefig(op.join('..', 'figures', '%s_bem.pdf' % subject))
+
+
+
+.. image:: /auto_examples/single_subject_analysis/images/sphx_glr_plot_analysis_12_030.png
+    :align: center
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Using surface: /tsi/doctorants/data_gramfort/dgw_faces_reproduce/subjects/sub012/bem/inner_skull.surf
+    Using surface: /tsi/doctorants/data_gramfort/dgw_faces_reproduce/subjects/sub012/bem/outer_skull.surf
+    Using surface: /tsi/doctorants/data_gramfort/dgw_faces_reproduce/subjects/sub012/bem/outer_skin.surf
+
+
+**Total running time of the script:** ( 4 minutes  18.059 seconds)
+
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Python source code: plot_analysis_12.py <plot_analysis_12.py>`
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Jupyter notebook: plot_analysis_12.ipynb <plot_analysis_12.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_

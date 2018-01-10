@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Spatio-temporal source-space statistics (MEG) &#8212; MNE Biomag Demo</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MNE Biomag Demo</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../index.html">Results</a></li>
+                <li><a href="../../auto_scripts/index.html">Processing Scripts</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Spatio-temporal source-space statistics (MEG)</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="spatio-temporal-source-space-statistics-meg">
+<span id="sphx-glr-auto-examples-statistics-plot-source-stats-py"></span><h1>Spatio-temporal source-space statistics (MEG)<a class="headerlink" href="#spatio-temporal-source-space-statistics-meg" title="Permalink to this headline">¶</a></h1>
+<p>Clustering in source space.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span> <span class="nn">mayavi</span> <span class="kn">import</span> <span class="n">mlab</span>
+
+<span class="kn">import</span> <span class="nn">mne</span>
+<span class="kn">from</span> <span class="nn">mne</span> <span class="kn">import</span> <a href="https://mne-tools.github.io/dev/generated/mne.spatial_src_connectivity.html#mne.spatial_src_connectivity" title="View documentation for mne.spatial_src_connectivity"><span class="n">spatial_src_connectivity</span></a>
+<span class="kn">from</span> <span class="nn">mne.stats</span> <span class="kn">import</span> <span class="p">(</span><a href="https://mne-tools.github.io/dev/generated/mne.stats.spatio_temporal_cluster_1samp_test.html#mne.stats.spatio_temporal_cluster_1samp_test" title="View documentation for mne.stats.spatio_temporal_cluster_1samp_test"><span class="n">spatio_temporal_cluster_1samp_test</span></a><span class="p">,</span>
+                       <a href="https://mne-tools.github.io/dev/generated/mne.stats.summarize_clusters_stc.html#mne.stats.summarize_clusters_stc" title="View documentation for mne.stats.summarize_clusters_stc"><span class="n">summarize_clusters_stc</span></a><span class="p">,</span> <a href="https://mne-tools.github.io/dev/generated/mne.stats.ttest_1samp_no_p.html#mne.stats.ttest_1samp_no_p" title="View documentation for mne.stats.ttest_1samp_no_p"><span class="n">ttest_1samp_no_p</span></a><span class="p">)</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;processing&#39;</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">library.config</span> <span class="kn">import</span> <span class="p">(</span><span class="n">meg_dir</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">,</span> <span class="n">fsaverage_vertices</span><span class="p">,</span>
+                            <span class="n">exclude_subjects</span><span class="p">,</span> <span class="n">N_JOBS</span><span class="p">,</span> <span class="n">l_freq</span><span class="p">,</span> <span class="n">random_state</span><span class="p">)</span>  <span class="c1"># noqa: E402</span>
+
+<span class="n">faces</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">scrambled</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">subject_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">subject_id</span> <span class="ow">in</span> <span class="n">exclude_subjects</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;sub</span><span class="si">%03d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">subject_id</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;processing subject: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">subject</span><span class="p">)</span>
+    <span class="n">data_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">meg_dir</span><span class="p">,</span> <span class="n">subject</span><span class="p">)</span>
+    <span class="n">stc</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.read_source_estimate.html#mne.read_source_estimate" title="View documentation for mne.read_source_estimate"><span class="n">mne</span><span class="o">.</span><span class="n">read_source_estimate</span></a><span class="p">(</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s1">&#39;mne_dSPM_inverse_morph_highpass-</span><span class="si">%s</span><span class="s1">Hz-faces_eq&#39;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">l_freq</span><span class="p">,)))</span>
+    <span class="n">faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stc</span><span class="o">.</span><span class="n">magnitude</span><span class="p">()</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">stc</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.read_source_estimate.html#mne.read_source_estimate" title="View documentation for mne.read_source_estimate"><span class="n">mne</span><span class="o">.</span><span class="n">read_source_estimate</span></a><span class="p">(</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s1">&#39;mne_dSPM_inverse_morph_highpass-</span><span class="si">%s</span><span class="s1">Hz-scrambled_eq&#39;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">l_freq</span><span class="p">,)))</span>
+    <span class="n">scrambled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stc</span><span class="o">.</span><span class="n">magnitude</span><span class="p">()</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">tstep</span> <span class="o">=</span> <span class="n">stc</span><span class="o">.</span><span class="n">tstep</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span><span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub002</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub003</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub004</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub006</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub007</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub008</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub009</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub010</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub011</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub012</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub013</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub014</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub015</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub017</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub018</span>
+<span class="n">processing</span> <span class="n">subject</span><span class="p">:</span> <span class="n">sub019</span>
+</pre></div>
+</div>
+<p>Set up our contrast and initial p-value threshold</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.array.html#numpy.array" title="View documentation for numpy.array"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="n">faces</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-</span> <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.array.html#numpy.array" title="View documentation for numpy.array"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="n">scrambled</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="n">fsaverage_src</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.read_source_spaces.html#mne.read_source_spaces" title="View documentation for mne.read_source_spaces"><span class="n">mne</span><span class="o">.</span><span class="n">read_source_spaces</span></a><span class="p">(</span>
+    <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="s1">&#39;bem&#39;</span><span class="p">,</span> <span class="s1">&#39;fsaverage-5-src.fif&#39;</span><span class="p">))</span>
+<span class="n">connectivity</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.spatial_src_connectivity.html#mne.spatial_src_connectivity" title="View documentation for mne.spatial_src_connectivity"><span class="n">spatial_src_connectivity</span></a><span class="p">(</span><span class="n">fsaverage_src</span><span class="p">)</span>
+<span class="c1"># something like 0.01 is a more typical value here (or use TFCE!), but</span>
+<span class="c1"># for speed here we&#39;ll use 0.001 (fewer clusters to handle)</span>
+<span class="n">p_threshold</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">t_threshold</span> <span class="o">=</span> <span class="o">-</span><span class="n">stats</span><span class="o">.</span><span class="n">distributions</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">p_threshold</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span><span class="n">Reading</span> <span class="n">a</span> <span class="n">source</span> <span class="n">space</span><span class="o">...</span>
+    <span class="n">Computing</span> <span class="n">patch</span> <span class="n">statistics</span><span class="o">...</span>
+    <span class="n">Patch</span> <span class="n">information</span> <span class="n">added</span><span class="o">...</span>
+    <span class="n">Distance</span> <span class="n">information</span> <span class="n">added</span><span class="o">...</span>
+    <span class="p">[</span><span class="n">done</span><span class="p">]</span>
+    <span class="n">Reading</span> <span class="n">a</span> <span class="n">source</span> <span class="n">space</span><span class="o">...</span>
+    <span class="n">Computing</span> <span class="n">patch</span> <span class="n">statistics</span><span class="o">...</span>
+    <span class="n">Patch</span> <span class="n">information</span> <span class="n">added</span><span class="o">...</span>
+    <span class="n">Distance</span> <span class="n">information</span> <span class="n">added</span><span class="o">...</span>
+    <span class="p">[</span><span class="n">done</span><span class="p">]</span>
+    <span class="mi">2</span> <span class="n">source</span> <span class="n">spaces</span> <span class="n">read</span>
+<span class="o">--</span> <span class="n">number</span> <span class="n">of</span> <span class="n">connected</span> <span class="n">vertices</span> <span class="p">:</span> <span class="mi">20484</span>
+</pre></div>
+</div>
+<p>Here we could do an exact test with <code class="docutils literal"><span class="pre">n_permutations=2**(len(X)-1)</span></code>,
+i.e. 32768 permutations, but this would take a long time. For speed and
+simplicity we’ll do 1024.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">stat_fun</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><a href="https://mne-tools.github.io/dev/generated/mne.stats.ttest_1samp_no_p.html#mne.stats.ttest_1samp_no_p" title="View documentation for mne.stats.ttest_1samp_no_p"><span class="n">ttest_1samp_no_p</span></a><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">T_obs</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">cluster_p_values</span><span class="p">,</span> <span class="n">H0</span> <span class="o">=</span> <span class="n">clu</span> <span class="o">=</span> \
+    <a href="https://mne-tools.github.io/dev/generated/mne.stats.spatio_temporal_cluster_1samp_test.html#mne.stats.spatio_temporal_cluster_1samp_test" title="View documentation for mne.stats.spatio_temporal_cluster_1samp_test"><span class="n">spatio_temporal_cluster_1samp_test</span></a><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="n">connectivity</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">N_JOBS</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">t_threshold</span><span class="p">,</span>
+        <span class="n">stat_fun</span><span class="o">=</span><span class="n">stat_fun</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="n">step_down_p</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">good_cluster_inds</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.where.html#numpy.where" title="View documentation for numpy.where"><span class="n">np</span><span class="o">.</span><span class="n">where</span></a><span class="p">(</span><span class="n">cluster_p_values</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">good_cluster_inds</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Found cluster with p=</span><span class="si">%g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cluster_p_values</span><span class="p">[</span><span class="n">ind</span><span class="p">],))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span><span class="n">stat_fun</span><span class="p">(</span><span class="n">H1</span><span class="p">):</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">5.241046</span> <span class="nb">max</span><span class="o">=</span><span class="mf">11.401539</span>
+<span class="n">Running</span> <span class="n">initial</span> <span class="n">clustering</span>
+<span class="n">Found</span> <span class="mi">900</span> <span class="n">clusters</span>
+<span class="n">Permuting</span> <span class="mi">1023</span> <span class="n">times</span><span class="o">...</span>
+
+<span class="p">[</span>                                        <span class="p">]</span> <span class="mf">0.09775</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">.</span>                                       <span class="p">]</span> <span class="mf">3.12805</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">..</span>                                      <span class="p">]</span> <span class="mf">6.25611</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">...</span>                                     <span class="p">]</span> <span class="mf">9.38416</span> \
+<span class="p">[</span><span class="o">.....</span>                                   <span class="p">]</span> <span class="mf">12.51222</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">......</span>                                  <span class="p">]</span> <span class="mf">15.64027</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">.......</span>                                 <span class="p">]</span> <span class="mf">18.76833</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">........</span>                                <span class="p">]</span> <span class="mf">21.89638</span> \
+<span class="p">[</span><span class="o">..........</span>                              <span class="p">]</span> <span class="mf">25.02444</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">...........</span>                             <span class="p">]</span> <span class="mf">28.15249</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">............</span>                            <span class="p">]</span> <span class="mf">31.28055</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">.............</span>                           <span class="p">]</span> <span class="mf">34.40860</span> \
+<span class="p">[</span><span class="o">...............</span>                         <span class="p">]</span> <span class="mf">37.53666</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">................</span>                        <span class="p">]</span> <span class="mf">40.66471</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">.................</span>                       <span class="p">]</span> <span class="mf">43.79277</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">..................</span>                      <span class="p">]</span> <span class="mf">46.92082</span> \
+<span class="p">[</span><span class="o">....................</span>                    <span class="p">]</span> <span class="mf">50.04888</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">.....................</span>                   <span class="p">]</span> <span class="mf">53.17693</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">......................</span>                  <span class="p">]</span> <span class="mf">56.30499</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">.......................</span>                 <span class="p">]</span> <span class="mf">59.43304</span> \
+<span class="p">[</span><span class="o">.........................</span>               <span class="p">]</span> <span class="mf">62.56109</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">..........................</span>              <span class="p">]</span> <span class="mf">65.68915</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">...........................</span>             <span class="p">]</span> <span class="mf">68.81720</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">............................</span>            <span class="p">]</span> <span class="mf">71.94526</span> \
+<span class="p">[</span><span class="o">..............................</span>          <span class="p">]</span> <span class="mf">75.07331</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">...............................</span>         <span class="p">]</span> <span class="mf">78.20137</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">................................</span>        <span class="p">]</span> <span class="mf">81.32942</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">.................................</span>       <span class="p">]</span> <span class="mf">84.45748</span> \
+<span class="p">[</span><span class="o">...................................</span>     <span class="p">]</span> <span class="mf">87.58553</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">....................................</span>    <span class="p">]</span> <span class="mf">90.71359</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">.....................................</span>   <span class="p">]</span> <span class="mf">93.84164</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">......................................</span>  <span class="p">]</span> <span class="mf">96.96970</span> \    <span class="n">Computing</span> <span class="n">cluster</span> <span class="n">p</span><span class="o">-</span><span class="n">values</span>
+<span class="n">Step</span><span class="o">-</span><span class="n">down</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">jumps</span> <span class="n">iteration</span> <span class="c1">#1 found 7 clusters to exclude from subsequent iterations</span>
+<span class="n">Permuting</span> <span class="mi">1023</span> <span class="n">times</span><span class="o">...</span>
+
+<span class="p">[</span>                                        <span class="p">]</span> <span class="mf">0.09775</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">.</span>                                       <span class="p">]</span> <span class="mf">3.12805</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">..</span>                                      <span class="p">]</span> <span class="mf">6.25611</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">...</span>                                     <span class="p">]</span> <span class="mf">9.38416</span> \
+<span class="p">[</span><span class="o">.....</span>                                   <span class="p">]</span> <span class="mf">12.51222</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">......</span>                                  <span class="p">]</span> <span class="mf">15.64027</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">.......</span>                                 <span class="p">]</span> <span class="mf">18.76833</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">........</span>                                <span class="p">]</span> <span class="mf">21.89638</span> \
+<span class="p">[</span><span class="o">..........</span>                              <span class="p">]</span> <span class="mf">25.02444</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">...........</span>                             <span class="p">]</span> <span class="mf">28.15249</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">............</span>                            <span class="p">]</span> <span class="mf">31.28055</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">.............</span>                           <span class="p">]</span> <span class="mf">34.40860</span> \
+<span class="p">[</span><span class="o">...............</span>                         <span class="p">]</span> <span class="mf">37.53666</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">................</span>                        <span class="p">]</span> <span class="mf">40.66471</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">.................</span>                       <span class="p">]</span> <span class="mf">43.79277</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">..................</span>                      <span class="p">]</span> <span class="mf">46.92082</span> \
+<span class="p">[</span><span class="o">....................</span>                    <span class="p">]</span> <span class="mf">50.04888</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">.....................</span>                   <span class="p">]</span> <span class="mf">53.17693</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">......................</span>                  <span class="p">]</span> <span class="mf">56.30499</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">.......................</span>                 <span class="p">]</span> <span class="mf">59.43304</span> \
+<span class="p">[</span><span class="o">.........................</span>               <span class="p">]</span> <span class="mf">62.56109</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">..........................</span>              <span class="p">]</span> <span class="mf">65.68915</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">...........................</span>             <span class="p">]</span> <span class="mf">68.81720</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">............................</span>            <span class="p">]</span> <span class="mf">71.94526</span> \
+<span class="p">[</span><span class="o">..............................</span>          <span class="p">]</span> <span class="mf">75.07331</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">...............................</span>         <span class="p">]</span> <span class="mf">78.20137</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">................................</span>        <span class="p">]</span> <span class="mf">81.32942</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">.................................</span>       <span class="p">]</span> <span class="mf">84.45748</span> \
+<span class="p">[</span><span class="o">...................................</span>     <span class="p">]</span> <span class="mf">87.58553</span> <span class="o">|</span>
+<span class="p">[</span><span class="o">....................................</span>    <span class="p">]</span> <span class="mf">90.71359</span> <span class="o">/</span>
+<span class="p">[</span><span class="o">.....................................</span>   <span class="p">]</span> <span class="mf">93.84164</span> <span class="o">-</span>
+<span class="p">[</span><span class="o">......................................</span>  <span class="p">]</span> <span class="mf">96.96970</span> \    <span class="n">Computing</span> <span class="n">cluster</span> <span class="n">p</span><span class="o">-</span><span class="n">values</span>
+<span class="n">Step</span><span class="o">-</span><span class="n">down</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">jumps</span> <span class="n">iteration</span> <span class="c1">#2 found 0 additional clusters to exclude from subsequent iterations</span>
+<span class="n">Done</span><span class="o">.</span>
+<span class="n">Found</span> <span class="n">cluster</span> <span class="k">with</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.015625</span>
+<span class="n">Found</span> <span class="n">cluster</span> <span class="k">with</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.0273438</span>
+<span class="n">Found</span> <span class="n">cluster</span> <span class="k">with</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.0117188</span>
+<span class="n">Found</span> <span class="n">cluster</span> <span class="k">with</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.0429688</span>
+<span class="n">Found</span> <span class="n">cluster</span> <span class="k">with</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.0214844</span>
+<span class="n">Found</span> <span class="n">cluster</span> <span class="k">with</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.00585938</span>
+<span class="n">Found</span> <span class="n">cluster</span> <span class="k">with</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.00976562</span>
+</pre></div>
+</div>
+<p>Visualize the results:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">stc_all_cluster_vis</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.stats.summarize_clusters_stc.html#mne.stats.summarize_clusters_stc" title="View documentation for mne.stats.summarize_clusters_stc"><span class="n">summarize_clusters_stc</span></a><span class="p">(</span>
+    <span class="n">clu</span><span class="p">,</span> <span class="n">tstep</span><span class="o">=</span><span class="n">tstep</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">fsaverage_vertices</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
+<span class="n">pos_lims</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">l_freq</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="mi">30</span><span class="p">]</span>
+<span class="n">brain</span> <span class="o">=</span> <span class="n">stc_all_cluster_vis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="o">=</span><span class="n">subjects_dir</span><span class="p">,</span>
+    <span class="n">time_label</span><span class="o">=</span><span class="s1">&#39;Duration significant (ms)&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">=</span><span class="s1">&#39;ven&#39;</span><span class="p">,</span>
+    <span class="n">clim</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_lims</span><span class="o">=</span><span class="n">pos_lims</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+    <span class="n">background</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">foreground</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<a href="http://docs.enthought.com/mayavi/mayavi/auto/mlab_camera.html#mayavi.mlab.view" title="View documentation for mayavi.mlab.view"><span class="n">mlab</span><span class="o">.</span><span class="n">view</span></a><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="n">roll</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">focalpoint</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">15.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">distance</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">brain</span><span class="o">.</span><span class="n">save_image</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;figures&#39;</span><span class="p">,</span> <span class="s1">&#39;source_stats_highpass-</span><span class="si">%s</span><span class="s1">Hz.png&#39;</span>
+                         <span class="o">%</span> <span class="p">(</span><span class="n">l_freq</span><span class="p">,)))</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_source_stats_001.png" class="align-center" src="../../_images/sphx_glr_plot_source_stats_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span><span class="n">Updating</span> <span class="n">smoothing</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">be</span> <span class="n">patient</span><span class="o">..</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">1</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">2</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">3</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">4</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">5</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">6</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">7</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">8</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">9</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">10</span>
+<span class="n">colormap</span><span class="p">:</span> <span class="n">fmin</span><span class="o">=-</span><span class="mf">1.00e+02</span> <span class="n">fmid</span><span class="o">=</span><span class="mf">0.00e+00</span> <span class="n">fmax</span><span class="o">=</span><span class="mf">1.00e+02</span> <span class="n">transparent</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">Updating</span> <span class="n">smoothing</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">be</span> <span class="n">patient</span><span class="o">..</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">1</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">2</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">3</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">4</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">5</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">6</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">7</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">8</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">9</span>
+<span class="n">Smoothing</span> <span class="n">matrix</span> <span class="n">creation</span><span class="p">,</span> <span class="n">step</span> <span class="mi">10</span>
+<span class="n">colormap</span><span class="p">:</span> <span class="n">fmin</span><span class="o">=-</span><span class="mf">1.00e+02</span> <span class="n">fmid</span><span class="o">=</span><span class="mf">0.00e+00</span> <span class="n">fmax</span><span class="o">=</span><span class="mf">1.00e+02</span> <span class="n">transparent</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">setting</span> <span class="n">roll</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 40 minutes  13.008 seconds)</p>
+<div class="sphx-glr-footer container">
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/plot_source_stats.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_source_stats.py</span></code></a></div>
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/plot_source_stats.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_source_stats.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MNE Developers. Last updated on 2017-12-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

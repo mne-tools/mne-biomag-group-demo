@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Maxwell filtering in Python &#8212; MNE Biomag Demo</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MNE Biomag Demo</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../index.html">Results</a></li>
+                <li><a href="../../auto_scripts/index.html">Processing Scripts</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Maxwell filtering in Python</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="maxwell-filtering-in-python">
+<span id="sphx-glr-auto-examples-demos-plot-maxfilter-py"></span><h1>Maxwell filtering in Python<a class="headerlink" href="#maxwell-filtering-in-python" title="Permalink to this headline">¶</a></h1>
+<p>Demonstrates maxwell filtering for one run (sub003, run01) using MNE-python.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">mne</span>
+<span class="kn">from</span> <span class="nn">mne</span> <span class="kn">import</span> <a href="https://mne-tools.github.io/dev/generated/mne.Epochs.html#mne.Epochs" title="View documentation for mne.Epochs"><span class="n">Epochs</span></a>
+<span class="kn">from</span> <span class="nn">mne.preprocessing</span> <span class="kn">import</span> <a href="https://mne-tools.github.io/dev/generated/mne.preprocessing.maxwell_filter.html#mne.preprocessing.maxwell_filter" title="View documentation for mne.preprocessing.maxwell_filter"><span class="n">maxwell_filter</span></a>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;processing&#39;</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">library.config</span> <span class="kn">import</span> <span class="p">(</span><span class="n">study_path</span><span class="p">,</span> <span class="n">cal</span><span class="p">,</span> <span class="n">ctc</span><span class="p">,</span> <span class="n">l_freq</span><span class="p">,</span> <span class="n">annot_kwargs</span><span class="p">,</span>
+                            <span class="n">set_matplotlib_defaults</span><span class="p">)</span>  <span class="c1"># noqa: E402</span>
+
+<span class="n">event_ids</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span>  <span class="c1"># Famous faces</span>
+<span class="n">tmax</span> <span class="o">=</span> <span class="mf">0.8</span>  <span class="c1"># just show the constant-stimulus period here</span>
+
+<span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;sub001&quot;</span>
+<span class="n">bads</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MEG1031&#39;</span><span class="p">,</span> <span class="s1">&#39;MEG1111&#39;</span><span class="p">,</span> <span class="s1">&#39;MEG2113&#39;</span><span class="p">]</span>
+<span class="n">filter_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fir_window</span><span class="o">=</span><span class="s1">&#39;hamming&#39;</span><span class="p">,</span> <span class="n">filter_length</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="s1">&#39;zero&#39;</span><span class="p">,</span>
+                     <span class="n">l_trans_bandwidth</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">h_trans_bandwidth</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                     <span class="n">fir_design</span><span class="o">=</span><span class="s1">&#39;firwin&#39;</span><span class="p">)</span>
+
+<span class="n">raw_fname_in</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">study_path</span><span class="p">,</span> <span class="s1">&#39;ds117&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;MEG&#39;</span><span class="p">,</span> <span class="s1">&#39;run_01_raw.fif&#39;</span><span class="p">)</span>
+<span class="n">sss_fname_in</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">study_path</span><span class="p">,</span> <span class="s1">&#39;ds117&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;MEG&#39;</span><span class="p">,</span> <span class="s1">&#39;run_</span><span class="si">%02d</span><span class="s1">_sss.fif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>First the filtered raw data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">raw</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.io.read_raw_fif.html#mne.io.read_raw_fif" title="View documentation for mne.io.read_raw_fif"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span></a><span class="p">(</span><span class="n">raw_fname_in</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;bads&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bads</span>
+<span class="n">raw</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">l_freq</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_params</span><span class="p">)</span>
+
+<span class="n">events</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.find_events.html#mne.find_events" title="View documentation for mne.find_events"><span class="n">mne</span><span class="o">.</span><span class="n">find_events</span></a><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">stim_channel</span><span class="o">=</span><span class="s1">&#39;STI101&#39;</span><span class="p">,</span> <span class="n">consecutive</span><span class="o">=</span><span class="s1">&#39;increasing&#39;</span><span class="p">,</span>
+                         <span class="n">mask</span><span class="o">=</span><span class="mi">4352</span><span class="p">,</span> <span class="n">mask_type</span><span class="o">=</span><span class="s1">&#39;not_and&#39;</span><span class="p">,</span> <span class="n">min_duration</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">evoked_before</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.Epochs.html#mne.Epochs" title="View documentation for mne.Epochs"><span class="n">Epochs</span></a><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="n">event_ids</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="n">tmax</span><span class="p">)</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span><span class="n">Opening</span> <span class="n">raw</span> <span class="n">data</span> <span class="n">file</span> <span class="o">/</span><span class="n">tsi</span><span class="o">/</span><span class="n">doctorants</span><span class="o">/</span><span class="n">data_gramfort</span><span class="o">/</span><span class="n">dgw_faces_reproduce</span><span class="o">/</span><span class="n">ds117</span><span class="o">/</span><span class="n">sub001</span><span class="o">/</span><span class="n">MEG</span><span class="o">/</span><span class="n">run_01_raw</span><span class="o">.</span><span class="n">fif</span><span class="o">...</span>
+    <span class="n">Read</span> <span class="n">a</span> <span class="n">total</span> <span class="n">of</span> <span class="mi">8</span> <span class="n">projection</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v1</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v2</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v3</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v4</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v5</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">grad_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">grad</span><span class="o">-</span><span class="n">v1</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">grad_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">grad</span><span class="o">-</span><span class="n">v2</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">grad_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">grad</span><span class="o">-</span><span class="n">v3</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+    <span class="n">Range</span> <span class="p">:</span> <span class="mi">268400</span> <span class="o">...</span> <span class="mi">815099</span> <span class="o">=</span>    <span class="mf">244.000</span> <span class="o">...</span>   <span class="mf">740.999</span> <span class="n">secs</span>
+<span class="n">Ready</span><span class="o">.</span>
+<span class="n">Current</span> <span class="n">compensation</span> <span class="n">grade</span> <span class="p">:</span> <span class="mi">0</span>
+<span class="n">Reading</span> <span class="mi">0</span> <span class="o">...</span> <span class="mi">546699</span>  <span class="o">=</span>      <span class="mf">0.000</span> <span class="o">...</span>   <span class="mf">496.999</span> <span class="n">secs</span><span class="o">...</span>
+<span class="n">Setting</span> <span class="n">up</span> <span class="n">low</span><span class="o">-</span><span class="k">pass</span> <span class="nb">filter</span> <span class="n">at</span> <span class="mi">40</span> <span class="n">Hz</span>
+<span class="n">h_trans_bandwidth</span> <span class="n">chosen</span> <span class="n">to</span> <span class="n">be</span> <span class="mf">10.0</span> <span class="n">Hz</span>
+<span class="n">Filter</span> <span class="n">length</span> <span class="n">of</span> <span class="mi">363</span> <span class="n">samples</span> <span class="p">(</span><span class="mf">0.330</span> <span class="n">sec</span><span class="p">)</span> <span class="n">selected</span>
+<span class="mi">148</span> <span class="n">events</span> <span class="n">found</span>
+<span class="n">Events</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span> <span class="mi">5</span>  <span class="mi">6</span>  <span class="mi">7</span> <span class="mi">13</span> <span class="mi">14</span> <span class="mi">15</span> <span class="mi">17</span> <span class="mi">18</span> <span class="mi">19</span><span class="p">]</span>
+<span class="mi">50</span> <span class="n">matching</span> <span class="n">events</span> <span class="n">found</span>
+<span class="n">Created</span> <span class="n">an</span> <span class="n">SSP</span> <span class="n">operator</span> <span class="p">(</span><span class="n">subspace</span> <span class="n">dimension</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span>
+<span class="mi">8</span> <span class="n">projection</span> <span class="n">items</span> <span class="n">activated</span>
+</pre></div>
+</div>
+<p>Then Maxfiltered and SSS’d data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">raw</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.io.read_raw_fif.html#mne.io.read_raw_fif" title="View documentation for mne.io.read_raw_fif"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span></a><span class="p">(</span><span class="n">raw_fname_in</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">raw_sss_mf</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.io.read_raw_fif.html#mne.io.read_raw_fif" title="View documentation for mne.io.read_raw_fif"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span></a><span class="p">(</span><span class="n">sss_fname_in</span> <span class="o">%</span> <span class="mi">1</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                 <span class="n">verbose</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+<span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;bads&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bads</span>
+<span class="n">raw</span><span class="o">.</span><span class="n">fix_mag_coil_types</span><span class="p">()</span>
+<span class="c1"># Get the origin and destinations they used</span>
+<span class="n">destination</span> <span class="o">=</span> <span class="n">raw_sss_mf</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;dev_head_t&#39;</span><span class="p">]</span>
+<span class="n">origin</span> <span class="o">=</span> <span class="n">raw_sss_mf</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;proc_history&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;max_info&#39;</span><span class="p">][</span><span class="s1">&#39;sss_info&#39;</span><span class="p">][</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span>
+<span class="c1"># Get the head positions.</span>
+<span class="c1"># Usually this can be done by saving to a text file with MaxFilter</span>
+<span class="c1"># instead, and reading with :func:`mne.chpi.read_head_pos`.</span>
+<span class="n">chpi_picks</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.pick_types.html#mne.pick_types" title="View documentation for mne.pick_types"><span class="n">mne</span><span class="o">.</span><span class="n">pick_types</span></a><span class="p">(</span><span class="n">raw_sss_mf</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">meg</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">chpi</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">chpi_picks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">9</span>
+<span class="n">head_pos</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">raw_sss_mf</span><span class="p">[</span><span class="n">chpi_picks</span><span class="p">]</span>
+<span class="c1"># Add first_samp.</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">raw_sss_mf</span><span class="o">.</span><span class="n">first_samp</span> <span class="o">/</span> <span class="n">raw_sss_mf</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span>
+<span class="c1"># The head positions in the FIF file are all zero for invalid positions</span>
+<span class="c1"># so let&#39;s remove them, and then concatenate our times.</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">head_pos</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">head_pos</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.concatenate.html#numpy.concatenate" title="View documentation for numpy.concatenate"><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span></a><span class="p">((</span><span class="n">t</span><span class="p">[</span><a href="https://docs.scipy.org/doc/numpy-dev/reference/arrays.indexing.html#numpy.newaxis" title="View documentation for numpy.newaxis"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">],</span> <span class="n">head_pos</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="c1"># In this dataset due to old MaxFilter (2.2.10), data are uniformly</span>
+<span class="c1"># sampled at 1 Hz, so we save some processing time in</span>
+<span class="c1"># maxwell_filter by downsampling.</span>
+<span class="n">skip</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">raw_sss_mf</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]))</span>
+<span class="n">head_pos</span> <span class="o">=</span> <span class="n">head_pos</span><span class="p">[::</span><span class="n">skip</span><span class="p">]</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span><span class="n">Opening</span> <span class="n">raw</span> <span class="n">data</span> <span class="n">file</span> <span class="o">/</span><span class="n">tsi</span><span class="o">/</span><span class="n">doctorants</span><span class="o">/</span><span class="n">data_gramfort</span><span class="o">/</span><span class="n">dgw_faces_reproduce</span><span class="o">/</span><span class="n">ds117</span><span class="o">/</span><span class="n">sub001</span><span class="o">/</span><span class="n">MEG</span><span class="o">/</span><span class="n">run_01_raw</span><span class="o">.</span><span class="n">fif</span><span class="o">...</span>
+    <span class="n">Read</span> <span class="n">a</span> <span class="n">total</span> <span class="n">of</span> <span class="mi">8</span> <span class="n">projection</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v1</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v2</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v3</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v4</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">mag_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">mags</span><span class="o">-</span><span class="n">v5</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">grad_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">grad</span><span class="o">-</span><span class="n">v1</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">grad_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">grad</span><span class="o">-</span><span class="n">v2</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+        <span class="n">grad_ssp_upright</span><span class="o">.</span><span class="n">fif</span> <span class="p">:</span> <span class="n">PCA</span><span class="o">-</span><span class="n">grad</span><span class="o">-</span><span class="n">v3</span> <span class="p">(</span><span class="mi">1</span> <span class="n">x</span> <span class="mi">306</span><span class="p">)</span>  <span class="n">idle</span>
+    <span class="n">Range</span> <span class="p">:</span> <span class="mi">268400</span> <span class="o">...</span> <span class="mi">815099</span> <span class="o">=</span>    <span class="mf">244.000</span> <span class="o">...</span>   <span class="mf">740.999</span> <span class="n">secs</span>
+<span class="n">Ready</span><span class="o">.</span>
+<span class="n">Current</span> <span class="n">compensation</span> <span class="n">grade</span> <span class="p">:</span> <span class="mi">0</span>
+<span class="n">Reading</span> <span class="mi">0</span> <span class="o">...</span> <span class="mi">546699</span>  <span class="o">=</span>      <span class="mf">0.000</span> <span class="o">...</span>   <span class="mf">496.999</span> <span class="n">secs</span><span class="o">...</span>
+<span class="mi">100</span> <span class="n">of</span> <span class="mi">100</span> <span class="n">T1</span><span class="o">/</span><span class="n">T2</span> <span class="n">magnetometer</span> <span class="n">types</span> <span class="n">replaced</span> <span class="k">with</span> <span class="n">T3</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Run <a class="reference external" href="https://mne-tools.github.io/dev/generated/mne.preprocessing.maxwell_filter.html#mne.preprocessing.maxwell_filter" title="(in MNE v0.16.dev0)"><code class="xref py py-func docutils literal"><span class="pre">mne.preprocessing.maxwell_filter()</span></code></a>, and band-pass filter the data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">raw_sss_py</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.preprocessing.maxwell_filter.html#mne.preprocessing.maxwell_filter" title="View documentation for mne.preprocessing.maxwell_filter"><span class="n">maxwell_filter</span></a><span class="p">(</span>
+    <span class="n">raw</span><span class="p">,</span> <span class="n">calibration</span><span class="o">=</span><span class="n">cal</span><span class="p">,</span> <span class="n">cross_talk</span><span class="o">=</span><span class="n">ctc</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span> <span class="n">head_pos</span><span class="o">=</span><span class="n">head_pos</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">raw</span>
+
+<span class="n">raw_sss_py</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">l_freq</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_params</span><span class="p">)</span>
+<span class="n">raw_sss_mf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">l_freq</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_params</span><span class="p">)</span>
+
+<span class="n">evoked_sss_py</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.Epochs.html#mne.Epochs" title="View documentation for mne.Epochs"><span class="n">Epochs</span></a><span class="p">(</span><span class="n">raw_sss_py</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="n">event_ids</span><span class="p">,</span>
+                       <span class="n">tmax</span><span class="o">=</span><span class="n">tmax</span><span class="p">)</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
+<span class="n">evoked_sss_mf</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.Epochs.html#mne.Epochs" title="View documentation for mne.Epochs"><span class="n">Epochs</span></a><span class="p">(</span><span class="n">raw_sss_mf</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="n">event_ids</span><span class="p">,</span>
+                       <span class="n">tmax</span><span class="o">=</span><span class="n">tmax</span><span class="p">)</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span>Maxwell filtering raw data
+    Appending head position result channels and copying original raw data
+    Bad MEG channels being reconstructed: [&#39;MEG1031&#39;, &#39;MEG1111&#39;, &#39;MEG2113&#39;]
+    Processing 204 gradiometers and 102 magnetometers
+    Using fine calibration sss_cal.dat
+        Adjusting non-orthogonal EX and EY
+        Adjusted coil positions by (μ ± σ): 0.3° ± 0.3° (max: 1.3°)
+    Using origin 3.0, 9.0, 40.0 mm in the head frame
+        Using 85/95 harmonic components for    0.000  (70/80 in, 15/15 out)
+    Processing 49 data chunks of (at least) 10.0 sec
+        Used  1 head position for    0.000 -    9.999 sec  (#1/49)
+        Used  1 head position for   10.000 -   19.999 sec  (#2/49)
+        Using 85/95 harmonic components for   21.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   22.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   23.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   24.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   25.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   26.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   27.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   28.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   29.000  (70/80 in, 15/15 out)
+        Used  10 head positions for   20.000 -   29.999 sec  (#3/49)
+        Using 85/95 harmonic components for   30.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   31.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   32.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   33.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   34.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   35.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   36.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   37.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   38.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   39.000  (70/80 in, 15/15 out)
+        Used  10 head positions for   30.000 -   39.999 sec  (#4/49)
+        Using 85/95 harmonic components for   40.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   41.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   42.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   43.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   44.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   45.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   46.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   47.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   48.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   49.000  (70/80 in, 15/15 out)
+        Used  10 head positions for   40.000 -   49.999 sec  (#5/49)
+        Using 85/95 harmonic components for   50.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   51.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   52.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   53.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   54.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   55.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   56.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   57.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   58.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   59.000  (70/80 in, 15/15 out)
+        Used  10 head positions for   50.000 -   59.999 sec  (#6/49)
+        Using 85/95 harmonic components for   60.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   61.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   62.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   63.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   64.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   65.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   66.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   67.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   68.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   69.000  (70/80 in, 15/15 out)
+        Used  10 head positions for   60.000 -   69.999 sec  (#7/49)
+        Using 85/95 harmonic components for   70.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   71.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   72.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   73.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   74.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   75.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   76.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   77.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   78.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   79.000  (70/80 in, 15/15 out)
+        Used  10 head positions for   70.000 -   79.999 sec  (#8/49)
+        Using 85/95 harmonic components for   80.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   81.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   82.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   83.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   84.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   85.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   86.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   87.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   88.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   89.000  (70/80 in, 15/15 out)
+        Used  10 head positions for   80.000 -   89.999 sec  (#9/49)
+        Using 85/95 harmonic components for   90.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   91.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   92.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   93.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   94.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   95.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   96.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   97.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   98.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for   99.000  (70/80 in, 15/15 out)
+        Used  10 head positions for   90.000 -   99.999 sec (#10/49)
+        Using 85/95 harmonic components for  100.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  101.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  102.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  103.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  104.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  105.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  106.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  107.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  108.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  109.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  100.000 -  109.999 sec (#11/49)
+        Using 85/95 harmonic components for  110.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  111.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  112.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  113.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  114.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  115.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  116.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  117.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  118.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  119.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  110.000 -  119.999 sec (#12/49)
+        Using 85/95 harmonic components for  120.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  121.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  122.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  123.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  124.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  125.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  126.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  127.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  128.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  129.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  120.000 -  129.999 sec (#13/49)
+        Using 85/95 harmonic components for  130.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  131.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  132.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  133.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  134.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  135.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  136.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  137.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  138.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  139.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  130.000 -  139.999 sec (#14/49)
+        Using 85/95 harmonic components for  140.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  141.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  142.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  143.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  144.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  145.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  146.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  147.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  148.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  149.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  140.000 -  149.999 sec (#15/49)
+        Using 85/95 harmonic components for  150.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  151.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  152.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  153.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  154.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  155.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  156.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  157.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  158.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  159.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  150.000 -  159.999 sec (#16/49)
+        Using 85/95 harmonic components for  160.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  161.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  162.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  163.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  164.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  165.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  166.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  167.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  168.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  169.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  160.000 -  169.999 sec (#17/49)
+        Using 85/95 harmonic components for  170.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  171.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  172.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  173.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  174.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  175.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  176.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  177.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  178.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  179.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  170.000 -  179.999 sec (#18/49)
+        Using 85/95 harmonic components for  180.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  181.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  182.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  183.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  184.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  185.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  186.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  187.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  188.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  189.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  180.000 -  189.999 sec (#19/49)
+        Using 85/95 harmonic components for  190.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  191.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  192.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  193.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  194.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  195.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  196.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  197.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  198.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  199.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  190.000 -  199.999 sec (#20/49)
+        Using 85/95 harmonic components for  200.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  201.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  202.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  203.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  204.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  205.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  206.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  207.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  208.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  209.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  200.000 -  209.999 sec (#21/49)
+        Using 85/95 harmonic components for  210.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  211.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  212.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  213.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  214.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  215.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  216.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  217.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  218.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  219.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  210.000 -  219.999 sec (#22/49)
+        Using 85/95 harmonic components for  220.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  221.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  222.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  223.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  224.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  225.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  226.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  227.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  228.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  229.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  220.000 -  229.999 sec (#23/49)
+        Using 85/95 harmonic components for  230.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  231.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  232.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  233.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  234.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  235.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  236.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  237.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  238.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  239.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  230.000 -  239.999 sec (#24/49)
+        Using 85/95 harmonic components for  240.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  241.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  242.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  243.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  244.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  245.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  246.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  247.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  248.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  249.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  240.000 -  249.999 sec (#25/49)
+        Using 85/95 harmonic components for  250.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  251.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  252.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  253.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  254.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  255.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  256.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  257.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  258.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  259.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  250.000 -  259.999 sec (#26/49)
+        Using 85/95 harmonic components for  260.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  261.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  262.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  263.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  264.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  265.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  266.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  267.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  268.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  269.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  260.000 -  269.999 sec (#27/49)
+        Using 85/95 harmonic components for  270.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  271.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  272.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  273.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  274.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  275.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  276.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  277.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  278.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  279.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  270.000 -  279.999 sec (#28/49)
+        Using 85/95 harmonic components for  280.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  281.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  282.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  283.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  284.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  285.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  286.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  287.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  288.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  289.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  280.000 -  289.999 sec (#29/49)
+        Using 85/95 harmonic components for  290.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  291.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  292.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  293.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  294.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  295.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  296.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  297.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  298.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  299.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  290.000 -  299.999 sec (#30/49)
+        Using 85/95 harmonic components for  300.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  301.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  302.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  303.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  304.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  305.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  306.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  307.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  308.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  309.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  300.000 -  309.999 sec (#31/49)
+        Using 85/95 harmonic components for  310.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  311.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  312.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  313.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  314.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  315.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  316.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  317.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  318.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  319.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  310.000 -  319.999 sec (#32/49)
+        Using 85/95 harmonic components for  320.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  321.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  322.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  323.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  324.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  325.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  326.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  327.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  328.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  329.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  320.000 -  329.999 sec (#33/49)
+        Using 85/95 harmonic components for  330.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  331.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  332.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  333.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  334.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  335.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  336.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  337.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  338.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  339.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  330.000 -  339.999 sec (#34/49)
+        Using 85/95 harmonic components for  340.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  341.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  342.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  343.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  344.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  345.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  346.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  347.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  348.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  349.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  340.000 -  349.999 sec (#35/49)
+        Using 85/95 harmonic components for  350.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  351.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  352.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  353.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  354.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  355.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  356.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  357.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  358.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  359.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  350.000 -  359.999 sec (#36/49)
+        Using 85/95 harmonic components for  360.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  361.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  362.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  363.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  364.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  365.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  366.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  367.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  368.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  369.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  360.000 -  369.999 sec (#37/49)
+        Using 85/95 harmonic components for  370.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  371.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  372.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  373.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  374.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  375.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  376.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  377.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  378.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  379.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  370.000 -  379.999 sec (#38/49)
+        Using 85/95 harmonic components for  380.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  381.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  382.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  383.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  384.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  385.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  386.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  387.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  388.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  389.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  380.000 -  389.999 sec (#39/49)
+        Using 85/95 harmonic components for  390.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  391.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  392.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  393.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  394.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  395.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  396.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  397.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  398.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  399.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  390.000 -  399.999 sec (#40/49)
+        Using 85/95 harmonic components for  400.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  401.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  402.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  403.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  404.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  405.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  406.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  407.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  408.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  409.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  400.000 -  409.999 sec (#41/49)
+        Using 85/95 harmonic components for  410.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  411.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  412.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  413.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  414.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  415.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  416.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  417.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  418.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  419.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  410.000 -  419.999 sec (#42/49)
+        Using 85/95 harmonic components for  420.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  421.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  422.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  423.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  424.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  425.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  426.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  427.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  428.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  429.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  420.000 -  429.999 sec (#43/49)
+        Using 85/95 harmonic components for  430.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  431.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  432.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  433.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  434.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  435.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  436.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  437.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  438.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  439.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  430.000 -  439.999 sec (#44/49)
+        Using 85/95 harmonic components for  440.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  441.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  442.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  443.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  444.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  445.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  446.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  447.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  448.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  449.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  440.000 -  449.999 sec (#45/49)
+        Using 85/95 harmonic components for  450.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  451.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  452.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  453.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  454.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  455.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  456.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  457.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  458.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  459.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  450.000 -  459.999 sec (#46/49)
+        Using 85/95 harmonic components for  460.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  461.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  462.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  463.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  464.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  465.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  466.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  467.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  468.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  469.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  460.000 -  469.999 sec (#47/49)
+        Using 85/95 harmonic components for  470.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  471.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  472.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  473.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  474.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  475.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  476.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  477.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  478.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  479.000  (70/80 in, 15/15 out)
+        Used  10 head positions for  470.000 -  479.999 sec (#48/49)
+        Using 85/95 harmonic components for  480.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  481.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  482.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  483.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  484.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  485.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  486.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  487.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  488.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  489.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  490.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  491.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  492.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  493.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  494.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  495.000  (70/80 in, 15/15 out)
+        Using 85/95 harmonic components for  496.000  (70/80 in, 15/15 out)
+        Used  17 head positions for  480.000 -  496.999 sec (#49/49)
+[done]
+Setting up low-pass filter at 40 Hz
+h_trans_bandwidth chosen to be 10.0 Hz
+Filter length of 363 samples (0.330 sec) selected
+50 matching events found
+0 projection items activated
+50 matching events found
+0 projection items activated
+</pre></div>
+</div>
+<p>Plotting</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">set_matplotlib_defaults</span><span class="p">()</span>
+
+<span class="n">ylim</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mag</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">600</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span> <span class="k">if</span> <span class="n">l_freq</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="mi">400</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="View documentation for matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">evoked_before</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">meg</span><span class="o">=</span><span class="s1">&#39;mag&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spatial_colors</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Raw data&#39;</span><span class="p">)</span>
+<span class="n">evoked_sss_py</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">meg</span><span class="o">=</span><span class="s1">&#39;mag&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">spatial_colors</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\mathtt{maxwell\_filter}$&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">diff</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.combine_evoked.html#mne.combine_evoked" title="View documentation for mne.combine_evoked"><span class="n">mne</span><span class="o">.</span><span class="n">combine_evoked</span></a><span class="p">([</span><span class="n">evoked_sss_py</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">meg</span><span class="o">=</span><span class="s1">&#39;mag&#39;</span><span class="p">),</span>
+                           <span class="n">evoked_sss_mf</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">meg</span><span class="o">=</span><span class="s1">&#39;mag&#39;</span><span class="p">)],</span>
+                          <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">diff</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">spatial_colors</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;$\mathtt{maxwell\_filter}$ -</span><span class="se">\n</span><span class="s1">Maxfilter™&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">mne</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">ai</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;ABC&#39;</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.25</span> <span class="k">if</span> <span class="n">ai</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">),</span> <span class="o">**</span><span class="n">annot_kwargs</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;figures&#39;</span><span class="p">,</span> <span class="s1">&#39;Maxfilter.pdf&#39;</span><span class="p">),</span> <span class="n">bbox_to_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_maxfilter_001.png" class="align-center" src="../../_images/sphx_glr_plot_maxfilter_001.png" />
+<p><strong>Total running time of the script:</strong> ( 4 minutes  10.482 seconds)</p>
+<div class="sphx-glr-footer container">
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/plot_maxfilter.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_maxfilter.py</span></code></a></div>
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../../_downloads/plot_maxfilter.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_maxfilter.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MNE Developers. Last updated on 2017-12-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>01. Run Freesurfer/MNE anatomical pipeline &#8212; MNE Biomag Demo</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          MNE Biomag Demo</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../auto_examples/index.html">Results</a></li>
+                <li><a href="index.html">Processing Scripts</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">01. Run Freesurfer/MNE anatomical pipeline</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="run-freesurfer-mne-anatomical-pipeline">
+<span id="sphx-glr-auto-scripts-01-anatomy-py"></span><h1>01. Run Freesurfer/MNE anatomical pipeline<a class="headerlink" href="#run-freesurfer-mne-anatomical-pipeline" title="Permalink to this headline">¶</a></h1>
+<p>This runs Freesurfer recon-all on all subjects and computes the BEM surfaces
+later used for forward modeling. BEM extraction is done using flash MRI data.</p>
+<p>Make sure that Freesurfer is properly configured before running this script.
+See the <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall#Setup.26Configuration#noqa:E501">Setup &amp; Configuration</a> section of the Freesurfer manual.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Because of how long the reconstruction takes, this script is set
+up to only regenerate data if necessary. If you want to re-run
+specific steps, then you must delete the resulting files.</p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">mne</span>
+<span class="kn">from</span> <span class="nn">mne.parallel</span> <span class="kn">import</span> <span class="n">parallel_func</span>
+<span class="kn">import</span> <span class="nn">nibabel</span> <span class="kn">as</span> <span class="nn">nib</span>
+
+<span class="kn">from</span> <span class="nn">library.config</span> <span class="kn">import</span> <span class="n">study_path</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">,</span> <span class="n">N_JOBS</span><span class="p">,</span> <span class="n">spacing</span>
+
+
+<span class="k">def</span> <span class="nf">tee_output</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">log_file</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Running :</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">command</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="p">:</span>
+            <span class="c1"># print(line.decode(&#39;utf-8&#39;))</span>
+            <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Command failed&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">process_subject_anat</span><span class="p">(</span><span class="n">subject_id</span><span class="p">,</span> <span class="n">force_recon_all</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;sub</span><span class="si">%03d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">subject_id</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Processing </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">subject</span><span class="p">)</span>
+
+    <span class="n">t1_fname</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">study_path</span><span class="p">,</span> <span class="s1">&#39;ds117&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;anatomy&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;highres001.nii.gz&#39;</span><span class="p">)</span>
+    <span class="n">log_fname</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">study_path</span><span class="p">,</span> <span class="s1">&#39;ds117&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;my-recon-all.txt&#39;</span><span class="p">)</span>
+    <span class="n">subject_dir</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">subject</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">subject_dir</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Skipping reconstruction (folder exists)&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Running reconstruction (usually takes hours)&#39;</span><span class="p">)</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">tee_output</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;recon-all&#39;</span><span class="p">,</span> <span class="s1">&#39;-all&#39;</span><span class="p">,</span> <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;-sd&#39;</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">,</span>
+             <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">t1_fname</span><span class="p">],</span> <span class="n">log_fname</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Recon for </span><span class="si">%s</span><span class="s1"> complete in </span><span class="si">%0.1f</span><span class="s1"> hours&#39;</span>
+              <span class="o">%</span> <span class="p">(</span><span class="n">subject_id</span><span class="p">,</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">60.</span> <span class="o">/</span> <span class="mf">60.</span><span class="p">))</span>
+
+    <span class="c1"># Move flash data</span>
+    <span class="n">fnames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">study_path</span><span class="p">,</span> <span class="s1">&#39;ds117&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;anatomy&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;FLASH&#39;</span><span class="p">,</span> <span class="s1">&#39;meflash*&#39;</span><span class="p">))</span>
+    <span class="n">dst_flash</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;mri&#39;</span><span class="p">,</span> <span class="s1">&#39;flash&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">dst_flash</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Copying FLASH files&#39;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dst_flash</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f_src</span> <span class="ow">in</span> <span class="n">fnames</span><span class="p">:</span>
+            <span class="n">f_dst</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f_src</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;meflash_&quot;</span><span class="p">,</span> <span class="s2">&quot;mef&quot;</span><span class="p">)</span>
+            <span class="n">f_dst</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dst_flash</span><span class="p">,</span> <span class="n">f_dst</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">f_src</span><span class="p">,</span> <span class="n">f_dst</span><span class="p">)</span>
+
+    <span class="c1"># Fix the headers for subject 19</span>
+    <span class="k">if</span> <span class="n">subject_id</span> <span class="o">==</span> <span class="mi">19</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Fixing FLASH files for </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">subject</span><span class="p">,))</span>
+        <span class="n">fnames</span> <span class="o">=</span> <span class="p">([</span><span class="s1">&#39;mef05_</span><span class="si">%d</span><span class="s1">.mgz&#39;</span> <span class="o">%</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">)]</span> <span class="o">+</span>
+                  <span class="p">[</span><span class="s1">&#39;mef30_</span><span class="si">%d</span><span class="s1">.mgz&#39;</span> <span class="o">%</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">)])</span>
+        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">fnames</span><span class="p">:</span>
+            <span class="n">dest_fname</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dst_flash</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+            <span class="n">dest_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">dest_fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.nii.gz&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Copy the headers from subjects 1</span>
+            <span class="n">src_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">subjects_dir</span><span class="p">,</span> <span class="s2">&quot;sub001&quot;</span><span class="p">,</span> <span class="s2">&quot;mri&quot;</span><span class="p">,</span> <span class="s2">&quot;flash&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
+            <span class="n">hdr</span> <span class="o">=</span> <span class="n">src_img</span><span class="o">.</span><span class="n">header</span>
+            <span class="n">fixed</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">MGHImage</span><span class="p">(</span><span class="n">dest_img</span><span class="o">.</span><span class="n">get_data</span><span class="p">(),</span> <span class="n">dest_img</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span> <span class="n">hdr</span><span class="p">)</span>
+            <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fixed</span><span class="p">,</span> <span class="n">dest_fname</span><span class="p">)</span>
+
+    <span class="c1"># Make BEMs</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">/mri/flash/parameter_maps/flash5.mgz&quot;</span>
+                     <span class="o">%</span> <span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">subject</span><span class="p">)):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Converting flash MRIs&#39;</span><span class="p">)</span>
+        <a href="https://mne-tools.github.io/dev/generated/mne.bem.convert_flash_mris.html#mne.bem.convert_flash_mris" title="View documentation for mne.bem.convert_flash_mris"><span class="n">mne</span><span class="o">.</span><span class="n">bem</span><span class="o">.</span><span class="n">convert_flash_mris</span></a><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">convert</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                   <span class="n">subjects_dir</span><span class="o">=</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">/bem/flash/outer_skin.surf&quot;</span>
+                     <span class="o">%</span> <span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">subject</span><span class="p">)):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Making BEM&#39;</span><span class="p">)</span>
+        <a href="https://mne-tools.github.io/dev/generated/mne.bem.make_flash_bem.html#mne.bem.make_flash_bem" title="View documentation for mne.bem.make_flash_bem"><span class="n">mne</span><span class="o">.</span><span class="n">bem</span><span class="o">.</span><span class="n">make_flash_bem</span></a><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="o">=</span><span class="n">subjects_dir</span><span class="p">,</span>
+                               <span class="n">show</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n_layers</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;5120&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_layers</span><span class="p">)</span>
+        <span class="n">fname_bem_surfaces</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;bem&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1">-bem.fif&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">extra</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname_bem_surfaces</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Setting up </span><span class="si">%d</span><span class="s1">-layer BEM&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_layers</span><span class="p">,))</span>
+            <span class="n">conductivity</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)[:</span><span class="n">n_layers</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">bem_surfaces</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.make_bem_model.html#mne.make_bem_model" title="View documentation for mne.make_bem_model"><span class="n">mne</span><span class="o">.</span><span class="n">make_bem_model</span></a><span class="p">(</span>
+                    <span class="n">subject</span><span class="p">,</span> <span class="n">ico</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">conductivity</span><span class="o">=</span><span class="n">conductivity</span><span class="p">,</span>
+                    <span class="n">subjects_dir</span><span class="o">=</span><span class="n">subjects_dir</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">exp</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  FAILED to create </span><span class="si">%d</span><span class="s1">-layer BEM for </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span>
+                      <span class="o">%</span> <span class="p">(</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">exp</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="k">continue</span>
+            <a href="https://mne-tools.github.io/dev/generated/mne.write_bem_surfaces.html#mne.write_bem_surfaces" title="View documentation for mne.write_bem_surfaces"><span class="n">mne</span><span class="o">.</span><span class="n">write_bem_surfaces</span></a><span class="p">(</span><span class="n">fname_bem_surfaces</span><span class="p">,</span> <span class="n">bem_surfaces</span><span class="p">)</span>
+        <span class="n">fname_bem</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;bem&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1">-bem-sol.fif&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">extra</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname_bem</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Computing  </span><span class="si">%d</span><span class="s1">-layer BEM solution&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_layers</span><span class="p">,))</span>
+            <span class="n">bem_model</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.read_bem_surfaces.html#mne.read_bem_surfaces" title="View documentation for mne.read_bem_surfaces"><span class="n">mne</span><span class="o">.</span><span class="n">read_bem_surfaces</span></a><span class="p">(</span><span class="n">fname_bem_surfaces</span><span class="p">)</span>
+            <span class="n">bem</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.make_bem_solution.html#mne.make_bem_solution" title="View documentation for mne.make_bem_solution"><span class="n">mne</span><span class="o">.</span><span class="n">make_bem_solution</span></a><span class="p">(</span><span class="n">bem_model</span><span class="p">)</span>
+            <a href="https://mne-tools.github.io/dev/generated/mne.write_bem_solution.html#mne.write_bem_solution" title="View documentation for mne.write_bem_solution"><span class="n">mne</span><span class="o">.</span><span class="n">write_bem_solution</span></a><span class="p">(</span><span class="n">fname_bem</span><span class="p">,</span> <span class="n">bem</span><span class="p">)</span>
+
+    <span class="c1"># Create the surface source space</span>
+    <span class="n">fname_src</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;bem&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1">-src.fif&#39;</span>
+                        <span class="o">%</span> <span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">spacing</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname_src</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  Setting up source space&#39;</span><span class="p">)</span>
+        <span class="n">src</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.setup_source_space.html#mne.setup_source_space" title="View documentation for mne.setup_source_space"><span class="n">mne</span><span class="o">.</span><span class="n">setup_source_space</span></a><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span>
+                                     <span class="n">subjects_dir</span><span class="o">=</span><span class="n">subjects_dir</span><span class="p">)</span>
+        <a href="https://mne-tools.github.io/dev/generated/mne.write_source_spaces.html#mne.write_source_spaces" title="View documentation for mne.write_source_spaces"><span class="n">mne</span><span class="o">.</span><span class="n">write_source_spaces</span></a><span class="p">(</span><span class="n">fname_src</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
+
+
+<span class="n">parallel</span><span class="p">,</span> <span class="n">run_func</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parallel_func</span><span class="p">(</span><span class="n">process_subject_anat</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">N_JOBS</span><span class="p">)</span>
+<span class="n">parallel</span><span class="p">(</span><span class="n">run_func</span><span class="p">(</span><span class="n">subject_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">subject_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+
+<span class="c1"># now we do something special for fsaverage</span>
+<span class="n">fsaverage_src_dir</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;FREESURFER_HOME&#39;</span><span class="p">],</span> <span class="s1">&#39;subjects&#39;</span><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
+<span class="n">fsaverage_dst_dir</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Copying fsaverage into subjects directory&#39;</span><span class="p">)</span>  <span class="c1"># to allow writting in folder</span>
+<span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">fsaverage_dst_dir</span><span class="p">)</span>  <span class="c1"># remove symlink</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">fsaverage_src_dir</span><span class="p">,</span> <span class="n">fsaverage_dst_dir</span><span class="p">)</span>
+
+<span class="n">fsaverage_bem</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsaverage_dst_dir</span><span class="p">,</span> <span class="s1">&#39;bem&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">fsaverage_bem</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">fsaverage_bem</span><span class="p">)</span>
+
+<span class="n">fsaverage_src</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsaverage_bem</span><span class="p">,</span> <span class="s1">&#39;fsaverage-5-src.fif&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fsaverage_src</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Setting up source space for fsaverage&#39;</span><span class="p">)</span>
+    <span class="n">src</span> <span class="o">=</span> <a href="https://mne-tools.github.io/dev/generated/mne.setup_source_space.html#mne.setup_source_space" title="View documentation for mne.setup_source_space"><span class="n">mne</span><span class="o">.</span><span class="n">setup_source_space</span></a><span class="p">(</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="s1">&#39;ico5&#39;</span><span class="p">,</span>
+                                 <span class="n">subjects_dir</span><span class="o">=</span><span class="n">subjects_dir</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">src</span><span class="p">:</span>
+        <span class="k">assert</span> <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.array_equal.html#numpy.array_equal" title="View documentation for numpy.array_equal"><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span></a><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;vertno&#39;</span><span class="p">],</span> <a href="https://docs.scipy.org/doc/numpy-dev/reference/generated/numpy.arange.html#numpy.arange" title="View documentation for numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">10242</span><span class="p">))</span>
+    <a href="https://mne-tools.github.io/dev/generated/mne.write_source_spaces.html#mne.write_source_spaces" title="View documentation for mne.write_source_spaces"><span class="n">mne</span><span class="o">.</span><span class="n">write_source_spaces</span></a><span class="p">(</span><span class="n">fsaverage_src</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<div class="sphx-glr-footer container">
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../_downloads/01-anatomy.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">01-anatomy.py</span></code></a></div>
+<div class="sphx-glr-download container">
+<a class="reference download internal" href="../_downloads/01-anatomy.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">01-anatomy.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, MNE Developers. Last updated on 2017-12-20.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

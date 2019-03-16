@@ -70,6 +70,16 @@ Authors
 - [Matti Hämäläinen](https://www.martinos.org/user/5923), Martinos Center, MGH, Harvard Medical School
 - [Alexandre Gramfort](http://alexandre.gramfort.net), INRIA, Université Paris-Saclay
 
+Cite
+----
+
+If you use the code in your work, please cite the following paper:
+
+	Mainak Jas, Eric Larson, Denis Engemann, Jaakko Leppakangas, Samu Taulu, Matti Hamalainen,
+	and Alexandre Gramfort. 2018. A Reproducible MEG/EEG Group Study With the MNE Software: 
+	Recommendations, Quality Assessments, and Good Practices.
+	Frontiers in Neuroscience. 12, doi: 10.3389/fnins.2018.00530
+
 Abstract (of the satellite meeting)
 -----------------------------------
 <details>
